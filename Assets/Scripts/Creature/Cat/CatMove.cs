@@ -44,8 +44,8 @@ public class CatMove : MonoBehaviour
         Vector3 targetPos = GenerateRandomPosition();
         while (Vector3.Distance(transform.position, targetPos) > 0.01f)
         {
-            Debug.Log("Targ   " + targetPos);
-            Debug.Log("tf      "+transform.position);
+            //Debug.Log("Targ   " + targetPos);
+            //Debug.Log("tf      "+transform.position);
             transform.position = Vector3.MoveTowards(transform.position, targetPos, movingSpeed*Time.deltaTime);
             yield return null;
         }

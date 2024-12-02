@@ -8,14 +8,17 @@ public class DialogueTrigger : MonoBehaviour
 
     public void OnTriggerEnter(Collider other)
     {
-        // Assuming you have already assigned the DialogueConversations component via the inspector or programmatically
-        if (dialogueConversations != null)
+        if (other.gameObject.tag == "Player")
         {
-            // Hook up the onDialogueEnd action to a custom method
-            dialogueConversations.onDialogueEnd += OnDialogueComplete;
+            if (dialogueConversations != null)
+            {
+                Debug.Log("Tiggereddd");
 
-            // Start the dialogue
-            StartCoroutine(StartDialogue());
+                dialogueConversations.onDialogueEnd += OnDialogueComplete;
+
+                // Start the dialogue
+                StartCoroutine(StartDialogue());
+            }
         }
     }
 
@@ -23,7 +26,9 @@ public class DialogueTrigger : MonoBehaviour
 
     private IEnumerator StartDialogue()
     {
-        yield return new WaitForSeconds(1f); // Optional delay before starting the dialogue
+        yield return new WaitForSeconds(1f);
+
+        DialogueManager.instance.StartDialogue(dialogueConversations.dialogue);
         dialogueConversations.gameObject.SetActive(true);
     }
 

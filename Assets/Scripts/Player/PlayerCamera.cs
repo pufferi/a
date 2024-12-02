@@ -24,11 +24,9 @@ public class PlayerCamera : MonoBehaviour
         lookAction.Enable();
     }
 
-    void Start()
-    {
-        Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false;
-    }
+    
+
+
 
     void OnDestroy()
     {

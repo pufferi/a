@@ -3,13 +3,14 @@ using UnityEngine;
 public class GrabObjects : MonoBehaviour
 {
     private Rigidbody rb;
+    public Vector3 MeshCenter;
 
     public void Grab()
     {
         rb = GetComponent<Rigidbody>();
         Vector3 center = GetMeshCenter();
 
-        // 将物体的质心设置为新的父对象，使其中心位置为抓取点
+        // 质心
         GameObject grabCenter = new GameObject("GrabCenter");
         grabCenter.transform.position = center;
         transform.SetParent(grabCenter.transform);
@@ -23,6 +24,7 @@ public class GrabObjects : MonoBehaviour
         rb.isKinematic = false; // 使物品在释放时恢复物理影响
         transform.SetParent(null); 
     }
+
 
     private Vector3 GetMeshCenter()
     {
@@ -44,4 +46,5 @@ public class GrabObjects : MonoBehaviour
 
         return center;
     }
+
 }

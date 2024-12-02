@@ -7,11 +7,8 @@ namespace Dialogue
     {
         public Dialogue dialogue;
         public System.Action onDialogueEnd;
-
-
         private void OnDialogueEnd()
         {
-            Debug.Log("Ending Dialogue");
             gameObject.SetActive(false);
             onDialogueEnd?.Invoke();
         }

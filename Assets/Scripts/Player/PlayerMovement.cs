@@ -25,6 +25,9 @@ namespace Player
 
         Rigidbody playerRigidbody;
 
+
+        public bool playerStill=false;
+
         private void Start()
         {
             playerRigidbody = GetComponent<Rigidbody>();
@@ -46,7 +49,7 @@ namespace Player
 
         private void Update()
         {
-            grounded = Physics.Raycast(transform.position, Vector3.down, playerHeight * 0.5f + 0.2f, Layer_Ground);
+            grounded = Physics.Raycast(transform.position, Vector3.down, playerHeight * 0.5f + 1f, Layer_Ground);
             //Debug.Log(grounded);
             GetInput();
 
@@ -59,7 +62,7 @@ namespace Player
 
         private void FixedUpdate()
         {
-            PlayerMove();
+            if(!playerStill)PlayerMove();
         }
 
         private void GetInput()
@@ -70,6 +73,8 @@ namespace Player
 
         public void PlayerJump(InputAction.CallbackContext context)
         {
+            Debug.Log("jumping,,,");
+            Debug.Log(grounded);
             if (context.performed &&grounded)
                 playerRigidbody.AddForce(Vector3.up * 5f, ForceMode.Impulse);
         }

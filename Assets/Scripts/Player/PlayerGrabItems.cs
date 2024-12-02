@@ -219,6 +219,9 @@ public class PlayerGrabItems : MonoBehaviour
         GetClosestFace(grabbedMesh, grabbedObject.transform, targetObject.transform.position, out grabbedCenter, out grabbedNormal);
         GetClosestFace(targetMesh, targetObject.transform, grabbedObject.transform.position, out targetCenter, out targetNormal);
 
+        //还要设置法线夹角不能差太大，，
+        if (!AreNormalsWithinAngle(grabbedNormal, targetNormal, 30)) return;
+
         // 计算旋转，使两个法线平行
         Quaternion rotationToParallel = Quaternion.FromToRotation(targetNormal, grabbedNormal);
 
@@ -226,6 +229,22 @@ public class PlayerGrabItems : MonoBehaviour
         grabbedObject.transform.rotation = rotationToParallel * targetObject.transform.rotation;
         //grabbedObject.transform.position = grabbedCenter + grabbedNormal * Vector3.Distance(grabbedCenter, targetCenter);
     }
+
+    private static bool AreNormalsWithinAngle(Vector3 normal1, Vector3 normal2, float maxAngleDegrees)
+    {
+        // 将角度转换为弧度
+        float maxAngleRadians = maxAngleDegrees * Mathf.Deg2Rad;
+
+        // 计算法线向量的点积
+        float dotProduct = Vector3.Dot(normal1.normalized, normal2.normalized);
+
+        // 计算两个向量之间夹角的余弦值
+        float cosAngle = Mathf.Cos(maxAngleRadians);
+
+        // 比较余弦值
+        return dotProduct >= cosAngle;
+    }
+
 
     private void GetClosestFace(Mesh mesh, Transform transform, Vector3 referencePosition, out Vector3 faceCenter, out Vector3 normal)
     {

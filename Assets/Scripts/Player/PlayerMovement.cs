@@ -73,8 +73,7 @@ namespace Player
 
         public void PlayerJump(InputAction.CallbackContext context)
         {
-            Debug.Log("jumping,,,");
-            Debug.Log(grounded);
+            Debug.Log("jumping");
             if (context.performed &&grounded)
                 playerRigidbody.AddForce(Vector3.up * 5f, ForceMode.Impulse);
         }

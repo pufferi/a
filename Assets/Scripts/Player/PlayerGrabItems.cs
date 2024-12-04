@@ -1,14 +1,15 @@
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using System.Collections.Generic;
 
 public class PlayerGrabItems : MonoBehaviour
 {
     public Transform hand;
     public float grabDistance = 3.0f;
-    public float rotationSpeed = 5;
+    public float rotationSpeed = 10;
     public string targetTag = "Item";
-    public float rayDistance = 3f;
+    public float rayDistance = 0.3f;
 
     private GrabObjects grabbedObject;
     public InputActionAsset inputActions;
@@ -17,6 +18,7 @@ public class PlayerGrabItems : MonoBehaviour
     private InputAction rotateLRAction;
     private InputAction rotateUDAction;
     private InputAction jointAction;
+    private InputAction unjointAction;
     private InputAction itemForwardAction;
     private InputAction autoAttachAction;
 
@@ -34,6 +36,7 @@ public class PlayerGrabItems : MonoBehaviour
         rotateLRAction = playerMap.FindAction("RotateLR");
         rotateUDAction = playerMap.FindAction("RotateUD");
         jointAction = playerMap.FindAction("FixJoints");
+        unjointAction = playerMap.FindAction("UnfixJoints");
         itemForwardAction = playerMap.FindAction("ItemForward");
         autoAttachAction = playerMap.FindAction("AutoAttach");
 
@@ -41,6 +44,7 @@ public class PlayerGrabItems : MonoBehaviour
         rotateLRAction.Enable();
         rotateUDAction.Enable();
         jointAction.Enable();
+        unjointAction.Enable();
         itemForwardAction.Enable();
         autoAttachAction.Enable();
 
@@ -48,8 +52,12 @@ public class PlayerGrabItems : MonoBehaviour
         //rotateLRAction.performed += OnLRRotate;
         //rotateUDAction.performed += OnUDRotate;
         jointAction.performed += OnJoint;
-        itemForwardAction.performed += OnItemMoingForward;
+        unjointAction.performed += OnUnJoint;
+        itemForwardAction.performed += OnItemMovingForward;
         autoAttachAction.performed += OnAutoAttach;
+
+
+        directions = GenerateDirections(numberOfDirections);
     }
 
     void Update()
@@ -122,39 +130,65 @@ public class PlayerGrabItems : MonoBehaviour
     //}
 
 
-    //是不是要排除掉Player相对gragbbedObj的位置
-    private Vector3[] directions = {
-            Vector3.forward,
-            Vector3.back,
-            Vector3.left,
-            Vector3.right,
-            Vector3.up,
-            Vector3.down
-        };
+    private List<Vector3> GenerateDirections(int numberOfDirections)
+    {
+        List<Vector3> directions = new List<Vector3>();
+
+        for (int i = 0; i < numberOfDirections; i++)
+        {
+            float theta = Mathf.Acos(1 - 2 * (i + 0.5f) / numberOfDirections);
+            float phi = Mathf.PI * (1 + Mathf.Sqrt(5)) * (i + 0.5f);
+
+            float x = Mathf.Sin(theta) * Mathf.Cos(phi);
+            float y = Mathf.Sin(theta) * Mathf.Sin(phi);
+            float z = Mathf.Cos(theta);
+
+            directions.Add(new Vector3(x, y, z).normalized);
+        }
+
+        return directions;
+    }
 
 
-    //还缺取消joint的部分
+
+
+    private List<Vector3> directions;
+    private int numberOfDirections = 100; // 生成 100 个方向
+
+    //还要处理不能自己再次粘上已经粘黏过的物体
     private void OnJoint(InputAction.CallbackContext context)
     {
-        Debug.Log("onnonJOint");
+        Debug.Log("OnJoint");
         if (grabbedObject != null)
         {
+            RaycastHit closestHit=new RaycastHit();
+            bool found = false;
+            float closestDistance = Mathf.Infinity;
             foreach (Vector3 direction in directions)
             {
                 RaycastHit hit;
                 if (Physics.Raycast(grabbedObject.transform.position, direction, out hit, rayDistance))
                 {
-                    if (hit.collider.CompareTag(targetTag)&&hit.collider.gameObject!=grabbedObject)
+                    if (hit.collider.CompareTag(targetTag) && hit.collider.gameObject != grabbedObject)
                     {
-                        Debug.Log("Detected object with tag: " + targetTag + " in direction: " + direction);
-                        // 添加 FixedJoint
-                        FixedJoint joint = grabbedObject.AddComponent<FixedJoint>();
-                        joint.connectedBody = hit.rigidbody;
-                        grabbedObject.Release(); 
-                        grabbedObject = null;
-                        break; 
+                        float distance = Vector3.Distance(grabbedObject.transform.position, hit.point);
+                        if (distance < closestDistance)
+                        {
+                            closestDistance = distance;
+                            closestHit = hit;
+                            found = true;
+                        }
                     }
                 }
+            }
+            if (found)
+            {
+                Debug.Log("Detected closest object with tag: " + targetTag);
+                // 添加 FixedJoint
+                FixedJoint joint = grabbedObject.AddComponent<FixedJoint>();
+                joint.connectedBody = closestHit.rigidbody;
+                grabbedObject.Release();
+                grabbedObject = null;
             }
         }
         else
@@ -164,7 +198,32 @@ public class PlayerGrabItems : MonoBehaviour
     }
 
 
-    private void OnItemMoingForward(InputAction.CallbackContext context)
+    private void OnUnJoint(InputAction.CallbackContext context)
+    {
+        Debug.Log("OnUnJoint");
+        //直接
+        FixedJoint[] joints = grabbedObject.GetComponents<FixedJoint>();
+        if (joints.Length > 0)
+        {
+            foreach (FixedJoint joint in joints)
+            {
+                Destroy(joint);
+            }
+        }
+        //间接
+        FixedJoint[] allJoints = FindObjectsOfType<FixedJoint>();
+        foreach (FixedJoint j in allJoints)
+        {
+            if (j.connectedBody == grabbedObject.GetComponent<Rigidbody>())
+                Destroy(j); 
+        }
+        
+    }
+
+
+
+
+    private void OnItemMovingForward(InputAction.CallbackContext context)
     {
         if (grabbedObject != null)
         {
@@ -172,18 +231,18 @@ public class PlayerGrabItems : MonoBehaviour
             Vector3 direction = (grabbedObject.transform.position - hand.position).normalized;
 
             float distance = Vector3.Distance(grabbedObject.transform.position, hand.position);
-            float minDistance = 0.8f; // 设置物体与玩家之间的最小距离
+            float minDistance = 0.5f; // 物体与玩家之间的最小距离
 
-            if (distance > minDistance)
+            if(distance<minDistance && scrollValue<0)
             {
+                Debug.Log("Too close");
+            }
+            else 
                 grabbedObject.transform.position += direction * scrollValue;
-            }
-            else
-            {
-                Debug.Log("Too close to the player, pausing movement.");
-            }
         }
     }
+
+
 
 
     //只是转向贴近这个面

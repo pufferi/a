@@ -33,6 +33,15 @@
                     "initialStateCheck": true
                 },
                 {
+                    "name": "Talk",
+                    "type": "Button",
+                    "id": "ef7105bb-45e5-43e6-8796-97c0f4b0f99e",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
                     "name": "Grab",
                     "type": "Button",
                     "id": "680db107-18d0-40ee-aca5-cb32b7037272",
@@ -63,6 +72,15 @@
                     "name": "FixJoints",
                     "type": "Button",
                     "id": "2f24e8bc-5d1f-414e-8f32-dca1dbea5335",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "UnfixJoints",
+                    "type": "Button",
+                    "id": "7b27a3df-8d2e-440e-8d84-762efee8792b",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
@@ -228,6 +246,28 @@
                     "processors": "",
                     "groups": "",
                     "action": "AutoAttach",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "42589dbe-aaf0-4df0-9a59-c6c08ebc17fb",
+                    "path": "<Keyboard>/z",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "UnfixJoints",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "595afe32-da5e-469c-9fc9-5892dcdbd903",
+                    "path": "<Keyboard>/t",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Talk",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

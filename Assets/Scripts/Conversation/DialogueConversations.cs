@@ -9,7 +9,7 @@ namespace Dialogue
         public System.Action onDialogueEnd;
         private void OnDialogueEnd()
         {
-            gameObject.SetActive(false);
+            Debug.Log("IIIIIHJDHHDWHDJSJHDSBHD");
             onDialogueEnd?.Invoke();
         }
     }

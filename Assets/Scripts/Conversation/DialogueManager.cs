@@ -43,7 +43,6 @@ namespace Dialogue
             typingSpeed = TypingSpeedSliderHandler.TypingSpeed;
             if (lines.Count != 0)
             {
-                Debug.Log(leftclickAction.ToString());
                 if (leftclickAction.triggered)
                 {
                     if (dialogueArea.text == lines.Peek().dialogueline)

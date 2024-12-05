@@ -4,25 +4,31 @@ public class GrabObjects : MonoBehaviour
 {
     private Rigidbody rb;
     public Vector3 MeshCenter;
-
+    private GameObject grabCenter;
     public void Grab()
     {
         rb = GetComponent<Rigidbody>();
         Vector3 center = GetMeshCenter();
 
         // 质心
-        GameObject grabCenter = new GameObject("GrabCenter");
+        grabCenter = new GameObject("GrabCenter");
         grabCenter.transform.position = center;
         transform.SetParent(grabCenter.transform);
 
-        rb.isKinematic = true; // 使物品在抓取时不受物理影响
+        rb.isKinematic = true;
+        Debug.Log(rb.isKinematic);
         grabCenter.transform.SetParent(GameObject.FindWithTag("MainCamera").transform);
     }
 
     public void Release()
     {
-        rb.isKinematic = false; // 使物品在释放时恢复物理影响
-        transform.SetParent(null); 
+        rb.isKinematic = false;
+        transform.SetParent(null);
+        if (grabCenter != null)
+        {
+            Destroy(grabCenter);
+            grabCenter = null;
+        }
     }
 
 

@@ -14,7 +14,7 @@ public class DialogueTrigger : MonoBehaviour
             {
                 Debug.Log("Tiggereddd");
 
-                dialogueConversations.onDialogueEnd += OnDialogueComplete;
+                dialogueConversations.dialogue.onDialogueEnd += OnDialogueComplete;
 
                 // Start the dialogue
                 StartCoroutine(StartDialogue());

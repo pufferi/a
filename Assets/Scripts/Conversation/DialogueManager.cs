@@ -20,11 +20,12 @@ namespace Dialogue
         public Transform npcIconPosition;
         public Transform playerIconPosition;
         private bool isTyping = false;
+        private Dialogue currentDialogue; // Store the current dialogue
 
         public InputActionAsset inputActions;
         private InputAction leftclickAction;
 
-        public PlayerMovement playermovement;//¿ØÖÆÍæ¼ÒÔÝÍ£
+        public PlayerMovement playermovement; //¿ØÖÆÍæ¼ÒÔÝÍ£
 
         public TypingSpeedSliderHandler TypingSpeedSliderHandler;
 
@@ -60,10 +61,6 @@ namespace Dialogue
                     }
                 }
             }
-            else
-            {
-                EndDialogue();
-            }
         }
 
         public void DisplayNextDialogueLine()
@@ -94,18 +91,19 @@ namespace Dialogue
         public void StartDialogue(Dialogue dialogue)
         {
             DialogueCanvas.SetActive(true);
+            Debug.Log(DialogueCanvas.activeSelf);
             lines.Clear();
             foreach (DialogueLine dialogueline in dialogue.dialoguelines)
             {
                 lines.Enqueue(dialogueline);
             }
+            currentDialogue = dialogue; // Store the dialogue
             DisplayNextDialogueLine();
         }
 
-
         private IEnumerator TypeSentence(DialogueLine currentLine)
         {
-            dialogueArea.text = ""; 
+            dialogueArea.text = "";
             foreach (char c in currentLine.dialogueline.ToCharArray())
             {
                 if (!isTyping)
@@ -121,13 +119,15 @@ namespace Dialogue
             isTyping = false;
         }
 
-
-
         void EndDialogue()
         {
             DialogueCanvas.SetActive(false);
             playermovement.playerStill = false;
             // Any additional actions after dialogue ends
+            if (currentDialogue != null && currentDialogue.onDialogueEnd != null)
+            {
+                currentDialogue.onDialogueEnd.Invoke();
+            }
         }
     }
 }

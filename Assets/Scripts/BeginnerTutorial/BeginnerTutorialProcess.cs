@@ -1,6 +1,7 @@
 using Dialogue;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -12,45 +13,69 @@ public class BeginnerTutorialProcess : MonoBehaviour
     [SerializeField]
     private DialogueConversations conversation2;
 
+
+    public Transform FrogTransform;
+    public Transform FrogHandPos;
+
     private bool isConversation1triggered;
 
     private bool isConversation2triggered;
-
-    private bool isSwatterMade;
-
-    private bool isSwatterGavetoFrog;
 
     public ShowingTips ShowingTipsController;
     public InputActionAsset inputActions;
     private InputAction talkAction;
 
     private bool inRegion;
+    private bool isSwatterMade = false;
+    private bool isSwatterInHand = false;
 
     public GameObject Web; // 苍蝇拍的网
     public GameObject Bar;
 
-    private Rigidbody webRigdbody;
-    private Rigidbody barRigdbody;
+    private Rigidbody webRigidbody;
+    private Rigidbody barRigidbody;
 
     private void Start()
     {
         var playerMap = inputActions.FindActionMap("Player");
-        talkAction = playerMap.FindAction("Talk");
-        talkAction.performed += OnTalkAction;
+        talkAction = playerMap.FindAction("Grab");
+        talkAction.performed += OnTalk1Action;
         talkAction.Enable();
 
-        webRigdbody = Web.GetComponent<Rigidbody>();
-        barRigdbody = Bar.GetComponent<Rigidbody>();
+        webRigidbody = Web.GetComponent<Rigidbody>();
+        barRigidbody = Bar.GetComponent<Rigidbody>();
+    }
+    private void Update()
+    {
+        if (!isSwatterMade)
+            isSwatterMade = IsWebAndBarConnected();
+        else
+            isSwatterInHand = IsSwatterInHand();
     }
 
-    private void OnTalkAction(InputAction.CallbackContext context)
+    private void OnTalk1Action(InputAction.CallbackContext context)
     {
         if (inRegion&&!isConversation1triggered)
         {
             isConversation1triggered = true;
             ShowingTipsController.HidePuctTip();
-            conversation1.onDialogueEnd += OnConversation1Complete;
+            conversation1.dialogue.onDialogueEnd += OnConversation1Complete;
             StartCoroutine(StartDialogue(conversation1));
+            talkAction.performed -= OnTalk1Action;
+            talkAction.performed += OnTalk2Action;
+            Debug.Log("Okkkkk");
+        }
+    }
+    private void OnTalk2Action(InputAction.CallbackContext context)
+    {
+        if (inRegion && !isConversation2triggered&&isSwatterInHand)
+        {
+            //拿走苍蝇拍应该要setParent,取消kinematic
+            isConversation2triggered = true;
+            ShowingTipsController.HidePuctTip();
+            conversation2.dialogue.onDialogueEnd += OnConversation2Complete;
+            StartCoroutine(StartDialogue(conversation2));
+            talkAction.performed -= OnTalk2Action;
             Debug.Log("Okkkkk");
         }
     }
@@ -60,7 +85,7 @@ public class BeginnerTutorialProcess : MonoBehaviour
         if (other.gameObject.tag == "Player")
         {
             inRegion = true;
-            if (!isConversation1triggered) ShowingTipsController.ShowPunctTip(gameObject.transform);
+            if (!isConversation1triggered||(IsSwatterInHand() && !isConversation2triggered)) ShowingTipsController.ShowPunctTip(gameObject.transform);
         }
     }
 
@@ -75,14 +100,74 @@ public class BeginnerTutorialProcess : MonoBehaviour
 
     private void OnConversation1Complete()
     {
-        Debug.Log("Dialogue has ended.");
-        webRigdbody.isKinematic = false;
-        barRigdbody.isKinematic = false;
+        webRigidbody.isKinematic = false;
+        barRigidbody.isKinematic = false;
     }
+
+
+    private void OnConversation2Complete()
+    {
+        // 青蛙走掉
+        Vector3 destination = new Vector3(100, FrogTransform.position.y, 50);
+        StartCoroutine(MoveFrogTowards(destination));
+    }
+
+    private IEnumerator MoveFrogTowards(Vector3 target)
+    {
+        float speed = 30f; 
+        while (Vector3.Distance(FrogTransform.position, target) > 0.01f)
+        {
+            FrogTransform.position = Vector3.MoveTowards(FrogTransform.position, target, speed * Time.deltaTime);
+            yield return null;
+        }
+        FrogTransform.position = target;
+    }
+
 
     private IEnumerator StartDialogue(DialogueConversations conversation)
     {
         DialogueManager.instance.StartDialogue(conversation.dialogue);
        yield return null;
     }
+
+
+
+    private bool IsWebAndBarConnected()
+    {
+        Joint[] webJoints = webRigidbody.GetComponents<Joint>();
+        Joint[] barJoints = barRigidbody.GetComponents<Joint>();
+
+        bool isConnected = false;
+
+        foreach (var webJoint in webJoints)
+        {
+            if (webJoint.connectedBody == barRigidbody)
+            {
+                isConnected = true;
+                break;
+            }
+        }
+
+        if (!isConnected)
+        {
+            foreach (var barJoint in barJoints)
+            {
+                if (barJoint.connectedBody == webRigidbody)
+                {
+                    isConnected = true;
+                    break;
+                }
+            }
+        }
+        return isConnected;
+    }
+
+    private bool IsSwatterInHand()
+    {
+        if (Web != null && Web.transform.parent != null && Web.transform.parent.name == "GrabCenter") return true;
+        if (Bar != null && Bar.transform.parent != null && Bar.transform.parent.name == "GrabCenter") return true;
+        return false;
+    }
+
+
 }

@@ -8,7 +8,6 @@ namespace Dialogue
     {
         public string characterName = "";
         public Sprite icon = null;
-        //public Animator animator = null;
     }
 
     [System.Serializable]
@@ -24,5 +23,10 @@ namespace Dialogue
     public class Dialogue
     {
         public List<DialogueLine> dialoguelines = new List<DialogueLine>();
+        public System.Action onDialogueEnd;
+        private void OnDialogueEnd()
+        {
+            onDialogueEnd?.Invoke();
+        }
     }
 }

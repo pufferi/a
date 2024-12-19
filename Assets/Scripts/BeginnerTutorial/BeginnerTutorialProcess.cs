@@ -38,7 +38,7 @@ public class BeginnerTutorialProcess : MonoBehaviour
     private void Start()
     {
         var playerMap = inputActions.FindActionMap("Player");
-        talkAction = playerMap.FindAction("Grab");
+        talkAction = playerMap.FindAction("Interact");
         talkAction.performed += OnTalk1Action;
         talkAction.Enable();
 
@@ -130,8 +130,6 @@ public class BeginnerTutorialProcess : MonoBehaviour
        yield return null;
     }
 
-
-
     private bool IsWebAndBarConnected()
     {
         Joint[] webJoints = webRigidbody.GetComponents<Joint>();
@@ -161,6 +159,37 @@ public class BeginnerTutorialProcess : MonoBehaviour
         }
         return isConnected;
     }
+
+
+    //private bool IsWebAndBarConnected()
+    //{
+    //    Joint[] webJoints = webRigidbody.GetComponents<Joint>();
+    //    Joint[] barJoints = barRigidbody.GetComponents<Joint>();
+
+    //    bool isConnected = false;
+
+    //    foreach (var webJoint in webJoints)
+    //    {
+    //        if (webJoint.connectedBody == barRigidbody)
+    //        {
+    //            isConnected = true;
+    //            break;
+    //        }
+    //    }
+
+    //    if (!isConnected)
+    //    {
+    //        foreach (var barJoint in barJoints)
+    //        {
+    //            if (barJoint.connectedBody == webRigidbody)
+    //            {
+    //                isConnected = true;
+    //                break;
+    //            }
+    //        }
+    //    }
+    //    return isConnected;
+    //}
 
     private bool IsSwatterInHand()
     {

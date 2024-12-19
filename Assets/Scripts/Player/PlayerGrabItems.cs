@@ -1,3 +1,235 @@
+ï»¿//using Unity.VisualScripting;
+//using UnityEngine;
+//using UnityEngine.InputSystem;
+//using System.Collections.Generic;
+//using System;
+
+//public class PlayerGrabItems : MonoBehaviour
+//{
+//    public Transform hand;
+//    public float grabDistance = 3.0f;
+//    public float rotationSpeed = 10;
+//    public string targetTag = "Item";
+//    public float rayDistance = 0.3f;
+
+//    public GrabableObjectComponent grabbedObject;
+//    public InputActionAsset inputActions;
+
+//    private InputAction grabAction;
+//    private InputAction rotateLRAction;
+//    private InputAction rotateUDAction;
+//    private InputAction itemForwardAction;
+//    private InputAction autoAttachAction;
+
+
+//    public float ScrollSen=0.05f;
+
+//    private Camera playerCamera;
+
+//    private void Start()
+//    {
+//        playerCamera = Camera.main;
+//        var playerMap = inputActions.FindActionMap("Player");
+
+//        grabAction = playerMap.FindAction("Interact");
+//        rotateLRAction = playerMap.FindAction("RotateLR");
+//        rotateUDAction = playerMap.FindAction("RotateUD");
+
+//        itemForwardAction = playerMap.FindAction("ItemForward");
+//        autoAttachAction = playerMap.FindAction("AutoAttach");
+
+//        grabAction.Enable();
+//        rotateLRAction.Enable();
+//        rotateUDAction.Enable();
+
+//        itemForwardAction.Enable();
+//        autoAttachAction.Enable();
+
+//        grabAction.performed += OnGrab;
+//        rotateLRAction.performed += OnRotateLR;
+//        rotateUDAction.performed += OnRotateUD;
+
+//        itemForwardAction.performed += OnItemMovingForward;
+//        //autoAttachAction.performed += OnAutoAttach;
+
+
+//    }
+
+//    void Update()
+//    {
+//        // æ£€æµ‹Ré”®æ˜¯å¦è¢«æŒ‰ä½
+//        if (!rotateUDAction.IsPressed() && rotateLRAction.IsPressed() && grabbedObject != null)
+//        {
+//            float scrollValue = rotationSpeed * Time.deltaTime;
+//            grabbedObject.transform.Rotate(Vector3.up, scrollValue, Space.World);
+//        }
+//        //R+rightclick
+//        else if (rotateUDAction.IsPressed() && rotateLRAction.IsPressed() && grabbedObject != null)
+//        {
+//            float scrollValue = rotationSpeed * Time.deltaTime;
+//            grabbedObject.transform.Rotate(Vector3.left, scrollValue, Space.World);
+//        }
+//    }
+
+
+//    private void OnRotateUD(InputAction.CallbackContext context)
+//    {
+//        if (grabbedObject != null)
+//        {
+//            float scrollValue = rotationSpeed * Time.deltaTime;
+//            grabbedObject.transform.Rotate(Vector3.left, scrollValue, Space.World);
+//        }
+//    }
+
+//    private void OnRotateLR(InputAction.CallbackContext context)
+//    {
+//        if (grabbedObject != null)
+//        {
+//            float scrollValue = rotationSpeed * Time.deltaTime;
+//            grabbedObject.transform.Rotate(Vector3.up, scrollValue, Space.World);
+//        }
+//    }
+
+
+
+//    private void OnGrab(InputAction.CallbackContext context)
+//    {
+//        if (grabbedObject == null)
+//        {
+//            RaycastHit hit;
+//            if (Physics.Raycast(playerCamera.transform.position, playerCamera.transform.forward, out hit, grabDistance))
+//            {
+//                GrabableObjectComponent grabbable = hit.collider.GetComponent<GrabableObjectComponent>();
+//                if (grabbable != null)
+//                {
+//                    grabbedObject = grabbable;
+//                    grabbedObject.Grab();
+//                }
+//            }
+//        }
+//        else
+//        {
+//            grabbedObject.Release();
+//            grabbedObject = null;
+//        }
+//    }
+
+//    private void OnItemMovingForward(InputAction.CallbackContext context)
+//    {
+//        if (grabbedObject != null)
+//        {
+//            float scrollValue = context.ReadValue<float>() * 0.001f;
+//            Vector3 direction = (grabbedObject.transform.position - hand.position).normalized;
+
+//            float distance = Vector3.Distance(grabbedObject.transform.position, hand.position);
+//            float minDistance = 0.6f; // ç‰©ä½“ä¸ç©å®¶ä¹‹é—´çš„æœ€å°è·ç¦»
+
+//            if(distance<minDistance && scrollValue<0)
+//            {
+//                Debug.Log("Too close");
+//            }
+//            else 
+//                grabbedObject.transform.position += direction * scrollValue;
+//        }
+//    }
+
+
+
+
+//    ////åªæ˜¯è½¬å‘è´´è¿‘è¿™ä¸ªé¢
+//    //private void OnAutoAttach(InputAction.CallbackContext context)
+//    //{
+//    //    if (grabbedObject != null)
+//    //    {
+//    //        foreach (Vector3 direction in directions)
+//    //        {
+//    //            RaycastHit hit;
+//    //            if (Physics.Raycast(grabbedObject.transform.position, direction, out hit, rayDistance))
+//    //            {
+//    //                if (hit.collider.CompareTag(targetTag) && hit.collider.gameObject != grabbedObject)
+//    //                {
+//    //                    Debug.Log("Detected object with tag: " + targetTag + " in direction: " + direction);
+//    //                    GameObject targetObject = hit.collider.gameObject;
+//    //                    AttachToSurface(grabbedObject.gameObject, targetObject);
+//    //                    break;
+//    //                }
+//    //            }
+//    //        }
+//    //    }
+//    //}
+
+
+
+//    private void AttachToSurface(GameObject grabbedObject, GameObject targetObject)
+//    {
+//        Mesh grabbedMesh = grabbedObject.GetComponent<MeshFilter>().mesh;
+//        Mesh targetMesh = targetObject.GetComponent<MeshFilter>().mesh;
+
+//        Vector3 grabbedCenter, grabbedNormal, targetCenter, targetNormal;
+//        GetClosestFace(grabbedMesh, grabbedObject.transform, targetObject.transform.position, out grabbedCenter, out grabbedNormal);
+//        GetClosestFace(targetMesh, targetObject.transform, grabbedObject.transform.position, out targetCenter, out targetNormal);
+
+//        //è¿˜è¦è®¾ç½®æ³•çº¿å¤¹è§’ä¸èƒ½å·®å¤ªå¤§ï¼Œï¼Œ
+//        if (!AreNormalsWithinAngle(grabbedNormal, targetNormal, 30)) return;
+
+//        // è®¡ç®—æ—‹è½¬ï¼Œä½¿ä¸¤ä¸ªæ³•çº¿å¹³è¡Œ
+//        Quaternion rotationToParallel = Quaternion.FromToRotation(targetNormal, grabbedNormal);
+
+//        // åº”ç”¨æ—‹è½¬å¹¶è°ƒæ•´ä½ç½®
+//        grabbedObject.transform.rotation = rotationToParallel * targetObject.transform.rotation;
+//        //grabbedObject.transform.position = grabbedCenter + grabbedNormal * Vector3.Distance(grabbedCenter, targetCenter);
+//    }
+
+//    private static bool AreNormalsWithinAngle(Vector3 normal1, Vector3 normal2, float maxAngleDegrees)
+//    {
+//        // å°†è§’åº¦è½¬æ¢ä¸ºå¼§åº¦
+//        float maxAngleRadians = maxAngleDegrees * Mathf.Deg2Rad;
+
+//        // è®¡ç®—æ³•çº¿å‘é‡çš„ç‚¹ç§¯
+//        float dotProduct = Vector3.Dot(normal1.normalized, normal2.normalized);
+
+//        // è®¡ç®—ä¸¤ä¸ªå‘é‡ä¹‹é—´å¤¹è§’çš„ä½™å¼¦å€¼
+//        float cosAngle = Mathf.Cos(maxAngleRadians);
+
+//        // æ¯”è¾ƒä½™å¼¦å€¼
+//        return dotProduct >= cosAngle;
+//    }
+
+
+//    private void GetClosestFace(Mesh mesh, Transform transform, Vector3 referencePosition, out Vector3 faceCenter, out Vector3 normal)
+//    {
+//        faceCenter = Vector3.zero;
+//        normal = Vector3.zero;
+//        float minDistance = float.MaxValue;
+
+//        Vector3[] vertices = mesh.vertices;
+//        Vector3[] normals = mesh.normals;
+//        int[] triangles = mesh.triangles;
+
+//        for (int i = 0; i < triangles.Length; i += 3)
+//        {
+//            Vector3 v0 = transform.TransformPoint(vertices[triangles[i]]);
+//            Vector3 v1 = transform.TransformPoint(vertices[triangles[i + 1]]);
+//            Vector3 v2 = transform.TransformPoint(vertices[triangles[i + 2]]);
+
+//            Vector3 currentNormal = transform.TransformDirection(normals[triangles[i]]);
+//            Vector3 currentCenter = (v0 + v1 + v2) / 3.0f;
+
+//            float distance = Vector3.Distance(currentCenter, referencePosition);
+
+//            if (distance < minDistance)
+//            {
+//                minDistance = distance;
+//                faceCenter = currentCenter;
+//                normal = currentNormal;
+//            }
+//        }
+//    }
+
+
+//}
+
+
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -5,13 +237,15 @@ using System.Collections.Generic;
 
 public class PlayerGrabItems : MonoBehaviour
 {
-    public Transform hand;
-    public float grabDistance = 3.0f;
-    public float rotationSpeed = 10;
-    public string targetTag = "Item";
-    public float rayDistance = 0.3f;
 
-    private GrabObjects grabbedObject;
+    public Transform hand;
+    private float grabDistance = 1.4f;
+    public float rotationSpeed = 10;
+    private string targetTag = "Item";
+    private float rayDistance = 0.5f;
+    private UnionFind unionFind;
+
+    private GrabableObjectComponent grabbedObject;
     public InputActionAsset inputActions;
 
     private InputAction grabAction;
@@ -23,7 +257,7 @@ public class PlayerGrabItems : MonoBehaviour
     private InputAction autoAttachAction;
 
 
-    public float ScrollSen=0.05f;
+    public float ScrollSen = 0.05f;
 
     private Camera playerCamera;
 
@@ -32,7 +266,7 @@ public class PlayerGrabItems : MonoBehaviour
         playerCamera = Camera.main;
         var playerMap = inputActions.FindActionMap("Player");
 
-        grabAction = playerMap.FindAction("Grab");
+        grabAction = playerMap.FindAction("Interact");
         rotateLRAction = playerMap.FindAction("RotateLR");
         rotateUDAction = playerMap.FindAction("RotateUD");
         jointAction = playerMap.FindAction("FixJoints");
@@ -56,20 +290,20 @@ public class PlayerGrabItems : MonoBehaviour
         itemForwardAction.performed += OnItemMovingForward;
         autoAttachAction.performed += OnAutoAttach;
 
-
+        unionFind = new UnionFind();
         directions = GenerateDirections(numberOfDirections);
     }
 
     void Update()
     {
-        // ¼ì²âR¼üÊÇ·ñ±»°´×¡
-        if (!rotateUDAction.IsPressed()&&rotateLRAction.IsPressed() && grabbedObject != null)
+        // ï¿½ï¿½ï¿½Rï¿½ï¿½ï¿½Ç·ñ±»°ï¿½×¡
+        if (!rotateUDAction.IsPressed() && rotateLRAction.IsPressed() && grabbedObject != null)
         {
             float scrollValue = rotationSpeed * Time.deltaTime;
             grabbedObject.transform.Rotate(Vector3.up, scrollValue, Space.World);
         }
         //R+rightclick
-        else if(rotateUDAction.IsPressed() && rotateLRAction.IsPressed() && grabbedObject != null)
+        else if (rotateUDAction.IsPressed() && rotateLRAction.IsPressed() && grabbedObject != null)
         {
             float scrollValue = rotationSpeed * Time.deltaTime;
             grabbedObject.transform.Rotate(Vector3.left, scrollValue, Space.World);
@@ -84,7 +318,7 @@ public class PlayerGrabItems : MonoBehaviour
             RaycastHit hit;
             if (Physics.Raycast(playerCamera.transform.position, playerCamera.transform.forward, out hit, grabDistance))
             {
-                GrabObjects grabbable = hit.collider.GetComponent<GrabObjects>();
+                GrabableObjectComponent grabbable = hit.collider.GetComponent<GrabableObjectComponent>();
                 if (grabbable != null)
                 {
                     grabbedObject = grabbable;
@@ -102,30 +336,30 @@ public class PlayerGrabItems : MonoBehaviour
 
 
 
-    //ÔÚ¿¼ÂÇÊó±êÉÏÏÂ¹ö¶¯´¥·¢ÎïÌåĞı×ª»¹ÊÇÇ°ºóÒÆ¶¯
-    //ÕâÀïÒªÉèÖÃ³ÉAxis
+    //ï¿½Ú¿ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Â¹ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½×ªï¿½ï¿½ï¿½ï¿½Ç°ï¿½ï¿½ï¿½Æ¶ï¿½
+    //ï¿½ï¿½ï¿½ï¿½Òªï¿½ï¿½ï¿½Ã³ï¿½Axis
     //private void OnLRRotate(InputAction.CallbackContext context)
     //{
     //    if (grabbedObject != null)
     //    {
-    //        float scrollValue = context.ReadValue<float>() * ScrollSen; // Ğı×ªÎïÌå
+    //        float scrollValue = context.ReadValue<float>() * ScrollSen; // ï¿½ï¿½×ªï¿½ï¿½ï¿½ï¿½
     //        grabbedObject.transform.Rotate(Vector3.up, scrollValue, Space.World);
     //    }
     //    else
     //    {
-    //        //É¶Ò²²»×ö
+    //        //É¶Ò²ï¿½ï¿½ï¿½ï¿½
     //    }
     //}
     //private void OnUDRotate(InputAction.CallbackContext context)
     //{
     //    if (grabbedObject != null)
     //    {
-    //        float scrollValue = context.ReadValue<float>() * ScrollSen; // Ğı×ªÎïÌå
+    //        float scrollValue = context.ReadValue<float>() * ScrollSen; // ï¿½ï¿½×ªï¿½ï¿½ï¿½ï¿½
     //        grabbedObject.transform.Rotate(Vector3.left, scrollValue, Space.World);
     //    }
     //    else
     //    {
-    //        //É¶Ò²²»×ö
+    //        //É¶Ò²ï¿½ï¿½ï¿½ï¿½
     //    }
     //}
 
@@ -153,15 +387,15 @@ public class PlayerGrabItems : MonoBehaviour
 
 
     private List<Vector3> directions;
-    private int numberOfDirections = 100; // Éú³É 100 ¸ö·½Ïò
+    private int numberOfDirections = 100; // ï¿½ï¿½ï¿½ï¿½ 100 ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 
-    //»¹Òª´¦Àí²»ÄÜ×Ô¼ºÔÙ´ÎÕ³ÉÏÒÑ¾­Õ³ğ¤¹ıµÄÎïÌå
+    //ï¿½ï¿½Òªï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ô¼ï¿½ï¿½Ù´ï¿½Õ³ï¿½ï¿½ï¿½Ñ¾ï¿½Õ³ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     private void OnJoint(InputAction.CallbackContext context)
     {
         Debug.Log("OnJoint");
         if (grabbedObject != null)
         {
-            RaycastHit closestHit=new RaycastHit();
+            RaycastHit closestHit = new RaycastHit();
             bool found = false;
             float closestDistance = Mathf.Infinity;
             foreach (Vector3 direction in directions)
@@ -169,9 +403,13 @@ public class PlayerGrabItems : MonoBehaviour
                 RaycastHit hit;
                 if (Physics.Raycast(grabbedObject.transform.position, direction, out hit, rayDistance))
                 {
-                    if (hit.collider.CompareTag(targetTag) && hit.collider.gameObject != grabbedObject)
+                    if (hit.collider.CompareTag(targetTag) && hit.collider.gameObject != grabbedObject.gameObject)
                     {
+
                         float distance = Vector3.Distance(grabbedObject.transform.position, hit.point);
+                        Debug.Log("Raycast hit distance: " + distance);
+                        Debug.Log("Raycast distance: " + rayDistance);
+
                         if (distance < closestDistance)
                         {
                             closestDistance = distance;
@@ -181,19 +419,20 @@ public class PlayerGrabItems : MonoBehaviour
                     }
                 }
             }
-            if (found)
+            if (found&& !unionFind.IsConnected(grabbedObject.GetComponent<Rigidbody>(), closestHit.rigidbody))
             {
                 Debug.Log("Detected closest object with tag: " + targetTag);
-                // Ìí¼Ó FixedJoint
+                // ï¿½ï¿½ï¿½ï¿½ FixedJoint
                 FixedJoint joint = grabbedObject.AddComponent<FixedJoint>();
                 joint.connectedBody = closestHit.rigidbody;
                 grabbedObject.Release();
+                unionFind.Union(grabbedObject.GetComponent<Rigidbody>(), closestHit.rigidbody);
                 grabbedObject = null;
             }
         }
         else
         {
-            //É¶Ò²²»×ö
+            //É¶Ò²ï¿½ï¿½ï¿½ï¿½
         }
     }
 
@@ -201,23 +440,30 @@ public class PlayerGrabItems : MonoBehaviour
     private void OnUnJoint(InputAction.CallbackContext context)
     {
         Debug.Log("OnUnJoint");
-        //Ö±½Ó
+        //Ö±ï¿½ï¿½
         FixedJoint[] joints = grabbedObject.GetComponents<FixedJoint>();
         if (joints.Length > 0)
         {
             foreach (FixedJoint joint in joints)
             {
+                if (joint.connectedBody != null)
+                {
+                    unionFind.Find(joint.connectedBody);
+                }
                 Destroy(joint);
             }
         }
-        //¼ä½Ó
+        //ï¿½ï¿½ï¿½
         FixedJoint[] allJoints = FindObjectsOfType<FixedJoint>();
         foreach (FixedJoint j in allJoints)
         {
             if (j.connectedBody == grabbedObject.GetComponent<Rigidbody>())
-                Destroy(j); 
+            {
+                unionFind.Separate(grabbedObject.GetComponent<Rigidbody>(), j.connectedBody);
+                Destroy(j);
+            }
         }
-        
+
     }
 
 
@@ -231,13 +477,13 @@ public class PlayerGrabItems : MonoBehaviour
             Vector3 direction = (grabbedObject.transform.position - hand.position).normalized;
 
             float distance = Vector3.Distance(grabbedObject.transform.position, hand.position);
-            float minDistance = 0.5f; // ÎïÌåÓëÍæ¼ÒÖ®¼äµÄ×îĞ¡¾àÀë
+            float minDistance = 0.5f; // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö®ï¿½ï¿½ï¿½ï¿½ï¿½Ğ¡ï¿½ï¿½ï¿½ï¿½
 
-            if(distance<minDistance && scrollValue<0)
+            if (distance < minDistance && scrollValue < 0)
             {
                 Debug.Log("Too close");
             }
-            else 
+            else
                 grabbedObject.transform.position += direction * scrollValue;
         }
     }
@@ -245,7 +491,7 @@ public class PlayerGrabItems : MonoBehaviour
 
 
 
-    //Ö»ÊÇ×ªÏòÌù½üÕâ¸öÃæ
+    //Ö»ï¿½ï¿½×ªï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     private void OnAutoAttach(InputAction.CallbackContext context)
     {
         if (grabbedObject != null)
@@ -267,7 +513,7 @@ public class PlayerGrabItems : MonoBehaviour
         }
     }
 
-   
+
 
     private void AttachToSurface(GameObject grabbedObject, GameObject targetObject)
     {
@@ -278,29 +524,29 @@ public class PlayerGrabItems : MonoBehaviour
         GetClosestFace(grabbedMesh, grabbedObject.transform, targetObject.transform.position, out grabbedCenter, out grabbedNormal);
         GetClosestFace(targetMesh, targetObject.transform, grabbedObject.transform.position, out targetCenter, out targetNormal);
 
-        //»¹ÒªÉèÖÃ·¨Ïß¼Ğ½Ç²»ÄÜ²îÌ«´ó£¬£¬
+        //ï¿½ï¿½Òªï¿½ï¿½ï¿½Ã·ï¿½ï¿½ß¼Ğ½Ç²ï¿½ï¿½Ü²ï¿½Ì«ï¿½ó£¬£ï¿½
         if (!AreNormalsWithinAngle(grabbedNormal, targetNormal, 30)) return;
 
-        // ¼ÆËãĞı×ª£¬Ê¹Á½¸ö·¨ÏßÆ½ĞĞ
+        // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½×ªï¿½ï¿½Ê¹ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ½ï¿½ï¿½
         Quaternion rotationToParallel = Quaternion.FromToRotation(targetNormal, grabbedNormal);
 
-        // Ó¦ÓÃĞı×ª²¢µ÷ÕûÎ»ÖÃ
+        // Ó¦ï¿½ï¿½ï¿½ï¿½×ªï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Î»ï¿½ï¿½
         grabbedObject.transform.rotation = rotationToParallel * targetObject.transform.rotation;
         //grabbedObject.transform.position = grabbedCenter + grabbedNormal * Vector3.Distance(grabbedCenter, targetCenter);
     }
 
     private static bool AreNormalsWithinAngle(Vector3 normal1, Vector3 normal2, float maxAngleDegrees)
     {
-        // ½«½Ç¶È×ª»»Îª»¡¶È
+        // ï¿½ï¿½ï¿½Ç¶ï¿½×ªï¿½ï¿½Îªï¿½ï¿½ï¿½ï¿½
         float maxAngleRadians = maxAngleDegrees * Mathf.Deg2Rad;
 
-        // ¼ÆËã·¨ÏßÏòÁ¿µÄµã»ı
+        // ï¿½ï¿½ï¿½ã·¨ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Äµï¿½ï¿½
         float dotProduct = Vector3.Dot(normal1.normalized, normal2.normalized);
 
-        // ¼ÆËãÁ½¸öÏòÁ¿Ö®¼ä¼Ğ½ÇµÄÓàÏÒÖµ
+        // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö®ï¿½ï¿½Ğ½Çµï¿½ï¿½ï¿½ï¿½ï¿½Öµ
         float cosAngle = Mathf.Cos(maxAngleRadians);
 
-        // ±È½ÏÓàÏÒÖµ
+        // ï¿½È½ï¿½ï¿½ï¿½ï¿½ï¿½Öµ
         return dotProduct >= cosAngle;
     }
 
@@ -336,4 +582,75 @@ public class PlayerGrabItems : MonoBehaviour
     }
 
 
+}
+
+
+public class UnionFind
+{
+    private Dictionary<Rigidbody, Rigidbody> parent;
+    private Dictionary<Rigidbody, int> rank;
+
+    public UnionFind()
+    {
+        parent = new Dictionary<Rigidbody, Rigidbody>();
+        rank = new Dictionary<Rigidbody, int>();
+    }
+
+    public Rigidbody Find(Rigidbody x)
+    {
+        if (!parent.ContainsKey(x))
+        {
+            parent[x] = x;
+            rank[x] = 0;
+        }
+        if (parent[x] != x)
+        {
+            parent[x] = Find(parent[x]);
+        }
+        return parent[x];
+    }
+
+    public void Union(Rigidbody x, Rigidbody y)
+    {
+        if (x == null || y == null) return;
+        Rigidbody rootX = Find(x);
+        Rigidbody rootY = Find(y);
+
+        if (rootX != rootY)
+        {
+            if (rank[rootX] > rank[rootY])
+            {
+                parent[rootY] = rootX;
+            }
+            else if (rank[rootX] < rank[rootY])
+            {
+                parent[rootX] = rootY;
+            }
+            else
+            {
+                parent[rootY] = rootX;
+                rank[rootX]++;
+            }
+        }
+    }
+
+    public void Separate(Rigidbody x, Rigidbody y)
+    {
+        if (x == null || y == null) return;
+
+        if (parent.ContainsKey(x) && parent.ContainsKey(y))
+        {
+            parent[x] = x;
+            parent[y] = y;
+
+            rank[x] = 0;
+            rank[y] = 0;
+        }
+    }
+
+    public bool IsConnected(Rigidbody x, Rigidbody y)
+    {
+        if (x == null || y == null) return false;
+        return Find(x) == Find(y);
+    }
 }

@@ -3,14 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "Polyhedron", menuName = "ScriptableObjects/Polyhedron", order = 1)]
+
 public class Polyhedron : ScriptableObject
 {
     
     public HashSet<MyVector3> points = new HashSet<MyVector3>();
     public List<Vector3> vertices = new List<Vector3>();
     public List<int> triangles = new List<int>();
-   //meshCenter应该放在这里，，，好像不用Mesh,我有现成的points,,
-   //然后我的playerMOvement的限制距离也要拿这个meshCenter计算，，，或者再算一个max距离，，
+
     public static Vector3 meshCenter = Vector3.zero;
 
     public void AddPoint(float x, float y, float z)

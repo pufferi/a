@@ -15,13 +15,17 @@ public class PolyhedronFactory : MonoBehaviour
             Mesh mesh = new Mesh();
 
             polyhedron.initialing();
-
+            
             mesh.vertices = polyhedron.vertices.ToArray();
             mesh.triangles = polyhedron.triangles.ToArray();
             mesh.RecalculateNormals();
 
             meshFilter.mesh = mesh;
             meshRenderer.material = new Material(Shader.Find("Standard"));
+
+            MeshCollider meshCollider = gameObject.AddComponent<MeshCollider>();
+            meshCollider.sharedMesh = mesh;
+            meshCollider.convex = true; 
         }
         else
         {
@@ -33,16 +37,14 @@ public class PolyhedronFactory : MonoBehaviour
     {
         Polyhedron polyhedron = ScriptableObject.CreateInstance<Polyhedron>();
 
-        // 生成随机顶点
-        for (int i = 0; i < Random.Range(4, 20); i++)
+        for (int i = 0; i < Random.Range(4,12); i++)
         {
             polyhedron.AddPoint(
-                Random.Range(-1f, 1f),
-                Random.Range(-1f, 1f),
-                Random.Range(-1f, 1f)
+                Random.Range(-1f, 1f), 
+                Random.Range(0f, 1f),
+                Random.Range(-0.7f, 1.5f)   
             );
         }
-
         return polyhedron;
     }
 }

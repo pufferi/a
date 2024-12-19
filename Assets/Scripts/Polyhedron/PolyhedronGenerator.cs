@@ -13,17 +13,10 @@ public class PolyhedronGenerator : MonoBehaviour
             Mesh mesh=randomPolyhedron.initialing();
 
             Transform transform = GetComponent<Transform>();
-            MeshCollider collider = gameObject.AddComponent<MeshCollider>();
-            collider.sharedMesh = mesh;
-            collider.convex = true;
             Rigidbody rb = gameObject.AddComponent<Rigidbody>();
             rb.collisionDetectionMode = CollisionDetectionMode.Continuous; // 设置连续碰撞检测模式
 
-            transform.localScale = new Vector3(0.3f, 0.3f, 0.3f);
-
-
-            //joint,
-            //FixedJoint fixedJoint = gameObject.AddComponent<FixedJoint>();
+            transform.localScale = new Vector3(0.6f, 0.6f, 0.6f);
 
             rb.isKinematic = false;
 

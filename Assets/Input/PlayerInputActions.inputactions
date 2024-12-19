@@ -42,7 +42,7 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "Grab",
+                    "name": "Interact",
                     "type": "Button",
                     "id": "680db107-18d0-40ee-aca5-cb32b7037272",
                     "expectedControlType": "Button",
@@ -52,7 +52,7 @@
                 },
                 {
                     "name": "RotateLR",
-                    "type": "Button",
+                    "type": "Value",
                     "id": "cbda862d-0a20-4729-8474-2b8e2e4319dd",
                     "expectedControlType": "Button",
                     "processors": "",
@@ -190,7 +190,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Grab",
+                    "action": "Interact",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -228,15 +228,37 @@
                     "isPartOfComposite": false
                 },
                 {
-                    "name": "",
-                    "id": "016a4fb4-b903-4257-a311-af1b75a15525",
+                    "name": "One Modifier",
+                    "id": "8e382385-4d9d-45c5-beec-8f4657d0f444",
+                    "path": "OneModifier",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "RotateUD",
+                    "isComposite": true,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "modifier",
+                    "id": "12be9aae-6932-454d-982f-96ba6d35c858",
                     "path": "<Mouse>/rightButton",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
                     "action": "RotateUD",
                     "isComposite": false,
-                    "isPartOfComposite": false
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "binding",
+                    "id": "268087c5-b346-4cff-b199-cfd4f15c4393",
+                    "path": "<Keyboard>/r",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "RotateUD",
+                    "isComposite": false,
+                    "isPartOfComposite": true
                 },
                 {
                     "name": "",

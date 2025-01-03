@@ -35,13 +35,14 @@ public class BeginnerTutorialProcess : MonoBehaviour
     private Rigidbody webRigidbody;
     private Rigidbody barRigidbody;
 
+    public NPCBehaviorController npcbehaviour;
+
     private void Start()
     {
         var playerMap = inputActions.FindActionMap("Player");
         talkAction = playerMap.FindAction("Interact");
         talkAction.performed += OnTalk1Action;
         talkAction.Enable();
-
         webRigidbody = Web.GetComponent<Rigidbody>();
         barRigidbody = Bar.GetComponent<Rigidbody>();
     }
@@ -63,7 +64,6 @@ public class BeginnerTutorialProcess : MonoBehaviour
             StartCoroutine(StartDialogue(conversation1));
             talkAction.performed -= OnTalk1Action;
             talkAction.performed += OnTalk2Action;
-            Debug.Log("Okkkkk");
         }
     }
     private void OnTalk2Action(InputAction.CallbackContext context)
@@ -76,7 +76,6 @@ public class BeginnerTutorialProcess : MonoBehaviour
             conversation2.dialogue.onDialogueEnd += OnConversation2Complete;
             StartCoroutine(StartDialogue(conversation2));
             talkAction.performed -= OnTalk2Action;
-            Debug.Log("Okkkkk");
         }
     }
 
@@ -109,19 +108,12 @@ public class BeginnerTutorialProcess : MonoBehaviour
     {
         // ÇàÍÜ×ßµô
         Vector3 destination = new Vector3(100, FrogTransform.position.y, 50);
-        StartCoroutine(MoveFrogTowards(destination));
+        Debug.Log(FrogTransform == null);
+
+        npcbehaviour.Move(FrogTransform, destination, 30f);
+
     }
 
-    private IEnumerator MoveFrogTowards(Vector3 target)
-    {
-        float speed = 30f; 
-        while (Vector3.Distance(FrogTransform.position, target) > 0.01f)
-        {
-            FrogTransform.position = Vector3.MoveTowards(FrogTransform.position, target, speed * Time.deltaTime);
-            yield return null;
-        }
-        FrogTransform.position = target;
-    }
 
 
     private IEnumerator StartDialogue(DialogueConversations conversation)

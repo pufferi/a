@@ -91,7 +91,6 @@ namespace Dialogue
         public void StartDialogue(Dialogue dialogue)
         {
             DialogueCanvas.SetActive(true);
-            Debug.Log(DialogueCanvas.activeSelf);
             lines.Clear();
             foreach (DialogueLine dialogueline in dialogue.dialoguelines)
             {

@@ -13,6 +13,22 @@ public class PlayerChangeScene : MonoBehaviour
 
     private bool inRegion;
 
+    private void Start()
+    {
+        
+    }
+
+    public void ActivateChangeSceneFunction()
+    {
+
+        changeSceneAction.performed += OnSceneChange;
+    }
+
+    public void InactivateChangeSceneFunction()
+    {
+
+        changeSceneAction.performed -= OnSceneChange;
+    }
 
 
     private void Awake()
@@ -20,11 +36,14 @@ public class PlayerChangeScene : MonoBehaviour
         var ConversationMap = inputActions.FindActionMap("Player");
         changeSceneAction = ConversationMap.FindAction("Interact");
         changeSceneAction.Enable();
-        changeSceneAction.performed += OnSceneChange;
+        ActivateChangeSceneFunction();
     }
     private void OnSceneChange(InputAction.CallbackContext context)
     {
-        if(inRegion)Player.transform.position = destination.position;
+        if (inRegion) 
+        {
+            Player.transform.position = destination.position; 
+        }
     }
     
 

@@ -5,11 +5,10 @@ namespace Player
 {
     public class PlayerMovement : MonoBehaviour
     {
-        [Header("Movement")]
+        
         public float moveSpeed;
         public float groundDrag=5f;
 
-        [Header("Ground Check")]
         private BoxCollider playerCollider;
         private float playerHeight;
         public LayerMask Layer_Ground;
@@ -50,7 +49,6 @@ namespace Player
         private void Update()
         {
             grounded = Physics.Raycast(transform.position, Vector3.down, playerHeight * 0.5f + 1f, Layer_Ground);
-            //Debug.Log(grounded);
             GetInput();
 
             SpeedControl();

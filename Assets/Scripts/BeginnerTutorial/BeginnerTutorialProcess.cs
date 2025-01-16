@@ -152,37 +152,6 @@ public class BeginnerTutorialProcess : MonoBehaviour
         return isConnected;
     }
 
-
-    //private bool IsWebAndBarConnected()
-    //{
-    //    Joint[] webJoints = webRigidbody.GetComponents<Joint>();
-    //    Joint[] barJoints = barRigidbody.GetComponents<Joint>();
-
-    //    bool isConnected = false;
-
-    //    foreach (var webJoint in webJoints)
-    //    {
-    //        if (webJoint.connectedBody == barRigidbody)
-    //        {
-    //            isConnected = true;
-    //            break;
-    //        }
-    //    }
-
-    //    if (!isConnected)
-    //    {
-    //        foreach (var barJoint in barJoints)
-    //        {
-    //            if (barJoint.connectedBody == webRigidbody)
-    //            {
-    //                isConnected = true;
-    //                break;
-    //            }
-    //        }
-    //    }
-    //    return isConnected;
-    //}
-
     private bool IsSwatterInHand()
     {
         if (Web != null && Web.transform.parent != null && Web.transform.parent.name == "GrabCenter") return true;

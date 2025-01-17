@@ -7,9 +7,9 @@ public class GrabableObjectComponent : MonoBehaviour
     public Vector3 MeshCenter;
     private GameObject grabCenter;
     public LayerMask groundLayer;
-    public float minimumHeightAboveGround = 0.01f; // 物体距离地面的最小高度
+    //public float minimumHeightAboveGround = 0.5f; // 物体距离地面的最小高度
     public LayerMask Layer_DontTouchPlayer;
-
+    public float distanceToGround = 0.01f;
     private void Update()
     {
         AvoidingObjectPenetratingTheFloor();
@@ -21,12 +21,11 @@ public class GrabableObjectComponent : MonoBehaviour
         if (collider == null) return;
 
         RaycastHit hit;
-        float distanceToGround = 0.01f; // 调整这个值以获得更好的效果
+        
         Vector3 origin = transform.position + Vector3.up * collider.bounds.extents.y;
 
         if (Physics.Raycast(origin, Vector3.down, out hit, distanceToGround))
         {
-            // 如果物体太接近地面，调整其位置
             float offset = distanceToGround - hit.distance;
             transform.position = new Vector3(transform.position.x, transform.position.y + offset, transform.position.z);
         }
@@ -87,7 +86,6 @@ public class GrabableObjectComponent : MonoBehaviour
         }
         center /= vertices.Length;
 
-        // 转换到世界坐标系
         center = transform.TransformPoint(center);
         return center;
     }

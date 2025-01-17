@@ -7,16 +7,15 @@ public class PlayerChangeScene : MonoBehaviour
 
     public GameObject Player;
 
+    public PlayerGrabItems playerGrabItems;
+
+
     public InputActionAsset inputActions;
 
     private InputAction changeSceneAction;
 
-    private bool inRegion;
+    public bool inRegion;
 
-    private void Start()
-    {
-        
-    }
 
     public void ActivateChangeSceneFunction()
     {
@@ -42,6 +41,8 @@ public class PlayerChangeScene : MonoBehaviour
     {
         if (inRegion) 
         {
+            //if(playerGrabItems.grabbedObject!=null)
+                //playerGrabItems.grabbedObject.transform.position = destination.position;
             Player.transform.position = destination.position; 
         }
     }
@@ -52,6 +53,7 @@ public class PlayerChangeScene : MonoBehaviour
         if (other.gameObject.tag == "Player")
         {
             inRegion = true;
+            playerGrabItems.isPlayerInDoorArea = true;
         }
     }
 
@@ -60,6 +62,7 @@ public class PlayerChangeScene : MonoBehaviour
         if (other.gameObject.tag == "Player")
         {
             inRegion = false;
+            playerGrabItems.isPlayerInDoorArea = false ;
         }
     }
 

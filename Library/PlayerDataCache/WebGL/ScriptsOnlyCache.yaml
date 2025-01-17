@@ -1,7 +1,13 @@
 ScriptsOnlyBuild:
   usedScripts:
+    Assembly-CSharp:
+    - GrabableObjectComponent
+    - Polyhedron
+    - PolyhedronFactory
+    - PolyhedronGenerator
     Assembly-CSharp.dll:
     - BasicUiController
+    - BeginnerTutorialPreprocess
     - BeginnerTutorialProcess
     - CatMove
     - Click2Start
@@ -9,15 +15,23 @@ ScriptsOnlyBuild:
     - Dialogue.DialogueConversations
     - Dialogue.DialogueManager
     - DialogueTrigger
-    - GrabObjects
+    - GrabableObjectComponent
+    - GrabableObjectGenerator
+    - InAreaChecker
     - MoveCamera
+    - NPCBehaviorController
     - Player.PlayerMovement
     - PlayerCamera
+    - PlayerChangeScene
     - PlayerGrabItems
     - Polyhedron
     - PolyhedronFactory
     - PolyhedronGenerator
     - ShowingTips
+    - TaskListController
+    - Test_Generate_randomObjs
+    - Test_TaskList
+    - TutorialLetterHandler
     - TypingSpeedSliderHandler
     Unity.InputSystem.dll:
     - UnityEngine.InputSystem.Editor.InputActionEditorWindow
@@ -35,8 +49,12 @@ ScriptsOnlyBuild:
     - TMPro.TMP_Settings
     - TMPro.TMP_SpriteAsset
     - TMPro.TMP_StyleSheet
+    - TMPro.TextMeshProUGUI
     Unity.TextMeshPro.dll:
     - TMPro.TMP_FontAsset
+    - TMPro.TMP_Settings
+    - TMPro.TMP_SpriteAsset
+    - TMPro.TMP_StyleSheet
     - TMPro.TextMeshProUGUI
     UnityEditor.TestRunner.dll:
     - UnityEditor.TestTools.TestRunner.Api.CallbacksHolder
@@ -154,67 +172,87 @@ ScriptsOnlyBuild:
     - Class: 114
       Script: {instanceID: 17350}
     - Class: 114
-      Script: {instanceID: 17766}
+      Script: {instanceID: 17580}
     - Class: 114
-      Script: {instanceID: 17808}
+      Script: {instanceID: 17768}
     - Class: 114
-      Script: {instanceID: 17854}
+      Script: {instanceID: 17810}
     - Class: 114
-      Script: {instanceID: 18080}
+      Script: {instanceID: 17848}
     - Class: 114
-      Script: {instanceID: 18408}
+      Script: {instanceID: 17858}
     - Class: 114
-      Script: {instanceID: 18590}
+      Script: {instanceID: 18084}
     - Class: 114
-      Script: {instanceID: 18814}
+      Script: {instanceID: 18306}
     - Class: 114
-      Script: {instanceID: 19072}
+      Script: {instanceID: 18312}
     - Class: 114
-      Script: {instanceID: 19120}
+      Script: {instanceID: 18416}
     - Class: 114
-      Script: {instanceID: 19292}
+      Script: {instanceID: 18598}
     - Class: 114
-      Script: {instanceID: 19590}
+      Script: {instanceID: 18822}
     - Class: 114
-      Script: {instanceID: 19594}
+      Script: {instanceID: 18960}
     - Class: 114
-      Script: {instanceID: 19604}
+      Script: {instanceID: 19080}
     - Class: 114
-      Script: {instanceID: 19876}
+      Script: {instanceID: 19128}
     - Class: 114
-      Script: {instanceID: 20156}
+      Script: {instanceID: 19300}
     - Class: 114
-      Script: {instanceID: 20270}
+      Script: {instanceID: 19598}
     - Class: 114
-      Script: {instanceID: 20306}
+      Script: {instanceID: 19602}
     - Class: 114
-      Script: {instanceID: 20596}
+      Script: {instanceID: 19612}
     - Class: 114
-      Script: {instanceID: 20672}
+      Script: {instanceID: 19886}
     - Class: 114
-      Script: {instanceID: 20680}
+      Script: {instanceID: 19942}
     - Class: 114
-      Script: {instanceID: 20682}
+      Script: {instanceID: 20168}
+    - Class: 114
+      Script: {instanceID: 20282}
+    - Class: 114
+      Script: {instanceID: 20318}
+    - Class: 114
+      Script: {instanceID: 20608}
+    - Class: 114
+      Script: {instanceID: 20684}
+    - Class: 114
+      Script: {instanceID: 20692}
     - Class: 114
       Script: {instanceID: 20694}
     - Class: 114
-      Script: {instanceID: 21304}
+      Script: {instanceID: 20706}
     - Class: 114
-      Script: {instanceID: 21486}
+      Script: {instanceID: 20760}
     - Class: 114
-      Script: {instanceID: 21686}
+      Script: {instanceID: 21076}
     - Class: 114
-      Script: {instanceID: 21696}
+      Script: {instanceID: 21320}
     - Class: 114
-      Script: {instanceID: 22278}
+      Script: {instanceID: 21502}
     - Class: 114
-      Script: {instanceID: 22348}
+      Script: {instanceID: 21702}
     - Class: 114
-      Script: {instanceID: 23046}
+      Script: {instanceID: 21712}
     - Class: 114
-      Script: {instanceID: 23060}
+      Script: {instanceID: 22218}
     - Class: 114
-      Script: {instanceID: 25092}
+      Script: {instanceID: 22296}
+    - Class: 114
+      Script: {instanceID: 22366}
+    - Class: 114
+      Script: {instanceID: 23064}
+    - Class: 114
+      Script: {instanceID: 23078}
+    - Class: 114
+      Script: {instanceID: 23082}
+    - Class: 114
+      Script: {instanceID: 23378}
     - Class: 115
       Script: {instanceID: 0}
     - Class: 128
@@ -230,6 +268,8 @@ ScriptsOnlyBuild:
     - Class: 183
       Script: {instanceID: 0}
     - Class: 196
+      Script: {instanceID: 0}
+    - Class: 212
       Script: {instanceID: 0}
     - Class: 213
       Script: {instanceID: 0}
@@ -410,6 +450,12 @@ ScriptsOnlyBuild:
     className: PlayerCamera
   - hash:
       serializedVersion: 2
+      Hash: 35bfae4a600ceef08e3b1def9cb48d04
+    assemblyName: Assembly-CSharp
+    namespaceName: 
+    className: TutorialLetterHandler
+  - hash:
+      serializedVersion: 2
       Hash: e987953190eb4c12cf19df790566dc2c
     assemblyName: UnityEngine.UI
     namespaceName: UnityEngine.EventSystems
@@ -510,6 +556,18 @@ ScriptsOnlyBuild:
     assemblyName: Unity.VisualScripting.Core
     namespaceName: Unity.VisualScripting
     className: UnityOnDropdownValueChangedMessageListener
+  - hash:
+      serializedVersion: 2
+      Hash: 4ed4e69f50965199d27ee73bda59a9b2
+    assemblyName: Assembly-CSharp
+    namespaceName: 
+    className: PlayerChangeScene
+  - hash:
+      serializedVersion: 2
+      Hash: d11b63ca08e39ff0761390632eb00852
+    assemblyName: Assembly-CSharp
+    namespaceName: 
+    className: Click2Start
   - hash:
       serializedVersion: 2
       Hash: 03345d11bcfd9254d67e151179571f78
@@ -674,13 +732,13 @@ ScriptsOnlyBuild:
     className: UnityOnCollisionExit2DMessageListener
   - hash:
       serializedVersion: 2
-      Hash: 97e211d2e263a82c287bcc8284dabf9b
+      Hash: 978d618d2057189cae13daee4c19dd3d
     assemblyName: Assembly-CSharp
     namespaceName: 
-    className: Trigger
+    className: InAreaChecker
   - hash:
       serializedVersion: 2
-      Hash: be633587a442fe7ade92f7ee24d85dbe
+      Hash: 7502895acde6fb71935db8f96e133da7
     assemblyName: Assembly-CSharp
     namespaceName: 
     className: BeginnerTutorialProcess
@@ -740,10 +798,10 @@ ScriptsOnlyBuild:
     className: InputActionDebuggerWindow
   - hash:
       serializedVersion: 2
-      Hash: 5a343e4ce3042c0b7a7c7cf2d38557c3
+      Hash: 4735b3279caf18b78f7aff69804e5f2c
     assemblyName: Assembly-CSharp
     namespaceName: 
-    className: GrabObjects
+    className: GrabableObjectComponent
   - hash:
       serializedVersion: 2
       Hash: b747f5d40674055dd70e18552f1b0447
@@ -842,6 +900,12 @@ ScriptsOnlyBuild:
     className: EarClippingController
   - hash:
       serializedVersion: 2
+      Hash: 449541005c055029a65e8a2574f44ccb
+    assemblyName: Assembly-CSharp
+    namespaceName: 
+    className: ObjectStickHelper
+  - hash:
+      serializedVersion: 2
       Hash: 9ebc0a3016506a0cbb7e0306dfcb9497
     assemblyName: Unity.VisualScripting.Core
     namespaceName: Unity.VisualScripting
@@ -870,6 +934,12 @@ ScriptsOnlyBuild:
     assemblyName: Unity.VisualScripting.Core
     namespaceName: Unity.VisualScripting
     className: UnityOnCancelMessageListener
+  - hash:
+      serializedVersion: 2
+      Hash: 3259857e2ec2cc3b83245a013fd5978b
+    assemblyName: Assembly-CSharp
+    namespaceName: 
+    className: GrabableObjectGenerator
   - hash:
       serializedVersion: 2
       Hash: ea1b87a3bfed09792e7720338241c7a0
@@ -1034,10 +1104,16 @@ ScriptsOnlyBuild:
     className: TMP_FontAsset
   - hash:
       serializedVersion: 2
-      Hash: 5f53fc20f4e2d324cea420d68b147f2c
+      Hash: 59ba11babca7fe1cd10c75a4edb3a867
     assemblyName: Assembly-CSharp
     namespaceName: 
     className: PlayerGrabItems
+  - hash:
+      serializedVersion: 2
+      Hash: 34a66591a81fd8a1d54fd8b3bc706fa7
+    assemblyName: Assembly-CSharp
+    namespaceName: 
+    className: Test_TaskList
   - hash:
       serializedVersion: 2
       Hash: d82086405f46de14829f6b4bcbdd8fc9
@@ -1074,6 +1150,12 @@ ScriptsOnlyBuild:
     assemblyName: UnityEngine.UI
     namespaceName: UnityEngine.UI
     className: Text
+  - hash:
+      serializedVersion: 2
+      Hash: aa1472e1ac9af203c8d7a9dd34124a44
+    assemblyName: Assembly-CSharp
+    namespaceName: 
+    className: TaskListController
   - hash:
       serializedVersion: 2
       Hash: 2071f7ac454ae14eafecfd4041edae3a
@@ -1230,6 +1312,12 @@ ScriptsOnlyBuild:
     assemblyName: Unity.InputSystem
     namespaceName: 
     className: DownloadableSample
+  - hash:
+      serializedVersion: 2
+      Hash: 5354f10afcbf0a70671d2fe132cca2a1
+    assemblyName: Assembly-CSharp
+    namespaceName: 
+    className: Test_Generate_randomObjs
   - hash:
       serializedVersion: 2
       Hash: 876f7b2c0d4468adee4afb6d04ce9281
@@ -1394,6 +1482,12 @@ ScriptsOnlyBuild:
     className: InputSystemUIInputModule
   - hash:
       serializedVersion: 2
+      Hash: bdf1a32b9c59133e516b9947357a3c55
+    assemblyName: Assembly-CSharp
+    namespaceName: 
+    className: BeginnerTutorialPreprocess
+  - hash:
+      serializedVersion: 2
       Hash: d5cd7f207e91ca8336c65a577a6fb2a0
     assemblyName: UnityEngine.UI
     namespaceName: UnityEngine.UI
@@ -1416,6 +1510,12 @@ ScriptsOnlyBuild:
     assemblyName: Unity.InputSystem
     namespaceName: UnityEngine.InputSystem.XR
     className: TrackedPoseDriver
+  - hash:
+      serializedVersion: 2
+      Hash: fef4de0f5ac860034c5964e268a24cd6
+    assemblyName: Assembly-CSharp
+    namespaceName: 
+    className: NPCBehaviorController
   - hash:
       serializedVersion: 2
       Hash: 0f5a086d4d028363983ba6ca30a01397
@@ -1500,13 +1600,7 @@ ScriptsOnlyBuild:
     assemblyName: Unity.VisualScripting.Core
     namespaceName: Unity.VisualScripting
     className: UnityOnSliderValueChangedMessageListener
-  - hash:
-      serializedVersion: 2
-      Hash: d11b63ca08e39ff0761390632eb00852
-    assemblyName: Assembly-CSharp
-    namespaceName: 
-    className: Click2Start
   platform: 20
   scenePathNames:
   - Assets/Scenes/mainScene.unity
-  playerPath: C:/Users/24769/Desktop/A
+  playerPath: C:/Users/24769/Desktop/D

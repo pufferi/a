@@ -19,7 +19,7 @@ public class BeginnerTutorialPreprocess : MonoBehaviour
 
     private PlayerChangeScene playerChangeScene;
 
-    public Transform SofaBase;
+    //public Transform SofaBase;
     public float SofaBaseRadius;
 
     public Transform AlienLetter;
@@ -29,12 +29,14 @@ public class BeginnerTutorialPreprocess : MonoBehaviour
 
     public GameObject tip1;
     public GameObject tip2;
-    public string targetTag = "Player"; // 物体A的标签
-    private bool inLetterRegion;
-    private bool inSofaBaseRegion;
+    //public string targetTag = "Player"; 
     private bool hasPickedLetter = false;
     private bool hasTriggeredBaseConversation=false;
     private bool hasTriggeredLetterConversation=false;
+
+    public InAreaChecker inSofaAreaChecker;
+    public InAreaChecker inLetterAreaChecker;
+
 
     public PlayerMovement playerMovement;
 
@@ -60,22 +62,10 @@ public class BeginnerTutorialPreprocess : MonoBehaviour
 
     private void Update()
     {
-
-        if (!hasPickedLetter) { AlienLetterProcess(); }
-
+        
         if (hasPickedLetter&& !hasTriggeredBaseConversation)
         {
-            Collider[] hitColliders = Physics.OverlapSphere(SofaBase.position, SofaBaseRadius);
-            inSofaBaseRegion = false;
-            foreach (var hitCollider in hitColliders)
-            {
-                if (hitCollider.CompareTag(targetTag))
-                {
-                    inSofaBaseRegion = true;
-                    break;
-                }
-            }
-            if (inSofaBaseRegion)
+            if (inSofaAreaChecker.inArea)
             {
                 Destroy(tip2);
                 hasTriggeredBaseConversation = true;
@@ -85,26 +75,9 @@ public class BeginnerTutorialPreprocess : MonoBehaviour
         }
     }
 
-    private void AlienLetterProcess()
-    {
-        Collider[] hitColliders = Physics.OverlapSphere(AlienLetter.position, AlienLetterRadius);
-        inLetterRegion = false;
-        int i = 0;
-        foreach (var hitCollider in hitColliders)
-        {
-            i++;
-            if (hitCollider.CompareTag(targetTag))
-            {
-                inLetterRegion = true;
-                return;
-            }
-        }
-        if (i == hitColliders.Length) inLetterRegion = false;
-    }
-
     private void ToggleLetter(InputAction.CallbackContext context)
     {
-        if (inLetterRegion&& !hasTriggeredLetterConversation) 
+        if (inLetterAreaChecker.inArea&& !hasTriggeredLetterConversation) 
         {
             conversation2.dialogue.onDialogueEnd += OnConversation2Complete;
             StartCoroutine(StartDialogue(conversation2));

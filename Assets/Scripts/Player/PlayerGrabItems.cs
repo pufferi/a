@@ -6,13 +6,14 @@ using System.Collections.Generic;
 public class PlayerGrabItems : MonoBehaviour
 {
     public Transform hand;
-    private float grabDistance = 1.7f;
+    private float grabDistance =1.7f;
     public float rotationSpeed = 10;
     private string targetTag = "Item";
     private float rayDistance = 0.8f;
     private UnionFind unionFind;
 
-    private GrabableObjectComponent grabbedObject;
+    public GrabableObjectComponent grabbedObject { get; private set; }
+    public bool isPlayerInDoorArea=false;
     public InputActionAsset inputActions;
 
     private InputAction grabAction;
@@ -135,7 +136,7 @@ public class PlayerGrabItems : MonoBehaviour
                 }
             }
         }
-        else
+        else if(!isPlayerInDoorArea)
         {
             Renderer grabbedObjectRenderer = grabbedObject.GetComponent<Renderer>();
             grabbedObjectRenderer.material = originalGrabbedObjMet;
@@ -182,7 +183,7 @@ public class PlayerGrabItems : MonoBehaviour
                 Renderer grabbedObjectRenderer = grabbedObject.GetComponent<Renderer>();
                 grabbedObjectRenderer.material = originalGrabbedObjMet;
                 grabbedObject.Release();
-                unionFind.Union(grabbedObject.GetComponent<Rigidbody>(), closestHit.rigidbody);
+                //unionFind.Union(grabbedObject.GetComponent<Rigidbody>(), closestHit.rigidbody);
                 grabbedObject = null;
             }
         }
@@ -353,29 +354,29 @@ public class UnionFind
         return parent[x];
     }
 
-    public void Union(Rigidbody x, Rigidbody y)
-    {
-        if (x == null || y == null) return;
-        Rigidbody rootX = Find(x);
-        Rigidbody rootY = Find(y);
+    //public void Union(Rigidbody x, Rigidbody y)
+    //{
+    //    if (x == null || y == null) return;
+    //    Rigidbody rootX = Find(x);
+    //    Rigidbody rootY = Find(y);
 
-        if (rootX != rootY)
-        {
-            if (rank[rootX] > rank[rootY])
-            {
-                parent[rootY] = rootX;
-            }
-            else if (rank[rootX] < rank[rootY])
-            {
-                parent[rootX] = rootY;
-            }
-            else
-            {
-                parent[rootY] = rootX;
-                rank[rootX]++;
-            }
-        }
-    }
+    //    if (rootX != rootY)
+    //    {
+    //        if (rank[rootX] > rank[rootY])
+    //        {
+    //            parent[rootY] = rootX;
+    //        }
+    //        else if (rank[rootX] < rank[rootY])
+    //        {
+    //            parent[rootX] = rootY;
+    //        }
+    //        else
+    //        {
+    //            parent[rootY] = rootX;
+    //            rank[rootX]++;
+    //        }
+    //    }
+    //}
 
     public void Separate(Rigidbody x, Rigidbody y)
     {

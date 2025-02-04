@@ -7,35 +7,48 @@ public class GrabableObjectComponent : MonoBehaviour
     public Vector3 MeshCenter;
     private GameObject grabCenter;
     public LayerMask groundLayer;
-    //public float minimumHeightAboveGround = 0.5f; // 物体距离地面的最小高度
     public LayerMask Layer_DontTouchPlayer;
-    public float distanceToGround = 0.01f;
+
     private void Update()
     {
         AvoidingObjectPenetratingTheFloor();
     }
 
+    //private void AvoidingObjectPenetratingTheFloor()
+    //{
+    //    Collider collider = GetComponent<Collider>();
+    //    if (collider == null) return;
+
+    //    RaycastHit hit;
+    //    float distanceToGround = collider.bounds.extents.y*0.4f;
+    //    Vector3 origin = transform.position;//- Vector3.up * collider.bounds.extents.y*0.5f;
+
+    //    if (Physics.Raycast(origin, Vector3.down, out hit, distanceToGround))
+    //    {
+    //        //Debug.Log("okokokookkkkkkrrr");
+    //        float offset = distanceToGround - hit.distance;
+    //        transform.position = new Vector3(transform.position.x, transform.position.y + offset, transform.position.z);
+    //    }
+    //}
     private void AvoidingObjectPenetratingTheFloor()
     {
         Collider collider = GetComponent<Collider>();
         if (collider == null) return;
 
         RaycastHit hit;
-        
-        Vector3 origin = transform.position + Vector3.up * collider.bounds.extents.y;
+        float distanceToGround = collider.bounds.extents.y * 0.3f;
+        Vector3 origin = transform.position;
 
         if (Physics.Raycast(origin, Vector3.down, out hit, distanceToGround))
         {
-            float offset = distanceToGround - hit.distance;
-            transform.position = new Vector3(transform.position.x, transform.position.y + offset, transform.position.z);
-        }
-    }
+            if (hit.collider.tag == "ground") 
+            {
+                float offset = distanceToGround - hit.distance;
+                transform.position = new Vector3(transform.position.x, transform.position.y + offset, transform.position.z);
+            }
 
-    private Vector3 GetColliderBottomCenter(Collider collider)
-    {
-        Bounds bounds = collider.bounds;
-        Vector3 bottomCenter = new Vector3(bounds.center.x, bounds.min.y, bounds.center.z);
-        return bottomCenter;
+            //Debug.Log("okokokookkkkkkrrr");
+        }
     }
 
 
@@ -50,7 +63,7 @@ public class GrabableObjectComponent : MonoBehaviour
         transform.SetParent(grabCenter.transform);
         int layer = Mathf.RoundToInt(Mathf.Log(Layer_DontTouchPlayer.value, 2));
         gameObject.layer = layer;
-        
+
 
         rb.isKinematic = true;
         grabCenter.transform.SetParent(GameObject.FindWithTag("MainCamera").transform);
@@ -86,6 +99,7 @@ public class GrabableObjectComponent : MonoBehaviour
         }
         center /= vertices.Length;
 
+        // 转换到世界坐标系
         center = transform.TransformPoint(center);
         return center;
     }

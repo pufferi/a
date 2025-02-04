@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
 using TMPro;
+using UnityEngine.UI;
 public class MailSlotButton : MonoBehaviour, ISelectHandler, IPointerClickHandler, ISubmitHandler
 {
     [SerializeField]
@@ -17,6 +18,8 @@ public class MailSlotButton : MonoBehaviour, ISelectHandler, IPointerClickHandle
 
     [SerializeField]
     private MailButtonEvent _onClickEvent;
+
+    //public string mailName="";
 
 
     public MailButtonEvent OnSelectEvent { get => _onSelectEvent; set => _onSelectEvent = value; }

@@ -56,9 +56,9 @@ public class PlayerGrabItems : MonoBehaviour
         jointAction.performed += OnJoint;
         unjointAction.performed += OnUnJoint;
         itemForwardAction.performed += OnItemMovingForward;
-        autoAttachAction.performed += OnAutoAttach;
+        //autoAttachAction.performed += OnAutoAttach;
 
-        unionFind = new UnionFind();
+        //unionFind = new UnionFind();
         directions = GenerateDirections(numberOfDirections);
     }
 
@@ -175,24 +175,32 @@ public class PlayerGrabItems : MonoBehaviour
     private void OnJoint(InputAction.CallbackContext context)
     {
         Debug.Log("OnJoint");
-            if (canGrabbedObjStick && !unionFind.IsConnected(grabbedObject.GetComponent<Rigidbody>(), closestHit.rigidbody))
-            {
-                Debug.Log("Detected closest object with tag: " + targetTag);
-                FixedJoint joint = grabbedObject.AddComponent<FixedJoint>();
-                joint.connectedBody = closestHit.rigidbody;
-                Renderer grabbedObjectRenderer = grabbedObject.GetComponent<Renderer>();
-                grabbedObjectRenderer.material = originalGrabbedObjMet;
-                grabbedObject.Release();
-                //unionFind.Union(grabbedObject.GetComponent<Rigidbody>(), closestHit.rigidbody);
-                grabbedObject = null;
-            }
+        if (canGrabbedObjStick)
+        {
+            GrabableObjectComponent hitObject = closestHit.rigidbody.GetComponent<GrabableObjectComponent>();
+            if (hitObject == null|| GrabableObejectGroupingManager.Instance.IsConnect(grabbedObject, hitObject))
+                return;
+
+            Debug.Log("Detected closest object with tag: " + targetTag);
+
+            FixedJoint joint = grabbedObject.AddComponent<FixedJoint>();
+            joint.connectedBody = closestHit.rigidbody;
+            Renderer grabbedObjectRenderer = grabbedObject.GetComponent<Renderer>();
+            grabbedObjectRenderer.material = originalGrabbedObjMet;
+            grabbedObject.Release();
+            //grouping
+            GrabableObejectGroupingManager.Instance.AssignGroupID(grabbedObject, hitObject);
+            grabbedObject = null;
+
         }
+    }
     
 
 
     private void OnUnJoint(InputAction.CallbackContext context)
     {
         Debug.Log("OnUnJoint");
+        List<GrabableObjectComponent>connectObjs=GrabableObejectGroupingManager.Instance.GetConnectObjects(grabbedObject);
 
         FixedJoint[] joints = grabbedObject.GetComponents<FixedJoint>();
         if (joints.Length > 0)
@@ -219,7 +227,10 @@ public class PlayerGrabItems : MonoBehaviour
 
     }
 
+    private void DestroyConnectJoints()
+    {
 
+    }
 
 
     private void OnItemMovingForward(InputAction.CallbackContext context)
@@ -244,86 +255,86 @@ public class PlayerGrabItems : MonoBehaviour
 
 
 
-    private void OnAutoAttach(InputAction.CallbackContext context)
-    {
-        if (grabbedObject != null)
-        {
-            foreach (Vector3 direction in directions)
-            {
-                RaycastHit hit;
-                if (Physics.Raycast(grabbedObject.transform.position, direction, out hit, rayDistance))
-                {
-                    if (hit.collider.CompareTag(targetTag) && hit.collider.gameObject != grabbedObject)
-                    {
-                        Debug.Log("Detected object with tag: " + targetTag + " in direction: " + direction);
-                        GameObject targetObject = hit.collider.gameObject;
-                        AttachToSurface(grabbedObject.gameObject, targetObject);
-                        break;
-                    }
-                }
-            }
-        }
-    }
+    //private void OnAutoAttach(InputAction.CallbackContext context)
+    //{
+    //    if (grabbedObject != null)
+    //    {
+    //        foreach (Vector3 direction in directions)
+    //        {
+    //            RaycastHit hit;
+    //            if (Physics.Raycast(grabbedObject.transform.position, direction, out hit, rayDistance))
+    //            {
+    //                if (hit.collider.CompareTag(targetTag) && hit.collider.gameObject != grabbedObject)
+    //                {
+    //                    Debug.Log("Detected object with tag: " + targetTag + " in direction: " + direction);
+    //                    GameObject targetObject = hit.collider.gameObject;
+    //                    AttachToSurface(grabbedObject.gameObject, targetObject);
+    //                    break;
+    //                }
+    //            }
+    //        }
+    //    }
+    //}
 
 
 
-    private void AttachToSurface(GameObject grabbedObject, GameObject targetObject)
-    {
-        Mesh grabbedMesh = grabbedObject.GetComponent<MeshFilter>().mesh;
-        Mesh targetMesh = targetObject.GetComponent<MeshFilter>().mesh;
+    //private void AttachToSurface(GameObject grabbedObject, GameObject targetObject)
+    //{
+    //    Mesh grabbedMesh = grabbedObject.GetComponent<MeshFilter>().mesh;
+    //    Mesh targetMesh = targetObject.GetComponent<MeshFilter>().mesh;
 
-        Vector3 grabbedCenter, grabbedNormal, targetCenter, targetNormal;
-        GetClosestFace(grabbedMesh, grabbedObject.transform, targetObject.transform.position, out grabbedCenter, out grabbedNormal);
-        GetClosestFace(targetMesh, targetObject.transform, grabbedObject.transform.position, out targetCenter, out targetNormal);
+    //    Vector3 grabbedCenter, grabbedNormal, targetCenter, targetNormal;
+    //    GetClosestFace(grabbedMesh, grabbedObject.transform, targetObject.transform.position, out grabbedCenter, out grabbedNormal);
+    //    GetClosestFace(targetMesh, targetObject.transform, grabbedObject.transform.position, out targetCenter, out targetNormal);
 
-        if (!AreNormalsWithinAngle(grabbedNormal, targetNormal, 30)) return;
+    //    if (!AreNormalsWithinAngle(grabbedNormal, targetNormal, 30)) return;
 
-        Quaternion rotationToParallel = Quaternion.FromToRotation(targetNormal, grabbedNormal);
+    //    Quaternion rotationToParallel = Quaternion.FromToRotation(targetNormal, grabbedNormal);
 
-        grabbedObject.transform.rotation = rotationToParallel * targetObject.transform.rotation;
-    }
+    //    grabbedObject.transform.rotation = rotationToParallel * targetObject.transform.rotation;
+    //}
 
-    private static bool AreNormalsWithinAngle(Vector3 normal1, Vector3 normal2, float maxAngleDegrees)
-    {
-        float maxAngleRadians = maxAngleDegrees * Mathf.Deg2Rad;
+    //private static bool AreNormalsWithinAngle(Vector3 normal1, Vector3 normal2, float maxAngleDegrees)
+    //{
+    //    float maxAngleRadians = maxAngleDegrees * Mathf.Deg2Rad;
 
-        float dotProduct = Vector3.Dot(normal1.normalized, normal2.normalized);
+    //    float dotProduct = Vector3.Dot(normal1.normalized, normal2.normalized);
 
-        float cosAngle = Mathf.Cos(maxAngleRadians);
+    //    float cosAngle = Mathf.Cos(maxAngleRadians);
 
-        return dotProduct >= cosAngle;
-    }
+    //    return dotProduct >= cosAngle;
+    //}
 
 
-    private void GetClosestFace(Mesh mesh, Transform transform, Vector3 referencePosition, out Vector3 faceCenter, out Vector3 normal)
-    {
-        faceCenter = Vector3.zero;
-        normal = Vector3.zero;
-        float minDistance = float.MaxValue;
+    //private void GetClosestFace(Mesh mesh, Transform transform, Vector3 referencePosition, out Vector3 faceCenter, out Vector3 normal)
+    //{
+    //    faceCenter = Vector3.zero;
+    //    normal = Vector3.zero;
+    //    float minDistance = float.MaxValue;
 
-        Vector3[] vertices = mesh.vertices;
-        Vector3[] normals = mesh.normals;
-        int[] triangles = mesh.triangles;
+    //    Vector3[] vertices = mesh.vertices;
+    //    Vector3[] normals = mesh.normals;
+    //    int[] triangles = mesh.triangles;
 
-        for (int i = 0; i < triangles.Length; i += 3)
-        {
-            Vector3 v0 = transform.TransformPoint(vertices[triangles[i]]);
-            Vector3 v1 = transform.TransformPoint(vertices[triangles[i + 1]]);
-            Vector3 v2 = transform.TransformPoint(vertices[triangles[i + 2]]);
+    //    for (int i = 0; i < triangles.Length; i += 3)
+    //    {
+    //        Vector3 v0 = transform.TransformPoint(vertices[triangles[i]]);
+    //        Vector3 v1 = transform.TransformPoint(vertices[triangles[i + 1]]);
+    //        Vector3 v2 = transform.TransformPoint(vertices[triangles[i + 2]]);
 
-            Vector3 currentNormal = transform.TransformDirection(normals[triangles[i]]);
-            Vector3 currentCenter = (v0 + v1 + v2) / 3.0f;
+    //        Vector3 currentNormal = transform.TransformDirection(normals[triangles[i]]);
+    //        Vector3 currentCenter = (v0 + v1 + v2) / 3.0f;
 
-            float distance = Vector3.Distance(currentCenter, referencePosition);
+    //        float distance = Vector3.Distance(currentCenter, referencePosition);
 
-            if (distance < minDistance)
-            {
-                minDistance = distance;
-                faceCenter = currentCenter;
-                normal = currentNormal;
-            }
-        }
-    }
+    //        if (distance < minDistance)
+    //        {
+    //            minDistance = distance;
+    //            faceCenter = currentCenter;
+    //            normal = currentNormal;
+    //        }
+    //    }
+    //}
 
 
 }

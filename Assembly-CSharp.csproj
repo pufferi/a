@@ -9,7 +9,8 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <RootNamespace></RootNamespace>
+    <RootNamespace>
+    </RootNamespace>
     <ProjectGuid>{05E80D49-1975-F444-A953-CBFD372CDA2D}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
@@ -68,7 +69,9 @@
     <Compile Include="Assets\Scripts\Polyhedron\dependencies\_Utility scripts\Data structures\AABB.cs" />
     <Compile Include="Assets\Scripts\Polyhedron\dependencies\2. Generate Mesh\_GenerateMesh.cs" />
     <Compile Include="Assets\Scripts\Polyhedron\dependencies\Test scenes\5. Voronoi diagram\3d\VoronoiSphereController.cs" />
+    <Compile Include="Assets\Scripts\Polyhedron\MeshCombiner.cs" />
     <Compile Include="Assets\Scripts\Polyhedron\dependencies\_Utility scripts\Normalizer.cs" />
+    <Compile Include="Assets\Scripts\Inventory\InventoryController.cs" />
     <Compile Include="Assets\Scripts\GrabableObjectOperation\GrabableObjectComponent.cs" />
     <Compile Include="Assets\Scripts\Polyhedron\dependencies\Test scenes\1. Intersection\IntersectionController.cs" />
     <Compile Include="Assets\Scripts\MailSystem\TestMail.cs" />
@@ -85,12 +88,14 @@
     <Compile Include="Assets\Scripts\Polyhedron\dependencies\Test scenes\3. Convex hull\2d\HullController2D.cs" />
     <Compile Include="Assets\[Temp]\Click2Start.cs" />
     <Compile Include="Assets\Scripts\Polyhedron\dependencies\4. Triangulation\Delaunay\_Delaunay.cs" />
+    <Compile Include="Assets\Scripts\GarbageCanSystem\GarbageBin.cs" />
     <Compile Include="Assets\Scripts\Polyhedron\dependencies\1. Intersection\_Intersections.cs" />
     <Compile Include="Assets\Scripts\Polyhedron\dependencies\6. Polygon clipping\SutherlandHodgman.cs" />
     <Compile Include="Assets\Scripts\Polyhedron\PolyhedronGenerator.cs" />
     <Compile Include="Assets\Scripts\Polyhedron\dependencies\5. Voronoi diagram\Voronoi.cs" />
     <Compile Include="Assets\Scripts\Controller\CursorController.cs" />
     <Compile Include="Assets\Scripts\Polyhedron\dependencies\_Utility scripts\Data structures\MyMesh.cs" />
+    <Compile Include="Assets\Scripts\GrabableObjectOperation\GrabableObejectGroupingManager.cs" />
     <Compile Include="Assets\Scripts\Polyhedron\dependencies\4. Triangulation\Ear Clipping\EarClippingPolygon.cs" />
     <Compile Include="Assets\Scripts\Polyhedron\dependencies\4. Triangulation\Marching squares\Node.cs" />
     <Compile Include="Assets\Scripts\Polyhedron\dependencies\8. Deform mesh\Simplification\Quadric Error Metric\QEM_Edge.cs" />
@@ -98,7 +103,6 @@
     <Compile Include="Assets\Scripts\Polyhedron\dependencies\4. Triangulation\Marching squares\Square.cs" />
     <Compile Include="Assets\Scripts\Polyhedron\dependencies\Test scenes\8. Deform mesh\Cut mesh with plane\CutMeshWithPlaneController.cs" />
     <Compile Include="Assets\Scripts\TaskList\TaskListController.cs" />
-    <Compile Include="Assets\MailController.cs" />
     <Compile Include="Assets\Scripts\Polyhedron\dependencies\Test scenes\4. Triangulation\DelaunayController.cs" />
     <Compile Include="Assets\Scripts\Polyhedron\dependencies\7. Extrude mesh along curve\Extrude mesh\ExtrudeMeshAlongCurve.cs" />
     <Compile Include="Assets\Scripts\Polyhedron\dependencies\4. Triangulation\TriangulateConvexHull.cs" />
@@ -110,7 +114,6 @@
     <Compile Include="Assets\Scripts\Controller\JointController.cs" />
     <Compile Include="Assets\Scripts\Player\PlayerChangeScene.cs" />
     <Compile Include="Assets\Scripts\Polyhedron\dependencies\_Utility scripts\Data structures\MyVector2.cs" />
-    <Compile Include="Assets\Scripts\npc interaction\ShowingTips.cs" />
     <Compile Include="Assets\Scripts\Polyhedron\dependencies\Test scenes\4. Triangulation\Marching\MetaCirclesController.cs" />
     <Compile Include="Assets\Scripts\Polyhedron\dependencies\_Utility scripts\Data structures\Half-edge\HalfEdgeData3.cs" />
     <Compile Include="Assets\Scripts\Polyhedron\dependencies\7. Extrude mesh along curve\InterpolationHelpMethods.cs" />
@@ -125,12 +128,15 @@
     <Compile Include="Assets\Scripts\Polyhedron\dependencies\7. Extrude mesh along curve\_Interpolation.cs" />
     <Compile Include="Assets\Scripts\Polyhedron\dependencies\_Utility scripts\HelpMethods.cs" />
     <Compile Include="Assets\Scripts\Polyhedron\dependencies\Test scenes\2. Generate mesh\GenerateMeshController.cs" />
+    <Compile Include="Assets\Scripts\MailSystem\MailController.cs" />
     <Compile Include="Assets\Scripts\Polyhedron\dependencies\4. Triangulation\Ear Clipping\LinkedVertex.cs" />
+    <Compile Include="Assets\Scripts\Inventory\InventoryItem.cs" />
     <Compile Include="Assets\Scripts\Polyhedron\dependencies\_Utility scripts\Data structures\Line.cs" />
     <Compile Include="Assets\Scripts\BeginnerTutorial\InAreaChecker.cs" />
     <Compile Include="Assets\Scripts\Player\MoveCamera.cs" />
     <Compile Include="Assets\Scripts\Polyhedron\dependencies\Test scenes\8. Deform mesh\Simplification\MeshSimplificationController.cs" />
     <Compile Include="Assets\Scripts\Polyhedron\dependencies\7. Extrude mesh along curve\Curves\_Curve.cs" />
+    <Compile Include="Assets\Scripts\Inventory\InventoryController1.cs" />
     <Compile Include="Assets\Scripts\Polyhedron\dependencies\3. Convex Hull\2d\JarvisMarchAlgorithm2D.cs" />
     <Compile Include="Assets\Scripts\Polyhedron\dependencies\4. Triangulation\Delaunay\DelaunayIncrementalSloan.cs" />
     <Compile Include="Assets\Scripts\Polyhedron\dependencies\_Utility scripts\MathUtility.cs" />
@@ -146,6 +152,7 @@
     <Compile Include="Assets\Scripts\Polyhedron\PolyhedronFactory.cs" />
     <Compile Include="Assets\Scripts\MailSystem\AutoScrollView.cs" />
     <Compile Include="Assets\Scripts\Polyhedron\dependencies\2. Generate Mesh\Shapes.cs" />
+    <Compile Include="Assets\Scripts\Inventory\InventoryIconCapturer.cs" />
     <Compile Include="Assets\Scripts\Polyhedron\dependencies\Test scenes\_Help scripts\VisualizerController.cs" />
     <Compile Include="Assets\Scripts\Polyhedron\dependencies\4. Triangulation\_TriangulatePoints.cs" />
     <Compile Include="Assets\Scripts\Player\PlayerGrabItems.cs" />
@@ -153,6 +160,7 @@
     <Compile Include="Assets\Scripts\Polyhedron\dependencies\Test scenes\7. Extrude mesh along curve\DisplayInterpolation.cs" />
     <Compile Include="Assets\Scripts\Polyhedron\dependencies\_Utility scripts\Data structures\Ray.cs" />
     <Compile Include="Assets\Scripts\Polyhedron\dependencies\Test scenes\4. Triangulation\EarClippingController.cs" />
+    <Compile Include="Assets\Scripts\npcBehaviors\npc interaction\ShowingTips.cs" />
     <Compile Include="Assets\Scripts\Polyhedron\dependencies\Test scenes\3. Convex hull\3d\HullController3D.cs" />
     <Compile Include="Assets\Scripts\Polyhedron\dependencies\_Utility scripts\Data structures\Edge.cs" />
     <Compile Include="Assets\Scripts\Polyhedron\dependencies\4. Triangulation\VisibleEdgesTriangulationAlgorithm.cs" />

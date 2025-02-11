@@ -8,28 +8,14 @@ public class GrabableObjectComponent : MonoBehaviour
     private GameObject grabCenter;
     public LayerMask groundLayer;
     public LayerMask Layer_DontTouchPlayer;
+    public int objID;
+    public int groupID=-1;//separate object;
 
     private void Update()
     {
         AvoidingObjectPenetratingTheFloor();
     }
 
-    //private void AvoidingObjectPenetratingTheFloor()
-    //{
-    //    Collider collider = GetComponent<Collider>();
-    //    if (collider == null) return;
-
-    //    RaycastHit hit;
-    //    float distanceToGround = collider.bounds.extents.y*0.4f;
-    //    Vector3 origin = transform.position;//- Vector3.up * collider.bounds.extents.y*0.5f;
-
-    //    if (Physics.Raycast(origin, Vector3.down, out hit, distanceToGround))
-    //    {
-    //        //Debug.Log("okokokookkkkkkrrr");
-    //        float offset = distanceToGround - hit.distance;
-    //        transform.position = new Vector3(transform.position.x, transform.position.y + offset, transform.position.z);
-    //    }
-    //}
     private void AvoidingObjectPenetratingTheFloor()
     {
         Collider collider = GetComponent<Collider>();
@@ -46,8 +32,6 @@ public class GrabableObjectComponent : MonoBehaviour
                 float offset = distanceToGround - hit.distance;
                 transform.position = new Vector3(transform.position.x, transform.position.y + offset, transform.position.z);
             }
-
-            //Debug.Log("okokokookkkkkkrrr");
         }
     }
 
@@ -99,7 +83,6 @@ public class GrabableObjectComponent : MonoBehaviour
         }
         center /= vertices.Length;
 
-        // 转换到世界坐标系
         center = transform.TransformPoint(center);
         return center;
     }

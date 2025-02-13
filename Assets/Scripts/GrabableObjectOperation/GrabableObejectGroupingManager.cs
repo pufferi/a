@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
 public class GrabableObejectGroupingManager : MonoBehaviour
@@ -33,10 +34,7 @@ public class GrabableObejectGroupingManager : MonoBehaviour
             Destroy(gameObject);
         }
         pendingObjectID = 0;
-        pendingGroupID = 0;
     }
-
-
 
 
     //------------------------------------------------------------------
@@ -55,13 +53,8 @@ public class GrabableObejectGroupingManager : MonoBehaviour
     LinkedList<objConnectionInfo> graph = new LinkedList<objConnectionInfo>();
     Dictionary<int ,objConnectionInfo> objId_objInfo = new Dictionary<int ,objConnectionInfo>();
 
-    private Dictionary<int ,int>groupingStatement=new Dictionary<int, int>();//<groupID,objID>
-    //private Dictionary<int , GrabableObjectComponent>objectDic= new Dictionary<int , GrabableObjectComponent>();
-    private Dictionary<int , List<GrabableObjectComponent>>groups=new Dictionary<int , List<GrabableObjectComponent>>();//groupID,group
-    private Queue<int>reusedGroupID=new Queue<int>();
     private Queue<int>reusedObjID=new Queue<int>();
     private int pendingObjectID;
-    private int pendingGroupID;
 
     public void AssignObjectID(GrabableObjectComponent Gobj)
     {
@@ -81,8 +74,8 @@ public class GrabableObejectGroupingManager : MonoBehaviour
 
     public void UnassignObjectID(GrabableObjectComponent Gobj)
     {
-        //objectDic.Remove(Gobj.objID);
         objConnectionInfo info = objId_objInfo[Gobj.objID];
+        UnassignGroupID(Gobj);
         graph.Remove(info);
         reusedObjID.Enqueue(Gobj.objID);
         Gobj.objID = -1;
@@ -90,90 +83,77 @@ public class GrabableObejectGroupingManager : MonoBehaviour
     
     public void AssignGroupID(GrabableObjectComponent a, GrabableObjectComponent b)
     {
-        if (a.groupID == -1 && b.groupID == -1)
-        {
-            int groupId;
-            if (reusedGroupID.Count > 0)
-                groupId = reusedGroupID.Dequeue();
-            else
-                groupId = pendingGroupID++;
-            a.groupID = groupId;
-            b.groupID = groupId;
-            groups.Add(groupId, new List<GrabableObjectComponent> { a, b });
-        }
-        else if (a.groupID == b.groupID)
-            return;
-        else if (a.groupID == -1 && b.groupID != -1)
-        {
-            int groupId = b.groupID;
-            a.groupID = groupId;
-            groups[groupId].Add(a);
-        }
-        else if (a.groupID != -1 && b.groupID == -1)
-        {
-            int groupId = a.groupID;
-            b.groupID = groupId;
-            groups[groupId].Add(b);
-        }
-        else
-        {
-            if(a.groupID < b.groupID)
-            {
-                int groupId = a.groupID;
-                List<GrabableObjectComponent> groupB = groups[b.groupID];
-                groups[a.groupID].AddRange(groupB);
-                groups.Remove(b.groupID);
-                foreach(GrabableObjectComponent component in groupB)
-                    component.groupID = groupId;
-            }
-            else
-            {
-                int groupId=b.groupID;
-                List<GrabableObjectComponent>groupA = groups[a.groupID];
-                groups[b.groupID].AddRange(groupA);
-                groups.Remove(a.groupID);
-                foreach (GrabableObjectComponent component in groupA)
-                    component.groupID = groupId;
-            }
-        }
+        objId_objInfo[a.objID].connectObjs.Add(b);
+        objId_objInfo[b.objID].connectObjs.Add(a);
     }   
     
     public void UnassignGroupID(GrabableObjectComponent Gobj)
     {
-        List<GrabableObjectComponent> connectObjs = GetConnectObjects(Gobj);
-        if (connectObjs.Count == 0)
-            return;
-        if(connectObjs.Count == 1)
+        int id=Gobj.objID;
+        objConnectionInfo ObjInfo = objId_objInfo[id];
+        foreach (var connetObj in ObjInfo.connectObjs)
         {
-            reusedGroupID.Enqueue(Gobj.groupID);
-            groups.Remove(Gobj.groupID);
-            Gobj.groupID = -1;
-            reusedGroupID.Enqueue(connectObjs[0].groupID);
-            groups.Remove(connectObjs[0].groupID);
-            connectObjs[0].groupID = -1;
+            objId_objInfo[connetObj.objID].connectObjs.Remove(Gobj);
         }
-        else
-        {
-            groups[Gobj.groupID].Remove(Gobj);
-            Gobj.groupID = -1;
-        }
+        ObjInfo.connectObjs.Clear();
     }
 
-    public List<GrabableObjectComponent> GetConnectObjects(GrabableObjectComponent Gobj)
+    public List<GrabableObjectComponent> GetNeighborObjects(GrabableObjectComponent Gobj)
     {
-        List<GrabableObjectComponent>connectObjs=groups[Gobj.groupID];
-        connectObjs.Remove(Gobj);
-        return connectObjs;
+       return objId_objInfo[Gobj.objID].connectObjs;
     }
+
+    public List<GrabableObjectComponent> GetAllConnectObjects(GrabableObjectComponent Gobj)
+    {
+        List<GrabableObjectComponent> result = new List<GrabableObjectComponent>();
+        HashSet<GrabableObjectComponent> visited = new HashSet<GrabableObjectComponent>();
+
+        void dfs(GrabableObjectComponent current)
+        {
+            visited.Add(current);
+            result.Add(current);
+            foreach (var neighbor in objId_objInfo[current.objID].connectObjs)
+            {
+                if (!visited.Contains(neighbor))
+                {
+                    dfs(neighbor);
+                }
+            }
+        }
+
+        dfs(Gobj);
+        return result;
+    }
+
+
 
     public bool IsConnect(GrabableObjectComponent a, GrabableObjectComponent b)
     {
-        if (a.groupID == -1 || b.groupID == -1) 
+        HashSet<GrabableObjectComponent> visited = new HashSet<GrabableObjectComponent>();
+
+        bool dfs(GrabableObjectComponent current)
+        {
+            if (current == b)
+                return true;
+
+            visited.Add(current);
+
+            if (!objId_objInfo.ContainsKey(current.objID))
+            {
+                return false; 
+            }
+
+            foreach (var neighbor in objId_objInfo[current.objID].connectObjs)
+            {
+                if (!visited.Contains(neighbor))
+                {
+                    if (dfs(neighbor))
+                        return true;
+                }
+            }
             return false;
-        return a.groupID == b.groupID;
+        }
+        return dfs(a);
     }
-    public bool IsConnect(GameObject a,GameObject b)
-    {
-        return IsConnect(a.GetComponent<GrabableObjectComponent>(),b.GetComponent<GrabableObjectComponent>());
-    }
+
 }

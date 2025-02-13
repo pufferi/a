@@ -9,8 +9,7 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <RootNamespace>
-    </RootNamespace>
+    <RootNamespace></RootNamespace>
     <ProjectGuid>{05E80D49-1975-F444-A953-CBFD372CDA2D}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
@@ -72,6 +71,7 @@
     <Compile Include="Assets\Scripts\Polyhedron\MeshCombiner.cs" />
     <Compile Include="Assets\Scripts\Polyhedron\dependencies\_Utility scripts\Normalizer.cs" />
     <Compile Include="Assets\Scripts\Inventory\InventoryController.cs" />
+    <Compile Include="Assets\Scripts\GrabableObjectOperation\GrabableObejectGroupingManager.cs" />
     <Compile Include="Assets\Scripts\GrabableObjectOperation\GrabableObjectComponent.cs" />
     <Compile Include="Assets\Scripts\Polyhedron\dependencies\Test scenes\1. Intersection\IntersectionController.cs" />
     <Compile Include="Assets\Scripts\MailSystem\TestMail.cs" />
@@ -95,7 +95,6 @@
     <Compile Include="Assets\Scripts\Polyhedron\dependencies\5. Voronoi diagram\Voronoi.cs" />
     <Compile Include="Assets\Scripts\Controller\CursorController.cs" />
     <Compile Include="Assets\Scripts\Polyhedron\dependencies\_Utility scripts\Data structures\MyMesh.cs" />
-    <Compile Include="Assets\Scripts\GrabableObjectOperation\GrabableObejectGroupingManager.cs" />
     <Compile Include="Assets\Scripts\Polyhedron\dependencies\4. Triangulation\Ear Clipping\EarClippingPolygon.cs" />
     <Compile Include="Assets\Scripts\Polyhedron\dependencies\4. Triangulation\Marching squares\Node.cs" />
     <Compile Include="Assets\Scripts\Polyhedron\dependencies\8. Deform mesh\Simplification\Quadric Error Metric\QEM_Edge.cs" />

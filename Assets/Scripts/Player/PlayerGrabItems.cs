@@ -10,7 +10,6 @@ public class PlayerGrabItems : MonoBehaviour
     public float rotationSpeed = 10;
     private string targetTag = "Item";
     private float rayDistance = 0.8f;
-    private UnionFind unionFind;
 
     public GrabableObjectComponent grabbedObject { get; private set; }
     public bool isPlayerInDoorArea=false;
@@ -25,7 +24,9 @@ public class PlayerGrabItems : MonoBehaviour
     private InputAction autoAttachAction;
 
     public Material greenMet;
-    public Material Met;
+    public Material yellowMet;
+    //public Material Met;
+    //public Material targetMet;
 
     public float ScrollSen = 0.05f;
 
@@ -58,7 +59,6 @@ public class PlayerGrabItems : MonoBehaviour
         itemForwardAction.performed += OnItemMovingForward;
         //autoAttachAction.performed += OnAutoAttach;
 
-        //unionFind = new UnionFind();
         directions = GenerateDirections(numberOfDirections);
     }
 
@@ -81,14 +81,18 @@ public class PlayerGrabItems : MonoBehaviour
             grabbedObject.transform.Rotate(Vector3.left, scrollValue, Space.World);
         }
     }
-
     bool canGrabbedObjStick = false;
     private RaycastHit closestHit = new RaycastHit();
     private Material originalGrabbedObjMet;
+
+    private Material targetObjOriginMet;
+    private RaycastHit lastRaycasHit;
+
     private void CheckIfCanStickAndChangeMaterial()
     {
         canGrabbedObjStick = false;
-        float closestDistance = Mathf.Infinity;
+        float closestDistance = 3f;
+
         foreach (Vector3 direction in directions)
         {
             if (Physics.Raycast(grabbedObject.transform.position, direction, out RaycastHit hit, rayDistance))
@@ -96,9 +100,6 @@ public class PlayerGrabItems : MonoBehaviour
                 if (hit.collider.CompareTag(targetTag) && hit.collider.gameObject != grabbedObject.gameObject)
                 {
                     float distance = Vector3.Distance(grabbedObject.transform.position, hit.point);
-                    Debug.Log($"Raycast hit distance: {distance}");
-                    Debug.Log($"Raycast distance: {rayDistance}");
-
                     if (distance < closestDistance)
                     {
                         closestDistance = distance;
@@ -108,15 +109,44 @@ public class PlayerGrabItems : MonoBehaviour
                 }
             }
         }
+
         Renderer grabbedObjectRenderer = grabbedObject.GetComponent<Renderer>();
         if (canGrabbedObjStick)
         {
             grabbedObjectRenderer.material = greenMet;
+
+            Renderer hitRenderer = closestHit.collider.GetComponent<Renderer>();
+            if (hitRenderer != null)
+            {
+                // 保存目标对象的原始材质
+                if (targetObjOriginMet == null)
+                {
+                    targetObjOriginMet = hitRenderer.material;
+                }
+
+                // 将材质更改为 yellowMet
+                hitRenderer.material = yellowMet;
+            }
+
+            // 记录最近一次射线击中信息
+            lastRaycasHit = closestHit;
         }
         else
+        {
             grabbedObjectRenderer.material = originalGrabbedObjMet;
-    }
 
+            // 还原目标对象的原始材质
+            if (lastRaycasHit.collider != null)
+            {
+                Renderer lastRenderer = lastRaycasHit.collider.GetComponent<Renderer>();
+                if (lastRenderer != null && targetObjOriginMet != null)
+                {
+                    lastRenderer.material = targetObjOriginMet;
+                    targetObjOriginMet = null; // 重置原始材质变量
+                }
+            }
+        }
+    }
 
 
     private void OnGrab(InputAction.CallbackContext context)
@@ -168,8 +198,7 @@ public class PlayerGrabItems : MonoBehaviour
 
 
     private List<Vector3> directions;
-    private int numberOfDirections = 100; 
-    
+    private int numberOfDirections = 100;
 
 
     private void OnJoint(InputAction.CallbackContext context)
@@ -178,7 +207,7 @@ public class PlayerGrabItems : MonoBehaviour
         if (canGrabbedObjStick)
         {
             GrabableObjectComponent hitObject = closestHit.rigidbody.GetComponent<GrabableObjectComponent>();
-            if (hitObject == null|| GrabableObejectGroupingManager.Instance.IsConnect(grabbedObject, hitObject))
+            if (hitObject == null || GrabableObejectGroupingManager.Instance.IsConnect(grabbedObject, hitObject))
                 return;
 
             Debug.Log("Detected closest object with tag: " + targetTag);
@@ -188,29 +217,27 @@ public class PlayerGrabItems : MonoBehaviour
             Renderer grabbedObjectRenderer = grabbedObject.GetComponent<Renderer>();
             grabbedObjectRenderer.material = originalGrabbedObjMet;
             grabbedObject.Release();
-            //grouping
+
+            Renderer hitRenderer = closestHit.collider.GetComponent<Renderer>();
+            if (hitRenderer != null)
+            {
+                hitRenderer.material = targetObjOriginMet;
+                targetObjOriginMet = null;
+            }
+
             GrabableObejectGroupingManager.Instance.AssignGroupID(grabbedObject, hitObject);
             grabbedObject = null;
-
         }
     }
-    
-
 
     private void OnUnJoint(InputAction.CallbackContext context)
     {
         Debug.Log("OnUnJoint");
-        List<GrabableObjectComponent>connectObjs=GrabableObejectGroupingManager.Instance.GetConnectObjects(grabbedObject);
-
         FixedJoint[] joints = grabbedObject.GetComponents<FixedJoint>();
         if (joints.Length > 0)
         {
             foreach (FixedJoint joint in joints)
             {
-                if (joint.connectedBody != null)
-                {
-                    unionFind.Find(joint.connectedBody);
-                }
                 Destroy(joint);
             }
         }
@@ -220,17 +247,67 @@ public class PlayerGrabItems : MonoBehaviour
         {
             if (j.connectedBody == grabbedObject.GetComponent<Rigidbody>())
             {
-                unionFind.Separate(grabbedObject.GetComponent<Rigidbody>(), j.connectedBody);
                 Destroy(j);
             }
         }
 
+        if (lastRaycasHit.collider != null)
+        {
+            Renderer lastRenderer = lastRaycasHit.collider.GetComponent<Renderer>();
+            if (lastRenderer != null && targetObjOriginMet != null)
+            {
+                lastRenderer.material = targetObjOriginMet;
+                targetObjOriginMet = null;
+            }
+        }
+
+        GrabableObejectGroupingManager.Instance.UnassignGroupID(grabbedObject);
     }
 
-    private void DestroyConnectJoints()
-    {
+    //private void OnJoint(InputAction.CallbackContext context)
+    //{
+    //    Debug.Log("OnJoint");
+    //    if (canGrabbedObjStick)
+    //    {
+    //        GrabableObjectComponent hitObject = closestHit.rigidbody.GetComponent<GrabableObjectComponent>();
+    //        if (hitObject == null|| GrabableObejectGroupingManager.Instance.IsConnect(grabbedObject, hitObject))
+    //            return;
 
-    }
+    //        Debug.Log("Detected closest object with tag: " + targetTag);
+
+    //        FixedJoint joint = grabbedObject.AddComponent<FixedJoint>();
+    //        joint.connectedBody = closestHit.rigidbody;
+    //        Renderer grabbedObjectRenderer = grabbedObject.GetComponent<Renderer>();
+    //        grabbedObjectRenderer.material = originalGrabbedObjMet;
+    //        grabbedObject.Release();
+    //        //grouping
+    //        GrabableObejectGroupingManager.Instance.AssignGroupID(grabbedObject, hitObject);
+    //        grabbedObject = null;
+
+    //    }
+    //}
+
+
+
+    //private void OnUnJoint(InputAction.CallbackContext context)
+    //{
+    //    Debug.Log("OnUnJoint");
+    //    FixedJoint[] joints = grabbedObject.GetComponents<FixedJoint>();
+    //    if (joints.Length > 0)
+    //    {
+    //        foreach (FixedJoint joint in joints)
+    //            Destroy(joint);
+    //    }
+
+    //    FixedJoint[] allJoints = FindObjectsOfType<FixedJoint>();
+    //    foreach (FixedJoint j in allJoints)
+    //    {
+    //        if (j.connectedBody == grabbedObject.GetComponent<Rigidbody>())
+    //            Destroy(j);
+    //    }
+    //    //ungrouping
+    //    GrabableObejectGroupingManager.Instance.UnassignGroupID(grabbedObject);
+    //}
 
 
     private void OnItemMovingForward(InputAction.CallbackContext context)
@@ -339,73 +416,3 @@ public class PlayerGrabItems : MonoBehaviour
 
 }
 
-
-public class UnionFind
-{
-    private Dictionary<Rigidbody, Rigidbody> parent;
-    private Dictionary<Rigidbody, int> rank;
-
-    public UnionFind()
-    {
-        parent = new Dictionary<Rigidbody, Rigidbody>();
-        rank = new Dictionary<Rigidbody, int>();
-    }
-
-    public Rigidbody Find(Rigidbody x)
-    {
-        if (!parent.ContainsKey(x))
-        {
-            parent[x] = x;
-            rank[x] = 0;
-        }
-        if (parent[x] != x)
-        {
-            parent[x] = Find(parent[x]);
-        }
-        return parent[x];
-    }
-
-    //public void Union(Rigidbody x, Rigidbody y)
-    //{
-    //    if (x == null || y == null) return;
-    //    Rigidbody rootX = Find(x);
-    //    Rigidbody rootY = Find(y);
-
-    //    if (rootX != rootY)
-    //    {
-    //        if (rank[rootX] > rank[rootY])
-    //        {
-    //            parent[rootY] = rootX;
-    //        }
-    //        else if (rank[rootX] < rank[rootY])
-    //        {
-    //            parent[rootX] = rootY;
-    //        }
-    //        else
-    //        {
-    //            parent[rootY] = rootX;
-    //            rank[rootX]++;
-    //        }
-    //    }
-    //}
-
-    public void Separate(Rigidbody x, Rigidbody y)
-    {
-        if (x == null || y == null) return;
-
-        if (parent.ContainsKey(x) && parent.ContainsKey(y))
-        {
-            parent[x] = x;
-            parent[y] = y;
-
-            rank[x] = 0;
-            rank[y] = 0;
-        }
-    }
-
-    public bool IsConnected(Rigidbody x, Rigidbody y)
-    {
-        if (x == null || y == null) return false;
-        return Find(x) == Find(y);
-    }
-}

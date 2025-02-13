@@ -1,13 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Text.RegularExpressions;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using static GrabableObejectGroupingManager;
 
 public class MeshCombiner : MonoBehaviour
 {
     public InputActionAsset inputActions;
-
     private InputAction ConbineMeshAction;
 
     public PlayerGrabItems playerGrabItems;
@@ -23,68 +22,44 @@ public class MeshCombiner : MonoBehaviour
     }
 
 
-    List<MeshFilter> meshFilters = new List<MeshFilter>();
-    HashSet<GameObject> visited = new HashSet<GameObject>();
-
-
-    //private void TraverseJoints(GameObject obj)
-    //{
-    //    if (visited.Contains(obj)) return;
-    //    visited.Add(obj);
-
-    //    MeshFilter meshFilter = obj.GetComponent<MeshFilter>();
-    //    if (meshFilter != null)
-    //    {
-    //        meshFilters.Add(meshFilter);
-    //    }
-
-    //    Joint[] joints = obj.GetComponents<Joint>();
-    //    foreach (Joint joint in joints)
-    //    {
-    //        if (joint.connectedBody != null)
-    //        {
-    //            TraverseJoints(joint.connectedBody.gameObject);
-    //        }
-    //    }
-    //}
-
-
-    //private void GetMeshFilters(GameObject obj)
-    //{
-    //    TraverseJoints(obj);
-    //}
-
     public void OnMeshConbine(InputAction.CallbackContext context)
     {
-        //MeshFilter[] meshFilters = GetComponentsInChildren<MeshFilter>();
         GameObject obj;
-        if(playerGrabItems.grabbedObject != null) 
+        if (playerGrabItems.grabbedObject != null)
             obj = playerGrabItems.grabbedObject.gameObject;
         else return;
-        //GetMeshFilters(obj);
+
+        // 使用 GetAllConnectObjects 获取所有连接的对象
+        List<GrabableObjectComponent> connectedObjects = GrabableObejectGroupingManager.Instance.GetAllConnectObjects(playerGrabItems.grabbedObject);
+
         Dictionary<Material, List<CombineInstance>> materialToMesh = new Dictionary<Material, List<CombineInstance>>();
 
-        foreach (MeshFilter meshFilter in meshFilters)
+        // 遍历所有连接的对象的 MeshFilter
+        foreach (GrabableObjectComponent grabObject in connectedObjects)
         {
-            Renderer renderer = meshFilter.GetComponent<Renderer>();
-            Mesh mesh = meshFilter.sharedMesh;
-            Material[] materials = renderer.sharedMaterials;
-
-            for (int subMesh = 0; subMesh < mesh.subMeshCount; subMesh++)
+            MeshFilter[] filters = grabObject.GetComponentsInChildren<MeshFilter>();
+            foreach (MeshFilter meshFilter in filters)
             {
-                Material material = materials[subMesh];
-                if (!materialToMesh.ContainsKey(material))
-                {
-                    materialToMesh[material] = new List<CombineInstance>();
-                }
+                Renderer renderer = meshFilter.GetComponent<Renderer>();
+                Mesh mesh = meshFilter.sharedMesh;
+                Material[] materials = renderer.sharedMaterials;
 
-                CombineInstance combineInstance = new CombineInstance
+                for (int subMesh = 0; subMesh < mesh.subMeshCount; subMesh++)
                 {
-                    mesh = mesh,
-                    transform = meshFilter.transform.localToWorldMatrix,
-                    subMeshIndex = subMesh
-                };
-                materialToMesh[material].Add(combineInstance);
+                    Material material = materials[subMesh];
+                    if (!materialToMesh.ContainsKey(material))
+                    {
+                        materialToMesh[material] = new List<CombineInstance>();
+                    }
+
+                    CombineInstance combineInstance = new CombineInstance
+                    {
+                        mesh = mesh,
+                        transform = meshFilter.transform.localToWorldMatrix,
+                        subMeshIndex = subMesh
+                    };
+                    materialToMesh[material].Add(combineInstance);
+                }
             }
         }
 
@@ -106,16 +81,10 @@ public class MeshCombiner : MonoBehaviour
         {
             finalCombine[i].mesh = meshes[i];
             finalCombine[i].transform = Matrix4x4.identity;
-            finalCombine[i].subMeshIndex = 0; 
+            finalCombine[i].subMeshIndex = 0;
         }
 
         combinedResult.CombineMeshes(finalCombine, false, false);
-
-        //MeshFilter resultFilter = gameObject.AddComponent<MeshFilter>();
-        //resultFilter.mesh = combinedResult;
-
-        //MeshRenderer resultRenderer = gameObject.AddComponent<MeshRenderer>();
-        //resultRenderer.materials = newMaterials.ToArray();
 
         // 创建一个新的 GameObject 来保存合并后的网格
         GameObject combinedObject = new GameObject("CombinedMesh");
@@ -125,13 +94,6 @@ public class MeshCombiner : MonoBehaviour
         MeshRenderer meshRendererCombined = combinedObject.AddComponent<MeshRenderer>();
         meshRendererCombined.material = GetComponentInChildren<MeshRenderer>().sharedMaterial;
 
-        // 删除旧的 GameObject
-        //foreach (var objj in visited)
-        //{
-        //    Destroy(objj);
-        //}
-
         Debug.Log("Mesh combination and replacement complete!");
     }
-
 }

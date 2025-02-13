@@ -14,6 +14,7 @@ public class InventoryIconCapturer : MonoBehaviour
 
     private InputAction shootAction;
 
+    public PlayerGrabItems playerGrabItems;
     private void Start()
     {
         var playerMap = inputActions.FindActionMap("Player");
@@ -26,12 +27,18 @@ public class InventoryIconCapturer : MonoBehaviour
 
     public void OnCapture(InputAction.CallbackContext context)
     {
-        string ItemName=targetObject.name;
-        targetObject.layer = LayerMask.NameToLayer("Layer_Capture");
-        foreach (Renderer renderer in targetObject.GetComponentsInChildren<Renderer>())
+        GrabableObjectComponent grabbed = playerGrabItems.grabbedObject;
+        if (grabbed == null)
+            return;
+        List<GrabableObjectComponent>connects=GrabableObejectGroupingManager.Instance.GetAllConnectObjects(grabbed);
+        string ItemName=grabbed.name;
+
+        grabbed.gameObject.layer = LayerMask.NameToLayer("Layer_Capture");
+        foreach (var connect in connects)
         {
-            renderer.gameObject.layer = LayerMask.NameToLayer("Layer_Capture");
+            connect.gameObject.layer = LayerMask.NameToLayer("Layer_Capture");
         }
+
 
         Camera tempCamera = new GameObject("Layer_Capture").AddComponent<Camera>();
         tempCamera.CopyFrom(captureCamera);

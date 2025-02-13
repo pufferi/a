@@ -9,8 +9,12 @@ public class GrabableObjectComponent : MonoBehaviour
     public LayerMask groundLayer;
     public LayerMask Layer_DontTouchPlayer;
     public int objID;
-    public int groupID=-1;//separate object;
+    //public int groupID=-1;//separate object;
 
+    private void Start()
+    {
+        GrabableObejectGroupingManager.Instance.AssignObjectID(this);
+    }
     private void Update()
     {
         AvoidingObjectPenetratingTheFloor();

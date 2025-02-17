@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using UnityEditor;
 using UnityEngine;
 
 public class GrabableObejectGroupingManager : MonoBehaviour
@@ -34,6 +33,7 @@ public class GrabableObejectGroupingManager : MonoBehaviour
             Destroy(gameObject);
         }
         pendingObjectID = 0;
+        pendingGroupID= 0;  
     }
 
 
@@ -54,7 +54,10 @@ public class GrabableObejectGroupingManager : MonoBehaviour
     Dictionary<int ,objConnectionInfo> objId_objInfo = new Dictionary<int ,objConnectionInfo>();
 
     private Queue<int>reusedObjID=new Queue<int>();
+    private Queue<int>reusedGroupID=new Queue<int>();
     private int pendingObjectID;
+    private int pendingGroupID;
+
 
     public void AssignObjectID(GrabableObjectComponent Gobj)
     {
@@ -85,7 +88,50 @@ public class GrabableObejectGroupingManager : MonoBehaviour
     {
         objId_objInfo[a.objID].connectObjs.Add(b);
         objId_objInfo[b.objID].connectObjs.Add(a);
+        int groupId_a=a.groupID;
+        int groupId_b=b.groupID;
+        if (groupId_a == -1 && groupId_b == -1)//1粘1
+        {
+            a.groupID = GetGroupNum();
+            b.groupID = a.groupID;
+        }
+        else if (a.groupID == -1) //1粘多
+        {
+            a.groupID=b.groupID;
+        }
+        else if(b.groupID == -1)//多粘1
+        {
+            b.groupID=a.groupID;
+        }
+        else//多粘多
+        {
+            if(a.groupID >b.groupID)
+            {
+                a.groupID=b.groupID;
+                List<GrabableObjectComponent>aConnects= GetAllConnectObjects(a);
+                foreach (var aConnect in aConnects)
+                    aConnect.groupID = b.groupID;
+                reusedGroupID.Enqueue(groupId_a);
+            }
+            else
+            {
+                b.groupID = a.groupID;
+                List<GrabableObjectComponent> bConnects = GetAllConnectObjects(b);
+                foreach (var bConnect in bConnects)
+                    bConnect.groupID = a.groupID;
+                reusedGroupID.Enqueue(groupId_b);
+            }
+        }
+
+        int GetGroupNum()
+        {
+            if (reusedGroupID.Count == 0)
+                return pendingGroupID++;
+            return reusedGroupID.Dequeue();
+        }
     }   
+
+   
     
     public void UnassignGroupID(GrabableObjectComponent Gobj)
     {
@@ -96,6 +142,7 @@ public class GrabableObejectGroupingManager : MonoBehaviour
             objId_objInfo[connetObj.objID].connectObjs.Remove(Gobj);
         }
         ObjInfo.connectObjs.Clear();
+        //这里还没有Assign groupID
     }
 
     public List<GrabableObjectComponent> GetNeighborObjects(GrabableObjectComponent Gobj)

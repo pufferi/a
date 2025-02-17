@@ -314,7 +314,7 @@ public class PlayerGrabItems : MonoBehaviour
     {
         if (grabbedObject != null)
         {
-            float scrollValue = context.ReadValue<float>() * 0.001f;
+            float scrollValue = context.ReadValue<Vector2>().y * 0.001f;
             Vector3 direction = (grabbedObject.transform.position - hand.position).normalized;
 
             float distance = Vector3.Distance(grabbedObject.transform.position, hand.position);

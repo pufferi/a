@@ -121,6 +121,24 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "StoreItem",
+                    "type": "Button",
+                    "id": "f0423c3b-c0ac-4c65-bfd0-1cdeafda43dd",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "ScrollInventory",
+                    "type": "Button",
+                    "id": "6a4abbb1-ec83-4dc7-91c1-497ca5017a75",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -235,15 +253,37 @@
                     "isPartOfComposite": false
                 },
                 {
-                    "name": "",
-                    "id": "3e06384f-5523-44eb-a432-b3c01321d5db",
-                    "path": "<Mouse>/scroll/y",
+                    "name": "One Modifier",
+                    "id": "1bc6a62b-ae68-4c2a-a547-136df73a0909",
+                    "path": "OneModifier",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "ItemForward",
+                    "isComposite": true,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "modifier",
+                    "id": "ce5264fc-96f9-4d08-b071-b7d8014a23f7",
+                    "path": "<Keyboard>/ctrl",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
                     "action": "ItemForward",
                     "isComposite": false,
-                    "isPartOfComposite": false
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "binding",
+                    "id": "efb025d0-7ed9-46e4-a4a6-86318ced5695",
+                    "path": "<Mouse>/scroll",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "ItemForward",
+                    "isComposite": false,
+                    "isPartOfComposite": true
                 },
                 {
                     "name": "One Modifier",
@@ -330,6 +370,28 @@
                     "processors": "",
                     "groups": "",
                     "action": "ConbineMesh",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "7e4340e8-e3fa-4549-b562-73ac5f0cc089",
+                    "path": "<Keyboard>/g",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "StoreItem",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "bde493f5-43d6-40cd-b259-157caf1e8501",
+                    "path": "<Mouse>/scroll/y",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "ScrollInventory",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

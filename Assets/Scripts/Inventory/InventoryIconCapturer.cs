@@ -10,28 +10,29 @@ public class InventoryIconCapturer : MonoBehaviour
     public LayerMask Layer_Capture;
     private int _width = 512;
     private int _height = 512;
-    public InputActionAsset inputActions;
+    //public InputActionAsset inputActions;
 
-    private InputAction shootAction;
+    //private InputAction shootAction;
 
     public PlayerGrabItems playerGrabItems;
     private void Start()
     {
-        var playerMap = inputActions.FindActionMap("Player");
+        //var playerMap = inputActions.FindActionMap("Player");
 
-        shootAction = playerMap.FindAction("Shoot");
+        //shootAction = playerMap.FindAction("Shoot");
 
-        shootAction.Enable();
-        shootAction.performed += OnCapture;
+        //shootAction.Enable();
+        //shootAction.performed += OnCapture;
     }
 
-    public void OnCapture(InputAction.CallbackContext context)
+    public void CaptureIcon(string SlotName)
     {
         GrabableObjectComponent grabbed = playerGrabItems.grabbedObject;
         if (grabbed == null)
             return;
-        List<GrabableObjectComponent>connects=GrabableObejectGroupingManager.Instance.GetAllConnectObjects(grabbed);
-        string ItemName=grabbed.name;
+        List<GrabableObjectComponent> connects = GrabableObejectGroupingManager.Instance.GetAllConnectObjects(grabbed);
+        //string ItemName = grabbed.name;
+        string ItemName = SlotName;
 
         grabbed.gameObject.layer = LayerMask.NameToLayer("Layer_Capture");
         foreach (var connect in connects)
@@ -61,9 +62,8 @@ public class InventoryIconCapturer : MonoBehaviour
         Destroy(tempCamera.gameObject);
 
         byte[] bytes = screenshot.EncodeToPNG();
-
-        System.IO.File.WriteAllBytes(Application.dataPath +"/Images/InventoryItemIcons/" + ItemName + ".png", bytes);
+        //\Resources\Inventory\InventoryItemIcons
+        System.IO.File.WriteAllBytes(Application.dataPath + "/Resources/Inventory/InventoryItemIcons/" + ItemName + ".png", bytes);
         Debug.Log("Screenshot saved");
     }
-
 }

@@ -18,6 +18,15 @@ public class TestMail : MonoBehaviour
     {
         mailHandler.CreatMail(mailName);
         mailHandler.CreatMail(mailName2);
+        mailHandler.CreatMail(mailName2);
+        mailHandler.CreatMail(mailName2);
+        mailHandler.CreatMail(mailName2);
+        mailHandler.CreatMail(mailName2);
+        mailHandler.CreatMail(mailName2);
+        mailHandler.CreatMail(mailName2);
+        mailHandler.CreatMail(mailName2);
+        mailHandler.CreatMail(mailName2);
+        mailHandler.CreatMail(mailName2);
     }
 
     // Update is called once per frame

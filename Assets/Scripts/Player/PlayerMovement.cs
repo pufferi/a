@@ -26,6 +26,7 @@ namespace Player
 
 
         public bool playerStill=false;
+        //public bool player
 
         private void Start()
         {

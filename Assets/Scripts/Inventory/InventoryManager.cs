@@ -8,7 +8,8 @@ using System.IO;
 public class InventoryManager : MonoBehaviour
 {
     public Button[] inventoryButtons=new Button[6];
-    public InventoryItemInfo[] inventorySlotsInfo = new InventoryItemInfo[6];
+    //public InventoryItemInfo[] inventorySlotsInfo = new InventoryItemInfo[6];
+    public bool[] isInventorySlotEmpty = new bool[6];
 
 
     public InputActionAsset inputActions;
@@ -32,6 +33,7 @@ public class InventoryManager : MonoBehaviour
     private GameObject _GrabableObjs;
 
     private string _prefabPath = "Assets/Resources/Inventory/InventoryPrefebs/";
+    private string _inventoryIconPath = "Assets/Resources/Inventory/InventoryItemIcons/";
 
     private void Start()
     {
@@ -45,6 +47,11 @@ public class InventoryManager : MonoBehaviour
         var scrollAction = playerMap.FindAction("ScrollInventory");
         scrollAction.Enable();
         scrollAction.performed += OnScrollInventory;
+
+        for(int i = 0; i < 6; i++)
+        {
+            isInventorySlotEmpty[i] = true;
+        }
     }
 
     private string GetInventoryName()
@@ -74,17 +81,17 @@ public class InventoryManager : MonoBehaviour
     private void OnStoreOrDropItem(InputAction.CallbackContext context)
     {
         GrabableObjectComponent itemInHand = playerGrabItems.grabbedObject;
-        if (itemInHand == null&& IsInventorySlotEmpty(currentSlot))
+        if (itemInHand == null&& isInventorySlotEmpty[currentSlot])
             return;
 
-        if (IsInventorySlotEmpty(currentSlot))
+        if (isInventorySlotEmpty[currentSlot])
         {
             string slotName=GetInventoryName();
             _inventoryIconCapturer.CaptureIcon(slotName);
 
             Image image = inventoryButtons[currentSlot].GetComponent<Image>();
 
-            string fileName = "Assets/Resources/Inventory/InventoryItemIcons/"+ slotName + ".png";
+            string fileName = _inventoryIconPath + slotName + ".png";
             if (File.Exists(fileName))
             {
                 byte[] fileData = File.ReadAllBytes(fileName);
@@ -94,12 +101,14 @@ public class InventoryManager : MonoBehaviour
                 image.sprite = sprite;
             }
 
-            
-            InventoryItemInfo newItemInfo = new InventoryItemInfo
-            {
-                obj = itemInHand.gameObject,
-                name = slotName,
-            };
+
+            //InventoryItemInfo newItemInfo = new InventoryItemInfo
+            //{
+            //    obj = itemInHand.gameObject,
+            //    name = slotName,
+            //};
+            isInventorySlotEmpty[currentSlot] = false;
+
             List<GrabableObjectComponent> AllComponent = GrabableObejectGroupingManager.Instance.GetAllConnectObjects(itemInHand);
             AllComponent.Add(itemInHand);
             GameObject wholeObj = new GameObject(slotName);
@@ -109,7 +118,7 @@ public class InventoryManager : MonoBehaviour
 
             PrefabUtility.SaveAsPrefabAsset(wholeObj, _prefabPath+slotName+".prefab");
             Destroy(wholeObj);
-            inventorySlotsInfo[currentSlot] = newItemInfo;
+            
             Debug.Log("Stored item in slot " + currentSlot);
 
         }
@@ -117,6 +126,7 @@ public class InventoryManager : MonoBehaviour
         else
         {
             Debug.Log("qwertyuiop[");
+
             GameObject dropped = new GameObject("dropped");
             Image image = inventoryButtons[currentSlot].GetComponent<Image>();
             image.sprite = null;
@@ -125,14 +135,30 @@ public class InventoryManager : MonoBehaviour
             if (dropped != null)
             {
                 Instantiate(dropped, Vector3.zero, Quaternion.identity);
+                dropped.transform.position = playerGrabItems.hand.position;
             }
+            //delete prefab
+            if (File.Exists(_prefabPath + GetInventoryName() + ".prefab"))
+            {
+                File.Delete(_prefabPath + GetInventoryName() + ".prefab");
+                Debug.Log("Prefab file deleted successfully.");
+            }
+            else
+            {
+                Debug.Log("Prefab file not found.");
+            }
+            //delete ImageIcon
+            if(File.Exists(_inventoryIconPath + GetInventoryName() + ".png"))
+            {
+                File.Delete(_inventoryIconPath + GetInventoryName() + ".png");
+            }
+            isInventorySlotEmpty[currentSlot] = true;
+
+
         }
     }
 
-    private bool IsInventorySlotEmpty(int slotIndex)
-    {
-        return inventorySlotsInfo[slotIndex] == null;
-    }
+
 
     private void OnScrollInventory(InputAction.CallbackContext context)
     {

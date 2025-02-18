@@ -67,7 +67,6 @@ public class GrabableObejectGroupingManager : MonoBehaviour
             id = reusedObjID.Dequeue();
         else
             id = pendingObjectID++;
-        //objectDic.Add(id, Gobj);
         objConnectionInfo info = new objConnectionInfo(Gobj);
         graph.AddLast(info);
         objId_objInfo.Add(id, info);
@@ -123,12 +122,6 @@ public class GrabableObejectGroupingManager : MonoBehaviour
             }
         }
 
-        int GetGroupNum()
-        {
-            if (reusedGroupID.Count == 0)
-                return pendingGroupID++;
-            return reusedGroupID.Dequeue();
-        }
     }   
 
    
@@ -137,13 +130,36 @@ public class GrabableObejectGroupingManager : MonoBehaviour
     {
         int id=Gobj.objID;
         objConnectionInfo ObjInfo = objId_objInfo[id];
+        reusedGroupID.Enqueue(Gobj.groupID);
+
         foreach (var connetObj in ObjInfo.connectObjs)
         {
             objId_objInfo[connetObj.objID].connectObjs.Remove(Gobj);
+            if (objId_objInfo[connetObj.objID].connectObjs.Count == 0)
+                connetObj.groupID = -1;
+            else
+            {
+                List<GrabableObjectComponent> AllLinkedObjsToConnectObj = GetAllConnectObjects(connetObj);
+                int pendingId = GetGroupNum();
+                connetObj.groupID=pendingId;
+                foreach(var obj in AllLinkedObjsToConnectObj)
+                {
+                    obj.groupID = pendingId;    
+                }
+            }
         }
+
+        Gobj.groupID = -1;
         ObjInfo.connectObjs.Clear();
-        //这里还没有Assign groupID
     }
+
+    private int GetGroupNum()
+    {
+        if (reusedGroupID.Count == 0)
+            return pendingGroupID++;
+        return reusedGroupID.Dequeue();
+    }
+
 
     public List<GrabableObjectComponent> GetNeighborObjects(GrabableObjectComponent Gobj)
     {
@@ -176,31 +192,9 @@ public class GrabableObejectGroupingManager : MonoBehaviour
 
     public bool IsConnect(GrabableObjectComponent a, GrabableObjectComponent b)
     {
-        HashSet<GrabableObjectComponent> visited = new HashSet<GrabableObjectComponent>();
-
-        bool dfs(GrabableObjectComponent current)
-        {
-            if (current == b)
-                return true;
-
-            visited.Add(current);
-
-            if (!objId_objInfo.ContainsKey(current.objID))
-            {
-                return false; 
-            }
-
-            foreach (var neighbor in objId_objInfo[current.objID].connectObjs)
-            {
-                if (!visited.Contains(neighbor))
-                {
-                    if (dfs(neighbor))
-                        return true;
-                }
-            }
+        if(a.groupID==-1&&b.groupID==-1)
             return false;
-        }
-        return dfs(a);
+        return a.groupID==b.groupID;
     }
 
 }

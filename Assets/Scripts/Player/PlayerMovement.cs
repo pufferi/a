@@ -5,14 +5,17 @@ namespace Player
 {
     public class PlayerMovement : MonoBehaviour
     {
-        
-        public float moveSpeed;
-        public float groundDrag=5f;
+        public static PlayerMovement Instance { get; private set; }
+
+        private float moveSpeed=5f;
+        private float groundDrag = 5f;
 
         private BoxCollider playerCollider;
         private float playerHeight;
-        public LayerMask Layer_Ground;
-        bool grounded;
+
+        [SerializeField]
+        private LayerMask Layer_Ground;
+        private bool grounded;
 
         public Transform orientation;
         public InputActionAsset inputActions;
@@ -21,17 +24,26 @@ namespace Player
         private InputAction moveAction;
         private InputAction jumpAction;
 
-
         Rigidbody playerRigidbody;
 
+        public bool playerStill = false;
 
-        public bool playerStill=false;
-        //public bool player
+        private void Awake()
+        {
+            if (Instance != null && Instance != this)
+            {
+                Destroy(gameObject);
+                return;
+            }
+
+            Instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
 
         private void Start()
         {
             playerRigidbody = GetComponent<Rigidbody>();
-            playerCollider=GetComponent<BoxCollider>();
+            playerCollider = GetComponent<BoxCollider>();
 
             playerHeight = playerCollider.size.y;
             playerRigidbody.freezeRotation = true;
@@ -61,8 +73,9 @@ namespace Player
 
         private void FixedUpdate()
         {
-            if(!playerStill)PlayerMove();
+            if (!playerStill) PlayerMove();
         }
+
 
         private void GetInput()
         {
@@ -70,9 +83,9 @@ namespace Player
                 moveInput = moveAction.ReadValue<Vector2>();
         }
 
-        public void PlayerJump(InputAction.CallbackContext context)
+        private void PlayerJump(InputAction.CallbackContext context)
         {
-            if (context.performed &&grounded)
+            if (context.performed && grounded)
                 playerRigidbody.AddForce(Vector3.up * 5f, ForceMode.Impulse);
         }
 

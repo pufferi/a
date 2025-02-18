@@ -125,8 +125,6 @@ public class InventoryManager : MonoBehaviour
 
         else
         {
-            Debug.Log("qwertyuiop[");
-
             GameObject dropped = new GameObject("dropped");
             Image image = inventoryButtons[currentSlot].GetComponent<Image>();
             image.sprite = null;
@@ -135,7 +133,7 @@ public class InventoryManager : MonoBehaviour
             if (dropped != null)
             {
                 Instantiate(dropped, Vector3.zero, Quaternion.identity);
-                dropped.transform.position = playerGrabItems.hand.position;
+                dropped.transform.position = playerGrabItems.hand.position+new Vector3(1,1,1);
             }
             //delete prefab
             if (File.Exists(_prefabPath + GetInventoryName() + ".prefab"))
@@ -162,9 +160,8 @@ public class InventoryManager : MonoBehaviour
 
     private void OnScrollInventory(InputAction.CallbackContext context)
     {
-        if (Keyboard.current[Key.LeftCtrl].isPressed)
-            return;
-        float scrollValue = context.ReadValue<float>();
+        
+        float scrollValue = context.ReadValue<Vector2>().y;
 
         if (scrollValue > 0.2f)
         {

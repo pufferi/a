@@ -3,12 +3,14 @@ using UnityEngine.InputSystem;
 
 public class PlayerCamera : MonoBehaviour
 {
+    public static PlayerCamera Instance { get; private set; }
+
     public float sensX = 100f;
     public float sensY = 100f;
     public Transform playerOrientation;
     public InputActionAsset inputActions;
-    public float damping = 10f; // 阻尼系数
-    public float deadZone = 0.05f; // 死区范围
+    public float damping = 10f; 
+    public float deadZone = 0.05f; 
 
     private InputAction lookAction;
     private Vector2 lookInput;
@@ -16,36 +18,38 @@ public class PlayerCamera : MonoBehaviour
     private float xRotation;
     private float yRotation;
 
-    void Awake()
+    public bool playerViewLock=false;
+
+    private void Awake()
     {
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
+
+        Instance = this;
+        DontDestroyOnLoad(gameObject);
+
         var playerMap = inputActions.FindActionMap("Player");
         lookAction = playerMap.FindAction("Look");
         lookAction.performed += OnLook;
         lookAction.Enable();
     }
 
-    
-
-
-
-    void OnDestroy()
+    private void OnDestroy()
     {
         lookAction.performed -= OnLook;
         lookAction.Disable();
     }
 
-    // Update is called once per frame
-    void Update()
+    private void Update()
     {
-        //Debug.Log("before"+  currentInput.x+"  "+currentInput.y);
-        // 使用 Vector2.Lerp 逐渐减小输入值
         currentInput = Vector2.Lerp(currentInput, lookInput, Time.deltaTime * damping);
-        //Debug.Log("after" + currentInput.x + "  " + currentInput.y);
 
-        // 检查输入值是否在死区范围内
         if (Mathf.Abs(currentInput.x) < deadZone && Mathf.Abs(currentInput.y) < deadZone)
         {
-            return; 
+            return;
         }
 
         float mouseX = currentInput.x * Time.deltaTime * sensX;
@@ -61,6 +65,8 @@ public class PlayerCamera : MonoBehaviour
 
     public void OnLook(InputAction.CallbackContext context)
     {
+        if (playerViewLock)
+            return;
         lookInput = context.ReadValue<Vector2>();
     }
 }

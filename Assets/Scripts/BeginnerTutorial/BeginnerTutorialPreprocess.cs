@@ -51,7 +51,7 @@ public class BeginnerTutorialPreprocess : MonoBehaviour
         playerChangeScene = GetComponent<PlayerChangeScene>();
         playerChangeScene.InactivateChangeSceneFunction();
 
-        playerMovement.playerStill = true;
+        //playerMovement.playerStill = true;
 
         var playerMap = inputActions.FindActionMap("Player");
         InteractAction = playerMap.FindAction("Interact");

@@ -185,6 +185,7 @@ public class GrabableObejectGroupingManager : MonoBehaviour
         }
 
         dfs(Gobj);
+        result.Remove(Gobj);
         return result;
     }
 

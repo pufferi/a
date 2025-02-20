@@ -6,6 +6,8 @@ public class PolyhedronFactory : MonoBehaviour
 
     public void Start()
     {
+        if (gameObject.GetComponent<Rigidbody>() != null)
+            return;
         Polyhedron polyhedron = GenerateRandomPolyhedron();
 
         if (polyhedron != null)

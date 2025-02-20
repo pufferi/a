@@ -4,16 +4,32 @@ public class PolyhedronGenerator : MonoBehaviour
 {
     public PolyhedronFactory polyhedronFactory;
 
+
     void Start()
     {
+        if (gameObject.GetComponent<Rigidbody>()!=null)
+            return;
         if (polyhedronFactory != null)
         {
             Polyhedron randomPolyhedron = polyhedronFactory.GenerateRandomPolyhedron();
-            Mesh mesh=randomPolyhedron.initialing();
+            if (randomPolyhedron == null)
+            {
+                Debug.LogError("Generated Polyhedron is null");
+                return;
+            }
+
+            Mesh mesh = randomPolyhedron.initialing();
+            if (mesh == null)
+            {
+                Debug.LogError("Initialized Mesh is null");
+                return;
+            }
 
             Transform transform = GetComponent<Transform>();
+
             Rigidbody rb = gameObject.AddComponent<Rigidbody>();
-            rb.collisionDetectionMode = CollisionDetectionMode.Continuous; 
+
+            rb.collisionDetectionMode = CollisionDetectionMode.Continuous;
 
             transform.localScale = new Vector3(0.6f, 0.6f, 0.6f);
 
@@ -26,4 +42,5 @@ public class PolyhedronGenerator : MonoBehaviour
             Debug.LogError("PolyhedronFactory Œ¥…Ë÷√");
         }
     }
+
 }

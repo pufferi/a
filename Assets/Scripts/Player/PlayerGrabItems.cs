@@ -30,6 +30,10 @@ public class PlayerGrabItems : MonoBehaviour
 
     private List<GrabableObjectComponent> AllConnectsOfCurrentGrabbedObj;
 
+    private bool isFishingRod = false;
+
+    public FishRod FishingRod;
+
     private void Start()
     {
         playerCamera = Camera.main;
@@ -62,21 +66,26 @@ public class PlayerGrabItems : MonoBehaviour
 
     void Update()
     {
+        
         if (grabbedObject != null) 
         {
             CheckIfCanStickAndChangeMaterial();
         }
 
+        if (!isFishingRod)
+        {
 
-        if (!rotateUDAction.IsPressed() && rotateLRAction.IsPressed() && grabbedObject != null)
-        {
-            float scrollValue = rotationSpeed * Time.deltaTime;
-            grabbedObject.transform.Rotate(Vector3.up, scrollValue, Space.World);
-        }
-        else if (rotateUDAction.IsPressed() && rotateLRAction.IsPressed() && grabbedObject != null)
-        {
-            float scrollValue = rotationSpeed * Time.deltaTime;
-            grabbedObject.transform.Rotate(Vector3.left, scrollValue, Space.World);
+            if (!rotateUDAction.IsPressed() && rotateLRAction.IsPressed() && grabbedObject != null)
+            {
+
+                float scrollValue = rotationSpeed * Time.deltaTime;
+                grabbedObject.transform.Rotate(Vector3.up, scrollValue, Space.World);
+            }
+            else if (rotateUDAction.IsPressed() && rotateLRAction.IsPressed() && grabbedObject != null)
+            {
+                float scrollValue = rotationSpeed * Time.deltaTime;
+                grabbedObject.transform.Rotate(Vector3.left, scrollValue, Space.World);
+            }
         }
     }
 
@@ -96,6 +105,8 @@ public class PlayerGrabItems : MonoBehaviour
 
     private void CheckIfCanStickAndChangeMaterial()//Get closestHit
     {
+        if (isFishingRod)
+            return;
         canGrabbedObjStick = false;
         float closestDistance = 3f;
 
@@ -163,6 +174,7 @@ public class PlayerGrabItems : MonoBehaviour
     {
         if (grabbedObject == null)
         {
+            
             RaycastHit hit;
             if (Physics.Raycast(playerCamera.transform.position, playerCamera.transform.forward, out hit, grabDistance))
             {
@@ -170,6 +182,12 @@ public class PlayerGrabItems : MonoBehaviour
                 if (grabbable != null)
                 {
                     grabbedObject = grabbable;
+                    if (grabbedObject.objID == -2)//fishingRod
+                    {
+                        isFishingRod = true;
+                        grabbedObject.Grab();
+                        return;
+                    }
                     Renderer grabbedObjectRenderer = grabbedObject.GetComponent<Renderer>();
                     originalMat_Grabbed = grabbedObjectRenderer.material;
                     grabbedObject.Grab();
@@ -179,6 +197,15 @@ public class PlayerGrabItems : MonoBehaviour
         }
         else if(!isPlayerInDoorArea)
         {
+            if(isFishingRod = true)
+            {
+                //ReleaseFishRod();
+                isFishingRod= false;
+                grabbedObject.Release();
+                grabbedObject = null;
+                return;
+            }
+
             Renderer grabbedObjectRenderer = grabbedObject.GetComponent<Renderer>();
             grabbedObjectRenderer.material = originalMat_Grabbed;
             grabbedObject.Release();
@@ -216,6 +243,8 @@ public class PlayerGrabItems : MonoBehaviour
     private void OnJoint(InputAction.CallbackContext context)
     {
         Debug.Log("OnJoint");
+        if (isFishingRod)
+            return;
         if (canGrabbedObjStick)
         {
             GrabableObjectComponent hitObject = closestHit.rigidbody.GetComponent<GrabableObjectComponent>();
@@ -285,6 +314,8 @@ public class PlayerGrabItems : MonoBehaviour
     {
         if (Keyboard.current[Key.LeftCtrl].isPressed)
             return;
+        if (isFishingRod)
+            return;
         if (grabbedObject != null)
         {
             float scrollValue = context.ReadValue<float>()* 0.001f;
@@ -300,6 +331,23 @@ public class PlayerGrabItems : MonoBehaviour
             else
                 grabbedObject.transform.position += direction * scrollValue;
         }
+    }
+
+
+
+    ////////////////////////////////////////////
+    ///special Item 
+    ///
+
+    private void GrabFishRod()
+    {
+        FishingRod.isRodInHand= true;
+    }
+
+
+    private void ReleaseFishRod()
+    {
+        FishingRod.isRodInHand = false;
     }
 
 }

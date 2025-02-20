@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -11,9 +12,21 @@ public class GrabableObjectComponent : MonoBehaviour
     public int objID;
     public int groupID=-1;//separate object;
 
+
+    public Material Amat;
+    public Mesh Amesh;
+
     private void Start()
     {
         GrabableObejectGroupingManager.Instance.AssignObjectID(this);
+        //StartCoroutine(StoreMeshAndMaterialAfterDelay(2f));
+    }
+
+    private IEnumerator StoreMeshAndMaterialAfterDelay(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        Amat = GetComponent<Renderer>().material;
+        Amesh = GetComponent<MeshFilter>().mesh;
     }
     private void Update()
     {
@@ -52,22 +65,23 @@ public class GrabableObjectComponent : MonoBehaviour
         int layer = Mathf.RoundToInt(Mathf.Log(Layer_DontTouchPlayer.value, 2));
         gameObject.layer = layer;
 
+        rb.isKinematic = true;
+        grabCenter.transform.SetParent(GameObject.FindWithTag("MainCamera").transform);
+
+        if(this.objID==-2)
+            return;
         List<GrabableObjectComponent> AllConnect = GrabableObejectGroupingManager.Instance.GetAllConnectObjects(this);
         foreach(var obj in AllConnect)
             obj.gameObject.layer=layer;
         
 
 
-        rb.isKinematic = true;
-        grabCenter.transform.SetParent(GameObject.FindWithTag("MainCamera").transform);
     }
 
     public void Release()
     {
         gameObject.layer = 0;
-        List<GrabableObjectComponent> AllConnect = GrabableObejectGroupingManager.Instance.GetAllConnectObjects(this);
-        foreach (var obj in AllConnect)
-            obj.gameObject.layer = 0;
+        
 
         rb.isKinematic = false;
         transform.SetParent(null);
@@ -76,14 +90,22 @@ public class GrabableObjectComponent : MonoBehaviour
             Destroy(grabCenter);
             grabCenter = null;
         }
+        if (this.objID == -2)
+            return;
+        List<GrabableObjectComponent> AllConnect = GrabableObejectGroupingManager.Instance.GetAllConnectObjects(this);
+        foreach (var obj in AllConnect)
+            obj.gameObject.layer = 0;
     }
 
     private Vector3 GetMeshCenter()
     {
         MeshFilter meshFilter = GetComponent<MeshFilter>();
+
         if (meshFilter == null) return transform.position;
 
         Mesh mesh = meshFilter.mesh;
+        //return Vector3.zero;
+
         Vector3[] vertices = mesh.vertices;
 
         Vector3 center = Vector3.zero;

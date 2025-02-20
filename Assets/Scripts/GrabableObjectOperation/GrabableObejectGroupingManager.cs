@@ -82,50 +82,49 @@ public class GrabableObejectGroupingManager : MonoBehaviour
         reusedObjID.Enqueue(Gobj.objID);
         Gobj.objID = -1;
     }
-    
+
     public void AssignGroupID(GrabableObjectComponent a, GrabableObjectComponent b)
     {
         objId_objInfo[a.objID].connectObjs.Add(b);
         objId_objInfo[b.objID].connectObjs.Add(a);
         int groupId_a = a.groupID;
         int groupId_b = b.groupID;
-        if (groupId_a == -1 && groupId_b == -1)//1粘1
+        if (groupId_a == -1 && groupId_b == -1) // 1粘1
         {
             a.groupID = GetGroupNum();
             b.groupID = a.groupID;
         }
-        else if (a.groupID == -1) //1粘多
+        else if (a.groupID == -1) // 1粘多
         {
-            a.groupID=b.groupID;
+            a.groupID = b.groupID;
         }
-        else if(b.groupID == -1)//多粘1
+        else if (b.groupID == -1) // 多粘1
         {
-            b.groupID=a.groupID;
+            b.groupID = a.groupID;
         }
-        else//多粘多
+        else // 多粘多
         {
-            if(a.groupID >b.groupID)
-            {
-                a.groupID = b.groupID;
-                List<GrabableObjectComponent>aConnects= GetAllConnectObjects(a);
-                foreach (var aConnect in aConnects)
-                    aConnect.groupID = b.groupID;
-                reusedGroupID.Enqueue(groupId_a);
-            }
+            if (a.groupID > b.groupID)
+                HandleMultiToMulti(a, b);
+            
             else
+                HandleMultiToMulti(b, a);
+        }
+        void HandleMultiToMulti(GrabableObjectComponent idLarger, GrabableObjectComponent idSmaller)
+        {
+            idLarger.groupID = idSmaller.groupID;
+            List<GrabableObjectComponent> connectedObjects = GetAllConnectObjects(idLarger);
+            foreach (var connectedObject in connectedObjects)
             {
-                b.groupID = a.groupID;
-                List<GrabableObjectComponent> bConnects = GetAllConnectObjects(b);
-                foreach (var bConnect in bConnects)
-                    bConnect.groupID = a.groupID;
-                reusedGroupID.Enqueue(groupId_b);
+                connectedObject.groupID = idSmaller.groupID;
             }
+            reusedGroupID.Enqueue(idLarger.groupID);
         }
 
-    }   
+    }
 
-   
-    
+
+
     public void UnassignGroupID(GrabableObjectComponent Gobj)
     {
         int id = Gobj.objID;

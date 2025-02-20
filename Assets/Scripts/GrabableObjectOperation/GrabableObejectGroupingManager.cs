@@ -87,8 +87,8 @@ public class GrabableObejectGroupingManager : MonoBehaviour
     {
         objId_objInfo[a.objID].connectObjs.Add(b);
         objId_objInfo[b.objID].connectObjs.Add(a);
-        int groupId_a=a.groupID;
-        int groupId_b=b.groupID;
+        int groupId_a = a.groupID;
+        int groupId_b = b.groupID;
         if (groupId_a == -1 && groupId_b == -1)//1ճ1
         {
             a.groupID = GetGroupNum();
@@ -106,7 +106,7 @@ public class GrabableObejectGroupingManager : MonoBehaviour
         {
             if(a.groupID >b.groupID)
             {
-                a.groupID=b.groupID;
+                a.groupID = b.groupID;
                 List<GrabableObjectComponent>aConnects= GetAllConnectObjects(a);
                 foreach (var aConnect in aConnects)
                     aConnect.groupID = b.groupID;
@@ -128,7 +128,7 @@ public class GrabableObejectGroupingManager : MonoBehaviour
     
     public void UnassignGroupID(GrabableObjectComponent Gobj)
     {
-        int id=Gobj.objID;
+        int id = Gobj.objID;
         objConnectionInfo ObjInfo = objId_objInfo[id];
         reusedGroupID.Enqueue(Gobj.groupID);
 
@@ -193,9 +193,11 @@ public class GrabableObejectGroupingManager : MonoBehaviour
 
     public bool IsConnect(GrabableObjectComponent a, GrabableObjectComponent b)
     {
-        if(a.groupID==-1&&b.groupID==-1)
+        if(a.groupID == -1 && b.groupID == -1)
             return false;
-        return a.groupID==b.groupID;
+        return a.groupID == b.groupID;
     }
+
+
 
 }

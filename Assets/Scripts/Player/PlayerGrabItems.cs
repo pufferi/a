@@ -86,13 +86,12 @@ public class PlayerGrabItems : MonoBehaviour
 
     private RaycastHit lastRaycasHit;
 
-
     public Material greenMet;
     public Material yellowMet;
     //确保被换黄mat的只有一个
     private Material originalMat_Grabbed;
     private Material originalMat_Target;
-    private GameObject hitObject;
+    private GameObject LastHitObject;
 
 
     private void CheckIfCanStickAndChangeMaterial()//Get closestHit
@@ -104,30 +103,18 @@ public class PlayerGrabItems : MonoBehaviour
         {
             if (Physics.Raycast(grabbedObject.transform.position, direction, out RaycastHit hit, rayDistance))
             {
-                if (hit.collider.CompareTag(targetTag) && hit.collider.gameObject != grabbedObject.gameObject && hit.collider.gameObject.layer == 0)//item,not self,and not connect to self
+                if (hit.collider.CompareTag(targetTag) && hit.collider.gameObject != grabbedObject.gameObject && hit.collider.gameObject.layer == 0)//item,not itself,and not connect to itself
                 {
                     float distance = Vector3.Distance(grabbedObject.transform.position, hit.point);
                     if (distance < closestDistance)
                     {
                         closestDistance = distance;
                         closestHit = hit;
-                        hitObject = hit.collider.gameObject;
                         canGrabbedObjStick = true;
-                        //Renderer grabbedObjectRenderer = grabbedObject.GetComponent<Renderer>();
-                        //Renderer hitObjectRenderer = closestHit.collider.GetComponent<Renderer>();
-                        ////originalMat_Grabbed=grabbedObjectRenderer.material;这步在onGrab里面做到了
-                        //grabbedObjectRenderer.material = greenMet;
-                        //originalMat_Target = hitObjectRenderer.material;
                     }
-
                 }
 
             }
-            //else//no hit
-            //{
-            //    if(closestHit.collider!=null&&closestHit.collider.gameObject!=null&&closestHit.collider.gameObject.GetComponent<Renderer>()!=null&& closestHit.collider.GetComponent<Renderer>().material == yellowMet)
-            //        closestHit.collider.GetComponent<Renderer>().material = originalMat_Target;
-            //}
         }
         Renderer grabbedObjectRenderer = grabbedObject.GetComponent<Renderer>();
         if (canGrabbedObjStick)
@@ -135,14 +122,19 @@ public class PlayerGrabItems : MonoBehaviour
             grabbedObjectRenderer.material = greenMet;
 
             Renderer hitRenderer = closestHit.collider.GetComponent<Renderer>();
+
+            if (LastHitObject != null && LastHitObject.GetComponent<Renderer>() != null)//&& LastHitObject.GetComponent<Renderer>().material == yellowMet)
+                LastHitObject.GetComponent<Renderer>().material = originalMat_Target;
+
+
             if (hitRenderer != null)
             {
-                // 保存目标对象的原始材质
-                if (originalMat_Target == null)
-                {
-                    originalMat_Target = hitRenderer.material;
-                }
+               
+                originalMat_Target = hitRenderer.material;
+               
                 hitRenderer.material = yellowMet;
+                LastHitObject = closestHit.collider.gameObject;//确保只有一个黄mesh
+
             }
 
             lastRaycasHit = closestHit;
@@ -156,12 +148,15 @@ public class PlayerGrabItems : MonoBehaviour
                 if (lastRenderer != null && originalMat_Target != null)
                 {
                     lastRenderer.material = originalMat_Target;
-                    originalMat_Target = null;
                 }
+                originalMat_Target = null;
+                LastHitObject= null;
             }
+
         }
 
     }
+
 
 
     private void OnGrab(InputAction.CallbackContext context)
@@ -268,7 +263,6 @@ public class PlayerGrabItems : MonoBehaviour
                 Destroy(j);
             }
         }
-
         if (lastRaycasHit.collider != null)
         {
             Renderer lastRenderer = lastRaycasHit.collider.GetComponent<Renderer>();

@@ -5,14 +5,14 @@ using System.Collections.Generic;
 
 public class PlayerGrabItems : MonoBehaviour
 {
-    //this is just for building materials.
+
     public Transform hand;
     private float grabDistance = 1.5f;
     public float rotationSpeed = 10;
     private string targetTag = "Item";
     private float rayDistance = 0.4f;
 
-    public GrabableObjectComponent grabbedObject { get; private set; }
+    public GrabableObjectComponent grabbedObject { get;  set; }
     public bool isPlayerInDoorArea = false;
     public InputActionAsset inputActions;
 
@@ -28,6 +28,12 @@ public class PlayerGrabItems : MonoBehaviour
     public float ScrollSen = 0.05f;
 
     private Camera playerCamera;
+
+    private bool isGrbbedNormalItem = false;//not a fishRod or something else
+    //special item id
+    //fishingRod : -2
+
+
 
     private List<GrabableObjectComponent> AllConnectsOfCurrentGrabbedObj;
 
@@ -63,10 +69,8 @@ public class PlayerGrabItems : MonoBehaviour
 
     void Update()
     {
-        if (grabbedObject != null)
-        {
+        if (isGrbbedNormalItem && grabbedObject != null)//normalItem means can stick
             CheckIfCanStickAndChangeMaterial();
-        }
 
 
         if (!rotateUDAction.IsPressed() && rotateLRAction.IsPressed() && grabbedObject != null)
@@ -89,7 +93,7 @@ public class PlayerGrabItems : MonoBehaviour
 
     public Material greenMet;
     public Material yellowMet;
-    //确保被换黄mat的只有一个
+    // Ensure only one object has the yellow material
     private Material originalMat_Grabbed;
     private Material originalMat_Target;
     private GameObject LastHitObject;
@@ -134,7 +138,7 @@ public class PlayerGrabItems : MonoBehaviour
                 originalMat_Target = hitRenderer.material;
 
                 hitRenderer.material = yellowMet;
-                LastHitObject = closestHit.collider.gameObject;//确保只有一个黄mesh
+                LastHitObject = closestHit.collider.gameObject;// Ensure only one object has the yellow material
 
             }
 
@@ -170,6 +174,16 @@ public class PlayerGrabItems : MonoBehaviour
                 GrabableObjectComponent grabbable = hit.collider.GetComponent<GrabableObjectComponent>();
                 if (grabbable != null)
                 {
+                    Debug.Log(grabbable);
+                    if (grabbable.objID >= 0)
+                        isGrbbedNormalItem = true;
+                    else//is fish rod or something
+                    {
+                        isGrbbedNormalItem = false;
+                        grabbedObject = grabbable;
+                        grabbedObject.Grab();
+                        return;
+                    }
                     grabbedObject = grabbable;
                     Renderer grabbedObjectRenderer = grabbedObject.GetComponent<Renderer>();
                     originalMat_Grabbed = grabbedObjectRenderer.material;
@@ -180,6 +194,12 @@ public class PlayerGrabItems : MonoBehaviour
         }
         else if (!isPlayerInDoorArea)
         {
+            if (!isGrbbedNormalItem)
+            {
+                grabbedObject.Release();
+                grabbedObject = null;
+                return;
+            }
             Renderer grabbedObjectRenderer = grabbedObject.GetComponent<Renderer>();
             grabbedObjectRenderer.material = originalMat_Grabbed;
             grabbedObject.Release();

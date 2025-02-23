@@ -154,6 +154,8 @@ public class GrabableObejectGroupingManager : MonoBehaviour
 
     private int GetGroupNum()
     {
+        //Debug.Log("pending goup id  " + pendingGroupID);
+        //Debug.Log(reusedGroupID.Count);
         if (reusedGroupID.Count == 0)
             return pendingGroupID++;
         return reusedGroupID.Dequeue();
@@ -167,6 +169,8 @@ public class GrabableObejectGroupingManager : MonoBehaviour
 
     public List<GrabableObjectComponent> GetAllConnectObjects(GrabableObjectComponent Gobj)
     {
+        if (Gobj.objID < 0)
+            return null;
         List<GrabableObjectComponent> result = new List<GrabableObjectComponent>();
         HashSet<GrabableObjectComponent> visited = new HashSet<GrabableObjectComponent>();
 

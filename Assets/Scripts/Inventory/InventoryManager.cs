@@ -5,9 +5,10 @@ using UnityEngine.InputSystem;
 using UnityEngine.UI;
 using System.IO;
 
+
 public class InventoryManager : MonoBehaviour
 {
-    public Button[] inventoryButtons=new Button[6];
+    public Button[] inventoryButtons = new Button[6];
     //public InventoryItemInfo[] inventorySlotsInfo = new InventoryItemInfo[6];
     public bool[] isInventorySlotEmpty = new bool[6];
 
@@ -20,7 +21,7 @@ public class InventoryManager : MonoBehaviour
 
     public int currentSlot = 0;
 
-    public Color selectedColor = Color.green; 
+    public Color selectedColor = Color.green;
     public Color defaultColor = Color.white;
 
     [SerializeField]
@@ -30,10 +31,12 @@ public class InventoryManager : MonoBehaviour
     private GameObject _parent;
 
     [SerializeField]
-    private GameObject _GrabableObjs;
+    private GameObject _GrabableObjs; // This is just an entry in the Hierarchy, convenient for managing these objects later
 
     private string _prefabPath = "Assets/Resources/Inventory/InventoryPrefebs/";
     private string _inventoryIconPath = "Assets/Resources/Inventory/InventoryItemIcons/";
+
+    public Camera playerCam;
 
     private void Start()
     {
@@ -48,7 +51,7 @@ public class InventoryManager : MonoBehaviour
         scrollAction.Enable();
         scrollAction.performed += OnScrollInventory;
 
-        for(int i = 0; i < 6; i++)
+        for (int i = 0; i < 6; i++)
         {
             isInventorySlotEmpty[i] = true;
         }
@@ -81,12 +84,18 @@ public class InventoryManager : MonoBehaviour
     private void OnStoreOrDropItem(InputAction.CallbackContext context)
     {
         GrabableObjectComponent itemInHand = playerGrabItems.grabbedObject;
-        if (itemInHand == null&& isInventorySlotEmpty[currentSlot])
+
+        if (itemInHand == null && isInventorySlotEmpty[currentSlot])
             return;
 
-        if (isInventorySlotEmpty[currentSlot])
+        bool isItemInHandNormal = false;
+        
+        if (isInventorySlotEmpty[currentSlot]) // store
         {
-            string slotName=GetInventoryName();
+            if (itemInHand.objID >= 0)
+                isItemInHandNormal = true;
+
+            string slotName = GetInventoryName();
             _inventoryIconCapturer.CaptureIcon(slotName);
 
             Image image = inventoryButtons[currentSlot].GetComponent<Image>();
@@ -103,61 +112,105 @@ public class InventoryManager : MonoBehaviour
 
             isInventorySlotEmpty[currentSlot] = false;
 
-            List<GrabableObjectComponent> AllComponent = GrabableObejectGroupingManager.Instance.GetAllConnectObjects(itemInHand);
-            AllComponent.Add(itemInHand);
-            GameObject wholeObj = new GameObject(slotName);
-            wholeObj.transform.SetParent(_parent.transform);
-            foreach (var obj in AllComponent)
+            if (isItemInHandNormal)
             {
-                Debug.Log(obj.gameObject.GetComponent<MeshRenderer>().material);
-                obj.transform.SetParent(wholeObj.transform);
+                List<GrabableObjectComponent> AllComponent = GrabableObejectGroupingManager.Instance.GetAllConnectObjects(itemInHand);
+                AllComponent.Add(itemInHand);
+                GameObject wholeObj = new GameObject(slotName);
+                wholeObj.transform.SetParent(_parent.transform);
+
+                foreach (var obj in AllComponent)
+                {
+                    Debug.Log(obj.gameObject.GetComponent<MeshRenderer>().material);
+                    obj.transform.SetParent(wholeObj.transform);
+                }
+
+                wholeObj.SetActive(false);
             }
-            
-            //PrefabUtility.SaveAsPrefabAsset(wholeObj, _prefabPath+slotName+".prefab");
-
-
-            SavePrefabWithMeshes(wholeObj, _prefabPath + slotName + ".prefab");
-
-
-
-            Destroy(wholeObj);
-            
+            else
+            {
+                itemInHand.name = slotName;
+                itemInHand.transform.SetParent(_parent.transform);
+                itemInHand.gameObject.SetActive(false);
+            }
             Debug.Log("Stored item in slot " + currentSlot);
-
+            playerGrabItems.grabbedObject = null;
         }
-
-        else
+        else // drop
         {
-            // 不需要前缀 'Assets/' 和后缀 '.prefab'
-            string prefabPath = "Inventory/InventoryPrefebs/" + GetInventoryName();
-            GameObject dropped = Resources.Load<GameObject>(prefabPath);
+            
+            string slotName = GetInventoryName();
+            Transform storedItem = _parent.transform.Find(slotName);
 
-            if (dropped != null)
+            if (storedItem != null)
             {
-                GameObject instantiatedObj = Instantiate(dropped, Vector3.zero, Quaternion.identity);
-                instantiatedObj.transform.position = playerGrabItems.hand.position + new Vector3(1, 1, 1);
-                instantiatedObj.transform.SetParent(_GrabableObjs.transform);
-                Debug.Log("success!!!!!!!!");
+                //check if isItemInHandNormal
+                if (storedItem.GetComponent<Rigidbody>()==null)
+                    isItemInHandNormal=true;
+
+                storedItem.gameObject.SetActive(true);
+                storedItem.position = new Vector3(
+                    playerGrabItems.hand.position.x + playerCam.transform.forward.x * 0.5f,
+                    Mathf.Max(storedItem.position.y, playerGrabItems.hand.position.y + playerCam.transform.forward.y * 0.5f),
+                    playerGrabItems.hand.position.z + playerCam.transform.forward.z * 0.5f
+                );
+                
+
+                //storedItem.SetParent(_GrabableObjs.transform);
+                if (!isItemInHandNormal)
+                {
+                    storedItem.GetComponent<Rigidbody>().isKinematic = false;
+                    storedItem.name = "obj_" + storedItem.GetComponent<GrabableObjectComponent>().objID;
+                    storedItem.SetParent(_GrabableObjs.transform);
+                }
+
+                // This foreach loop caused me a lot of trouble..........
+                //else
+                //{
+                //    Debug.Log(storedItem.childCount);
+                //    foreach (Transform child in storedItem)
+                //    {
+                //        Debug.Log("childis here");
+                //        child.GetComponent<Rigidbody>().isKinematic = false;
+                //        child.SetParent(_GrabableObjs.transform);
+                //    }
+                //    //Destroy(storedItem.gameObject);
+                //}
+                else
+                {
+                    List<Transform> children = new List<Transform>();
+                    foreach (Transform child in storedItem)
+                    {
+                        children.Add(child);
+                    }
+
+                    foreach (Transform child in children)
+                    {
+                        Debug.Log("child is here");
+                        child.GetComponent<Rigidbody>().isKinematic = false;
+                        child.SetParent(_GrabableObjs.transform);
+                        Debug.Log("child    " + child.transform.position);
+                        child.position = new Vector3(
+                    playerGrabItems.hand.position.x + playerCam.transform.forward.x * 0.5f,
+                    Mathf.Max(storedItem.position.y, playerGrabItems.hand.position.y + playerCam.transform.forward.y * 0.5f),
+                    playerGrabItems.hand.position.z + playerCam.transform.forward.z * 0.5f
+                );
+
+                    }
+
+                    Destroy(storedItem.gameObject);
+                }
+
+                Image image = inventoryButtons[currentSlot].GetComponent<Image>();
+                image.sprite = null;
+                Debug.Log("Dropped item from slot " + currentSlot);
             }
             else
             {
-                Debug.LogError("Failed to load prefab at path: " + prefabPath);
+                Debug.LogError("Failed to find stored item in slot: " + currentSlot);
             }
 
-            // 删除 prefab
-            string fullPath = Path.Combine(Application.dataPath, "Resources", prefabPath + ".prefab");
-            if (File.Exists(fullPath))
-            {
-                File.Delete(fullPath);
-                Debug.Log("Prefab file deleted successfully.");
-            }
-            else
-            {
-                Debug.Log("Prefab file not found.");
-            }
-
-            // 删除 ImageIcon
-            string iconPath = _inventoryIconPath + GetInventoryName() + ".png";
+            string iconPath = _inventoryIconPath + slotName + ".png";
             if (File.Exists(iconPath))
             {
                 File.Delete(iconPath);
@@ -165,72 +218,13 @@ public class InventoryManager : MonoBehaviour
 
             isInventorySlotEmpty[currentSlot] = true;
         }
-
-
     }
 
 
-
-    void SavePrefabWithMeshes(GameObject wholeObj, string prefabPath)
-    {
-        // 遍历所有子对象，确保 MeshFilter 和 MeshRenderer 都已正确分配
-        foreach (Transform child in wholeObj.transform)
-        {
-            MeshFilter meshFilter = child.GetComponent<MeshFilter>();
-            MeshRenderer meshRenderer = child.GetComponent<MeshRenderer>();
-
-            if (meshFilter == null)
-            {
-                Debug.LogError("MeshFilter missing in child: " + child.name);
-                meshFilter = child.gameObject.AddComponent<MeshFilter>();
-            }
-
-            if (meshFilter.mesh == null)
-            {
-                Debug.Log("mesh是空的，为什么为什么");
-                // 假设您有一个默认的 Mesh 资源
-                Mesh defaultMesh = Resources.Load<Mesh>("Path/To/DefaultMesh");
-                if (defaultMesh != null)
-                {
-                    meshFilter.mesh = defaultMesh;
-                    Debug.Log("Assigned default Mesh to child: " + child.name);
-                }
-                else
-                {
-                    Debug.LogError("Failed to load default Mesh for child: " + child.name);
-                }
-            }
-
-            if (meshRenderer == null)
-            {
-                Debug.LogError("MeshRenderer missing in child: " + child.name);
-                meshRenderer = child.gameObject.AddComponent<MeshRenderer>();
-            }
-
-            if (meshRenderer.material == null)
-            {
-                // 假设您有一个默认的材质资源
-                Material defaultMaterial = Resources.Load<Material>("Path/To/DefaultMaterial");
-                if (defaultMaterial != null)
-                {
-                    meshRenderer.material = defaultMaterial;
-                    Debug.Log("Assigned default Material to child: " + child.name);
-                }
-                else
-                {
-                    Debug.LogError("Failed to load default Material for child: " + child.name);
-                }
-            }
-        }
-
-        // 保存预制件
-        PrefabUtility.SaveAsPrefabAsset(wholeObj, prefabPath);
-        Debug.Log("Prefab saved successfully at path: " + prefabPath);
-    }
 
     private void OnScrollInventory(InputAction.CallbackContext context)
     {
-        
+
         float scrollValue = context.ReadValue<Vector2>().y;
 
         if (scrollValue > 0.2f)

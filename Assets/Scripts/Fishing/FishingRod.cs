@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.XR;
 using static UnityEditor.Experimental.GraphView.GraphView;
-public class FishingRod : MonoBehaviour
+public class FishingRod : GrabableObjectComponent
 {
     //private Vector3 grabPositionOffset = new Vector3(-0.5f,-1.25f,-1.42f);
     //private Vector3 grabRotationOffset = new Vector3(-80.7f, 40, 27.4f);
@@ -9,39 +9,49 @@ public class FishingRod : MonoBehaviour
     public PlayerGrabFishingRod playerGrabFishingRod;
 
 
-
-    public LayerMask Layer_DontTouchPlayer;
-    public Camera playerCam;//track the rotation
-
-
-    public void Grab()
+    private void Start()
     {
-        Debug.Log("Grabbing the fishing rod");  
-        transform.SetParent(hand);
-
-        this.GetComponent<Collider>().enabled = false;
+        this.objID = -2;
     }
 
-    void Update()
-    {
-        if (playerGrabFishingRod.fishingRod != null)
-        {
-            transform.localPosition = Vector3.zero;
-            //transform.localRotation = Quaternion.Euler(grabRotationOffset);
-            //transform.rotation = playerCam.transform.rotation * Quaternion.Euler(grabRotationOffset);
-            transform.rotation = playerCam.transform.rotation;
-        }
+    //public LayerMask Layer_DontTouchPlayer;
+    //public Camera playerCam;//track the rotation
+
+
+    //public void Grab()
+    //{
+    //    Debug.Log("Grabbing the fishing rod");  
+    //    transform.SetParent(hand);
+
+    //    this.GetComponent<Collider>().enabled = false;
+    //}
+
+    //void Update()
+    //{
+    //    if (playerGrabFishingRod.fishingRod != null)
+    //    {
+    //        transform.localPosition = Vector3.zero;
+    //        //transform.localRotation = Quaternion.Euler(grabRotationOffset);
+    //        //transform.rotation = playerCam.transform.rotation * Quaternion.Euler(grabRotationOffset);
+    //        transform.rotation = playerCam.transform.rotation;
+    //    }
         
-    }
+    //}
 
-    public void Release()
+    //public void Release()
+    //{
+    //    Debug.Log("Releasing the fishing rod");
+    //    transform.SetParent(null);
+    //    this.transform.position= hand.position;
+    //    this.GetComponent<Collider>().enabled = true;
+
+
+
+    //}
+
+    public void RodMovementDuringFishingGame()
     {
-        Debug.Log("Releasing the fishing rod");
-        transform.SetParent(null);
-        this.transform.position= hand.position;
-        this.GetComponent<Collider>().enabled = true;
-
-
 
     }
+
 }

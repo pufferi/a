@@ -35,10 +35,11 @@ public class InventoryIconCapturer : MonoBehaviour
         string ItemName = SlotName;
 
         grabbed.gameObject.layer = LayerMask.NameToLayer("Layer_Capture");
-        foreach (var connect in connects)
-        {
-            connect.gameObject.layer = LayerMask.NameToLayer("Layer_Capture");
-        }
+        if(connects != null)
+            foreach (var connect in connects)
+            {
+                connect.gameObject.layer = LayerMask.NameToLayer("Layer_Capture");
+            }
 
 
         Camera tempCamera = new GameObject("Layer_Capture").AddComponent<Camera>();

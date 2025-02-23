@@ -7,6 +7,8 @@ public class PlayerStateManager : MonoBehaviour
 {
     private static PlayerStateManager _instance;
 
+    public bool AAplayerLockView = false;
+
     public static PlayerStateManager Instance
     {
         get
@@ -26,6 +28,11 @@ public class PlayerStateManager : MonoBehaviour
         }
     }
 
+    private void Update()
+    {
+        PlayerCamera.Instance.playerViewLock = AAplayerLockView;
+    }
+
     private void Awake()
     {
         if (_instance == null)
@@ -39,12 +46,12 @@ public class PlayerStateManager : MonoBehaviour
         }
     }
 
-    public void PlayerStill()
+    public void PlayerMoveLock()
     {
         PlayerMovement.Instance.playerStill = true;
     }
 
-    public void PlayerMove()
+    public void PlayerMoveUnlock()
     {
         PlayerMovement.Instance.playerStill = false;
     }

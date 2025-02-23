@@ -5,6 +5,7 @@ using System.Collections.Generic;
 
 public class PlayerGrabItems : MonoBehaviour
 {
+    //this is just for building materials.
     public Transform hand;
     private float grabDistance = 1.5f;
     public float rotationSpeed = 10;

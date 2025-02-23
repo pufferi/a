@@ -6,10 +6,21 @@ public class InFishGameArea : MonoBehaviour
 {
     private bool inArea = false;
 
+    public GameObject fishingTip0;
+    public GameObject fishingTip1;
+
+    private int tipTime = 5;
+
     void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Player"))
         {
+            if(tipTime > 0)
+            {
+                fishingTip0.SetActive(true);
+                tipTime--;
+            }
+            else fishingTip1.SetActive(true);
             inArea = true;
         }
     }
@@ -18,6 +29,8 @@ public class InFishGameArea : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
+            fishingTip0.SetActive(false);
+            fishingTip1.SetActive(false);
             inArea = false;
         }
     }

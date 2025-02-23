@@ -6,13 +6,13 @@ using System.Collections.Generic;
 public class PlayerGrabItems : MonoBehaviour
 {
     public Transform hand;
-    private float grabDistance =1.5f;
+    private float grabDistance = 1.5f;
     public float rotationSpeed = 10;
     private string targetTag = "Item";
     private float rayDistance = 0.4f;
 
     public GrabableObjectComponent grabbedObject { get; private set; }
-    public bool isPlayerInDoorArea=false;
+    public bool isPlayerInDoorArea = false;
     public InputActionAsset inputActions;
 
     private InputAction grabAction;
@@ -29,10 +29,6 @@ public class PlayerGrabItems : MonoBehaviour
     private Camera playerCamera;
 
     private List<GrabableObjectComponent> AllConnectsOfCurrentGrabbedObj;
-
-    private bool isFishingRod = false;
-
-    public FishRod FishingRod;
 
     private void Start()
     {
@@ -66,26 +62,21 @@ public class PlayerGrabItems : MonoBehaviour
 
     void Update()
     {
-        
-        if (grabbedObject != null) 
+        if (grabbedObject != null)
         {
             CheckIfCanStickAndChangeMaterial();
         }
 
-        if (!isFishingRod)
+
+        if (!rotateUDAction.IsPressed() && rotateLRAction.IsPressed() && grabbedObject != null)
         {
-
-            if (!rotateUDAction.IsPressed() && rotateLRAction.IsPressed() && grabbedObject != null)
-            {
-
-                float scrollValue = rotationSpeed * Time.deltaTime;
-                grabbedObject.transform.Rotate(Vector3.up, scrollValue, Space.World);
-            }
-            else if (rotateUDAction.IsPressed() && rotateLRAction.IsPressed() && grabbedObject != null)
-            {
-                float scrollValue = rotationSpeed * Time.deltaTime;
-                grabbedObject.transform.Rotate(Vector3.left, scrollValue, Space.World);
-            }
+            float scrollValue = rotationSpeed * Time.deltaTime;
+            grabbedObject.transform.Rotate(Vector3.up, scrollValue, Space.World);
+        }
+        else if (rotateUDAction.IsPressed() && rotateLRAction.IsPressed() && grabbedObject != null)
+        {
+            float scrollValue = rotationSpeed * Time.deltaTime;
+            grabbedObject.transform.Rotate(Vector3.left, scrollValue, Space.World);
         }
     }
 
@@ -105,8 +96,6 @@ public class PlayerGrabItems : MonoBehaviour
 
     private void CheckIfCanStickAndChangeMaterial()//Get closestHit
     {
-        if (isFishingRod)
-            return;
         canGrabbedObjStick = false;
         float closestDistance = 3f;
 
@@ -140,9 +129,9 @@ public class PlayerGrabItems : MonoBehaviour
 
             if (hitRenderer != null)
             {
-               
+
                 originalMat_Target = hitRenderer.material;
-               
+
                 hitRenderer.material = yellowMet;
                 LastHitObject = closestHit.collider.gameObject;//确保只有一个黄mesh
 
@@ -161,7 +150,7 @@ public class PlayerGrabItems : MonoBehaviour
                     lastRenderer.material = originalMat_Target;
                 }
                 originalMat_Target = null;
-                LastHitObject= null;
+                LastHitObject = null;
             }
 
         }
@@ -174,7 +163,6 @@ public class PlayerGrabItems : MonoBehaviour
     {
         if (grabbedObject == null)
         {
-            
             RaycastHit hit;
             if (Physics.Raycast(playerCamera.transform.position, playerCamera.transform.forward, out hit, grabDistance))
             {
@@ -182,12 +170,6 @@ public class PlayerGrabItems : MonoBehaviour
                 if (grabbable != null)
                 {
                     grabbedObject = grabbable;
-                    if (grabbedObject.objID == -2)//fishingRod
-                    {
-                        isFishingRod = true;
-                        grabbedObject.Grab();
-                        return;
-                    }
                     Renderer grabbedObjectRenderer = grabbedObject.GetComponent<Renderer>();
                     originalMat_Grabbed = grabbedObjectRenderer.material;
                     grabbedObject.Grab();
@@ -195,22 +177,13 @@ public class PlayerGrabItems : MonoBehaviour
                 }
             }
         }
-        else if(!isPlayerInDoorArea)
+        else if (!isPlayerInDoorArea)
         {
-            if(isFishingRod = true)
-            {
-                //ReleaseFishRod();
-                isFishingRod= false;
-                grabbedObject.Release();
-                grabbedObject = null;
-                return;
-            }
-
             Renderer grabbedObjectRenderer = grabbedObject.GetComponent<Renderer>();
             grabbedObjectRenderer.material = originalMat_Grabbed;
             grabbedObject.Release();
             grabbedObject = null;
-            AllConnectsOfCurrentGrabbedObj=null;
+            AllConnectsOfCurrentGrabbedObj = null;
         }
     }
 
@@ -243,8 +216,6 @@ public class PlayerGrabItems : MonoBehaviour
     private void OnJoint(InputAction.CallbackContext context)
     {
         Debug.Log("OnJoint");
-        if (isFishingRod)
-            return;
         if (canGrabbedObjStick)
         {
             GrabableObjectComponent hitObject = closestHit.rigidbody.GetComponent<GrabableObjectComponent>();
@@ -262,7 +233,7 @@ public class PlayerGrabItems : MonoBehaviour
             Renderer hitRenderer = closestHit.collider.GetComponent<Renderer>();
             if (hitRenderer != null)
             {
-                hitRenderer.material =originalMat_Target;
+                hitRenderer.material = originalMat_Target;
                 originalMat_Target = null;
             }
 
@@ -309,16 +280,14 @@ public class PlayerGrabItems : MonoBehaviour
         GrabableObejectGroupingManager.Instance.UnassignGroupID(grabbedObject);
     }
 
- 
+
     private void OnItemMovingForward(InputAction.CallbackContext context)
     {
         if (Keyboard.current[Key.LeftCtrl].isPressed)
             return;
-        if (isFishingRod)
-            return;
         if (grabbedObject != null)
         {
-            float scrollValue = context.ReadValue<float>()* 0.001f;
+            float scrollValue = context.ReadValue<float>() * 0.001f;
             Vector3 direction = (grabbedObject.transform.position - hand.position).normalized;
 
             float distance = Vector3.Distance(grabbedObject.transform.position, hand.position);
@@ -333,22 +302,4 @@ public class PlayerGrabItems : MonoBehaviour
         }
     }
 
-
-
-    ////////////////////////////////////////////
-    ///special Item 
-    ///
-
-    private void GrabFishRod()
-    {
-        FishingRod.isRodInHand= true;
-    }
-
-
-    private void ReleaseFishRod()
-    {
-        FishingRod.isRodInHand = false;
-    }
-
 }
-

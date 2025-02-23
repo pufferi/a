@@ -16,6 +16,7 @@ GameObject:
   - component: {fileID: 5729140918280093802}
   - component: {fileID: 246481719953342211}
   - component: {fileID: 4740553064284239206}
+  - component: {fileID: 5665867775482684072}
   m_Layer: 11
   m_Name: PolyhedronGenerator(Clone)
   m_TagString: Item
@@ -31,9 +32,9 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8184358840473263302}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.07920845, y: -0.1524047, z: -0.040804148, w: 0.98429364}
-  m_LocalPosition: {x: 0.06684861, y: -0.20403603, z: -0.27644724}
-  m_LocalScale: {x: 0.59999996, y: 0.6000001, z: 0.6}
+  m_LocalRotation: {x: 0.0146222375, y: -0.7247891, z: -0.25836825, w: -0.63852394}
+  m_LocalPosition: {x: -0.87837136, y: -0.092582226, z: -10.249323}
+  m_LocalScale: {x: 0.60000026, y: 0.6000002, z: 0.6}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -83,8 +84,10 @@ MonoBehaviour:
   Layer_DontTouchPlayer:
     serializedVersion: 2
     m_Bits: 2048
-  objID: 16
-  groupID: -1
+  objID: 12
+  groupID: 0
+  Amat: {fileID: 0}
+  Amesh: {fileID: 0}
 --- !u!33 &3037674101299132854
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -184,3 +187,18 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 1
+--- !u!138 &5665867775482684072
+FixedJoint:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8184358840473263302}
+  m_ConnectedBody: {fileID: 0}
+  m_ConnectedArticulationBody: {fileID: 0}
+  m_BreakForce: Infinity
+  m_BreakTorque: Infinity
+  m_EnableCollision: 0
+  m_EnablePreprocessing: 1
+  m_MassScale: 1
+  m_ConnectedMassScale: 1

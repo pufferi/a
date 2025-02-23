@@ -69,4 +69,13 @@ public class PlayerCamera : MonoBehaviour
             return;
         lookInput = context.ReadValue<Vector2>();
     }
+
+
+    public void LookAtSomeWhere(Vector3 someWhere)
+    {
+        Vector3 direction = someWhere - transform.position; 
+        Quaternion rotation = Quaternion.LookRotation(direction);
+        transform.rotation = rotation;
+        playerOrientation.rotation=rotation;
+    }
 }

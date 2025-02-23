@@ -5,9 +5,43 @@ using UnityEngine;
 
 public class PlayerStateManager : MonoBehaviour
 {
+    private static PlayerStateManager _instance;
+
+    public static PlayerStateManager Instance
+    {
+        get
+        {
+            if (_instance == null)
+            {
+                _instance = FindObjectOfType<PlayerStateManager>();
+
+                if (_instance == null)
+                {
+                    GameObject singletonObject = new GameObject();
+                    _instance = singletonObject.AddComponent<PlayerStateManager>();
+                    singletonObject.name = typeof(PlayerStateManager).ToString() + " (Singleton)";
+                }
+            }
+            return _instance;
+        }
+    }
+
+    private void Awake()
+    {
+        if (_instance == null)
+        {
+            _instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else if (_instance != this)
+        {
+            Destroy(gameObject);
+        }
+    }
+
     public void PlayerStill()
     {
-        PlayerMovement.Instance.playerStill=true;
+        PlayerMovement.Instance.playerStill = true;
     }
 
     public void PlayerMove()
@@ -19,9 +53,9 @@ public class PlayerStateManager : MonoBehaviour
     {
         PlayerCamera.Instance.playerViewLock = true;
     }
+
     public void PlayerViewUnlock()
     {
-        PlayerCamera.Instance.playerViewLock=false;
+        PlayerCamera.Instance.playerViewLock = false;
     }
-
 }

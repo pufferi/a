@@ -139,24 +139,6 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
-                },
-                {
-                    "name": "Fishing",
-                    "type": "Button",
-                    "id": "5f6d5b55-c4b2-4b53-ba57-1e4b3d8f5cd4",
-                    "expectedControlType": "Button",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                },
-                {
-                    "name": "CatchFish",
-                    "type": "Button",
-                    "id": "1e01e95a-f64e-4169-9674-3eb98db16a87",
-                    "expectedControlType": "Button",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -412,28 +394,6 @@
                     "action": "ItemForward",
                     "isComposite": false,
                     "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "1cc9b868-2148-4afa-83c2-309e50ab5324",
-                    "path": "<Keyboard>/f",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Fishing",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "bf15191f-f6d3-4202-b6b4-af396b0de9d6",
-                    "path": "<Keyboard>/e",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "CatchFish",
-                    "isComposite": false,
-                    "isPartOfComposite": false
                 }
             ]
         },
@@ -519,6 +479,94 @@
                     "processors": "",
                     "groups": "",
                     "action": "Click",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        },
+        {
+            "name": "FishGame",
+            "id": "593bcd70-d3c2-4fb2-87a2-32b43c3fd7be",
+            "actions": [
+                {
+                    "name": "FinishWholeFishGame",
+                    "type": "Button",
+                    "id": "2a1cee37-5a3b-4a3d-88b4-e6156b95e125",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "CatchFish",
+                    "type": "Button",
+                    "id": "d6bc5d7e-ea3a-4a5c-bc67-f9d5ff480633",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Fishing",
+                    "type": "Button",
+                    "id": "cb472e1b-b5f2-420c-89bb-0047559719b8",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "FishRodMove",
+                    "type": "Button",
+                    "id": "928f3a32-496c-4696-8b2f-a45a32548941",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "806cf745-2ff7-4495-bc84-2e110a669f1a",
+                    "path": "<Keyboard>/escape",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "FinishWholeFishGame",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "2ba0cdbf-0a6f-412d-a971-54d7dacd24f0",
+                    "path": "<Keyboard>/f",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Fishing",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "1eab4e55-accb-4b5f-ac24-d5321e25bc9e",
+                    "path": "<Keyboard>/e",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "CatchFish",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "b45caf96-e8da-46b7-b135-ad65649557f0",
+                    "path": "<Mouse>/delta",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "FishRodMove",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

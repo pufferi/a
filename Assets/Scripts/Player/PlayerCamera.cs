@@ -9,8 +9,8 @@ public class PlayerCamera : MonoBehaviour
     public float sensY = 100f;
     public Transform playerOrientation;
     public InputActionAsset inputActions;
-    public float damping = 10f; 
-    public float deadZone = 0.05f; 
+    public float damping = 10f;
+    public float deadZone = 0.05f;
 
     private InputAction lookAction;
     private Vector2 lookInput;
@@ -18,7 +18,8 @@ public class PlayerCamera : MonoBehaviour
     private float xRotation;
     private float yRotation;
 
-    public bool playerViewLock=false;
+    public bool playerViewLockX = false;
+    public bool playerViewLockY = false;
 
     private void Awake()
     {
@@ -55,27 +56,36 @@ public class PlayerCamera : MonoBehaviour
         float mouseX = currentInput.x * Time.deltaTime * sensX;
         float mouseY = currentInput.y * Time.deltaTime * sensY;
 
-        yRotation += mouseX;
-        xRotation -= mouseY;
-        xRotation = Mathf.Clamp(xRotation, -90f, 90f);
+        if (!playerViewLockX)
+        {
+            yRotation += mouseX;
+        }
 
+        if (!playerViewLockY)
+        {
+            xRotation -= mouseY;
+            xRotation = Mathf.Clamp(xRotation, -90f, 90f);
+        }
+        //Debug.Log("yRotation      "+yRotation);
+        //Debug.Log("xRotation      "+xRotation);
         transform.rotation = Quaternion.Euler(xRotation, yRotation, 0);
         playerOrientation.rotation = Quaternion.Euler(0, yRotation, 0);
     }
 
     public void OnLook(InputAction.CallbackContext context)
     {
-        if (playerViewLock)
+        if (playerViewLockX && playerViewLockY)
             return;
         lookInput = context.ReadValue<Vector2>();
     }
 
-
     public void LookAtSomeWhere(Vector3 someWhere)
     {
-        Vector3 direction = someWhere - transform.position; 
+        Vector3 direction = someWhere - transform.position;
         Quaternion rotation = Quaternion.LookRotation(direction);
         transform.rotation = rotation;
-        playerOrientation.rotation=rotation;
+        playerOrientation.rotation = Quaternion.Euler(0, rotation.eulerAngles.y, 0);
+        xRotation = rotation.eulerAngles.x;
+        yRotation = rotation.eulerAngles.y;
     }
 }

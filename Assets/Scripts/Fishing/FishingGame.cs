@@ -1,6 +1,9 @@
 using UnityEngine;
+using UnityEngine.UI;
 using System.Collections;
 using UnityEngine.InputSystem;
+using TMPro;
+
 
 public class FishingGame : MonoBehaviour
 {
@@ -18,9 +21,11 @@ public class FishingGame : MonoBehaviour
     public InputActionAsset inputActions;
 
     private InputAction fishAction;
-    private InputAction catchFishAction;
+    //private InputAction catchFishAction;
+    private InputAction finishWholeGame;
 
-    // 添加音效
+
+    [Header("Audio Clips")]
     public AudioClip backGroundWaterSound;
     public AudioClip fishBitingSound;
     public AudioClip caughtFishSound;
@@ -28,24 +33,38 @@ public class FishingGame : MonoBehaviour
 
     public GameObject tip0;
     public GameObject tip1;
+    public GameObject TastList;
 
     [SerializeField]
-    private  GameObject _fishingFloat;
+    private GameObject _fishingFloat;
 
-    public Transform Player;
+    public Transform playerTransform;
+
+    public GrabableObjectGenerator grabableObjectGenerator;
+
+    private Vector3 playerStillPos = new Vector3(-4.65f, 1, 3.35f);
+    //private Vector3 playerCamView;
+    //private Vector3 player
+
+    //我决定钓竿不拿在手上，立在空中
+    private GrabableObjectComponent fishRod;
+
+    private bool _isPlayingFishingGame = false;
 
     private void Start()
     {
-        var playerMap = inputActions.FindActionMap("Player");
-        fishAction = playerMap.FindAction("Fishing");
-        catchFishAction = playerMap.FindAction("CatchFish");
+        var FishGameMap = inputActions.FindActionMap("FishGame");
+        fishAction = FishGameMap.FindAction("Fishing");
+        //catchFishAction = FishGameMap.FindAction("CatchFish");
+        finishWholeGame = FishGameMap.FindAction("FinishWholeFishGame");
 
         fishAction.Enable();
-        catchFishAction.Enable();
-
+        //catchFishAction.Enable();
+        finishWholeGame.Enable();
         fishAction.performed += OnFishingGameStart;
 
-        // 获取AudioSource组件
+        finishWholeGame.performed += OnFinishWholeGame;
+
         audioSource = GetComponent<AudioSource>();
     }
 
@@ -57,11 +76,24 @@ public class FishingGame : MonoBehaviour
             return;
         tip0.SetActive(false);
         tip1.SetActive(false);
+        TastList.SetActive(false);
         _fishingFloat.SetActive(true);
-        PlayerStateManager.Instance.PlayerViewLock();
+        //PlayerStateManager.Instance.PlayerViewLock();
         PlayerStateManager.Instance.PlayerMoveLock();
-        Player.position = new Vector3(-4.65f, 1, 3.35f);
-        //PlayerCamera.Instance.LookAtSomeWhere(Vector3.zero); // point to the center of the pool
+        PlayerStateManager.Instance.PlayerViewLock("x");
+        playerTransform.position = playerStillPos;
+
+        PlayerCamera.Instance.LookAtSomeWhere(Vector3.zero); // point to the center of the pool
+
+        //place the fish rod
+        fishRod = playerGrabItems.grabbedObject;
+        playerGrabItems.Release();
+        //isKenematic
+        //可以写一个动画
+        _isPlayingFishingGame = true;
+        fishRod.GetComponent<FishingRod>().StartFishingGame();
+        
+
 
         int fishSize = Random.Range(1, 11);
 
@@ -72,11 +104,19 @@ public class FishingGame : MonoBehaviour
 
         StartCoroutine(StartFishing(fishSize));
     }
+    //-----------------------
 
+    private bool caughtFish = false;
+
+    private string didntCatchFish = "You didn't catch anything!";
+    private string caughtFishMessage = "You caught a garbage!";
+
+    public TextMeshPro Message;
     private IEnumerator StartFishing(int fishSize)
     {
-        while (!catchFishAction.triggered)
+        while (true)
         {
+            Debug.Log(fishRod.GetComponent<FishingRod>().angle);
             float waitTime = Random.Range(3f, 20f);
             yield return new WaitForSeconds(waitTime);
 
@@ -86,10 +126,10 @@ public class FishingGame : MonoBehaviour
 
             fishingFloat.StartCoroutine(fishingFloat.FloatUpAndDown(duration, amplitude, frequency));
 
-            // 停止播放背景水声，播放鱼咬钩音效
             audioSource.Stop();
             audioSource.PlayOneShot(fishBitingSound);
-
+            if (fishRod.GetComponent<FishingRod>().angle < 40)
+                break;
             yield return new WaitForSeconds(duration);
         }
 
@@ -99,13 +139,15 @@ public class FishingGame : MonoBehaviour
     private void FishingGameEnd()
     {
         PlayerStateManager.Instance.PlayerViewUnlock();
-
+        Debug.Log("finsih the fishing game");   
         // 播放抓到鱼的音效
         audioSource.Stop();
         audioSource.PlayOneShot(caughtFishSound);
 
         // 等待抓到鱼的音效播放完毕后重新播放背景水声
         StartCoroutine(PlayBackgroundWaterSoundAfterCaughtFish());
+
+
     }
 
     private IEnumerator PlayBackgroundWaterSoundAfterCaughtFish()
@@ -114,5 +156,24 @@ public class FishingGame : MonoBehaviour
         audioSource.clip = backGroundWaterSound;
         audioSource.loop = true;
         audioSource.Play();
+    }
+
+    private void OnFinishWholeGame(InputAction.CallbackContext context)
+    {
+       if(!_isPlayingFishingGame)
+            return;
+        playerGrabItems.Grab(fishRod);
+        PlayerStateManager.Instance.PlayerMoveUnlock();
+        PlayerStateManager.Instance.PlayerViewUnlock("x");
+        PauseAllSounds();
+        fishRod.GetComponent<FishingRod>().EndFishingGame();
+        _isPlayingFishingGame=false;
+        TastList.SetActive(true);
+
+    }
+    private void PauseAllSounds()
+    {
+        audioSource.Pause();
+        audioSource.clip = null;
     }
 }

@@ -1,57 +1,74 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.XR;
 using static UnityEditor.Experimental.GraphView.GraphView;
+
 public class FishingRod : GrabableObjectComponent
 {
-    //private Vector3 grabPositionOffset = new Vector3(-0.5f,-1.25f,-1.42f);
-    //private Vector3 grabRotationOffset = new Vector3(-80.7f, 40, 27.4f);
-    public Transform hand;
-    public PlayerGrabFishingRod playerGrabFishingRod;
+    private Vector3 DefaultgrabPosition = new Vector3(-3.65f, -0.35f, 1.46f);
+    private Vector3 DefaultgrabRotation = new Vector3(-86.7f, 153, 54.8f);
 
+    public Vector3 RotateTarget= new Vector3(-4.377f,0.381f,1.762f);
+    public Vector3 axis = Vector3.up;
 
-    private void Start()
+    public InputActionAsset inputActions;
+
+    private InputAction fishRodMoveAction;
+
+    private bool _isInFishingGame = false;
+
+    public float angle = 0;
+
+    void Start()
     {
         this.objID = -2;
     }
 
-    //public LayerMask Layer_DontTouchPlayer;
-    //public Camera playerCam;//track the rotation
+    private void Awake()//not start..mystery
+    {
+        var fishMap = inputActions.FindActionMap("FishGame");
+        fishRodMoveAction = fishMap.FindAction("FishRodMove");
 
+        fishRodMoveAction.Enable();
+    }
 
-    //public void Grab()
-    //{
-    //    Debug.Log("Grabbing the fishing rod");  
-    //    transform.SetParent(hand);
+    private void Update()
+    {
+        // AvoidingObjectPenetratingTheFloor();
+        //还没写这个
 
-    //    this.GetComponent<Collider>().enabled = false;
-    //}
+        if (_isInFishingGame)
+        {
+            Vector2 mouseMovement = fishRodMoveAction.ReadValue<Vector2>();
+            float mouseY = mouseMovement.y;
+            angle = mouseY;
+            Debug.Log(angle);
+            RotateObjectAroundPoint(RotateTarget, axis, angle);
+        }
+    }
 
-    //void Update()
-    //{
-    //    if (playerGrabFishingRod.fishingRod != null)
-    //    {
-    //        transform.localPosition = Vector3.zero;
-    //        //transform.localRotation = Quaternion.Euler(grabRotationOffset);
-    //        //transform.rotation = playerCam.transform.rotation * Quaternion.Euler(grabRotationOffset);
-    //        transform.rotation = playerCam.transform.rotation;
-    //    }
-        
-    //}
-
-    //public void Release()
-    //{
-    //    Debug.Log("Releasing the fishing rod");
-    //    transform.SetParent(null);
-    //    this.transform.position= hand.position;
-    //    this.GetComponent<Collider>().enabled = true;
-
-
-
-    //}
+    private void RotateObjectAroundPoint(Vector3 target, Vector3 axis, float angle)
+    {
+        float rotationSpeed = 7.0f; //
+        transform.RotateAround(target, axis, angle * rotationSpeed * Time.deltaTime);
+    }
 
     public void RodMovementDuringFishingGame()
     {
-
+        // 这里可以放钓鱼游戏中的逻辑
     }
 
+    public void StartFishingGame()
+    {
+        this.transform.position = DefaultgrabPosition;
+        this.transform.rotation = Quaternion.Euler(DefaultgrabRotation);
+        this.GetComponent<Rigidbody>().isKinematic = true; 
+        _isInFishingGame = true;
+    }
+
+    public void EndFishingGame()
+    {
+        this.GetComponent<Rigidbody>().isKinematic = false;
+        _isInFishingGame = false;
+    }
 }

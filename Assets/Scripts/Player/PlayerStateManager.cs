@@ -6,9 +6,6 @@ using UnityEngine;
 public class PlayerStateManager : MonoBehaviour
 {
     private static PlayerStateManager _instance;
-
-    public bool AAplayerLockView = false;
-
     public static PlayerStateManager Instance
     {
         get
@@ -26,11 +23,6 @@ public class PlayerStateManager : MonoBehaviour
             }
             return _instance;
         }
-    }
-
-    private void Update()
-    {
-        PlayerCamera.Instance.playerViewLock = AAplayerLockView;
     }
 
     private void Awake()
@@ -56,13 +48,39 @@ public class PlayerStateManager : MonoBehaviour
         PlayerMovement.Instance.playerStill = false;
     }
 
-    public void PlayerViewLock()
+    public void PlayerViewLock(string axis = "all")
     {
-        PlayerCamera.Instance.playerViewLock = true;
+        switch (axis.ToLower())
+        {
+            case "x":
+                PlayerCamera.Instance.playerViewLockX = true;
+                break;
+            case "y":
+                PlayerCamera.Instance.playerViewLockY = true;
+                break;
+            case "all":
+            default:
+                PlayerCamera.Instance.playerViewLockX = true;
+                PlayerCamera.Instance.playerViewLockY = true;
+                break;
+        }
     }
 
-    public void PlayerViewUnlock()
+    public void PlayerViewUnlock(string axis = "all")
     {
-        PlayerCamera.Instance.playerViewLock = false;
+        switch (axis.ToLower())
+        {
+            case "x":
+                PlayerCamera.Instance.playerViewLockX = false;
+                break;
+            case "y":
+                PlayerCamera.Instance.playerViewLockY = false;
+                break;
+            case "all":
+            default:
+                PlayerCamera.Instance.playerViewLockX = false;
+                PlayerCamera.Instance.playerViewLockY = false;
+                break;
+        }
     }
 }

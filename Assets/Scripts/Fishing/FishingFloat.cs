@@ -5,7 +5,7 @@ using UnityEngine;
 public class FishingFloat : MonoBehaviour
 {
 
-    private Vector3 initialPosition=Vector3.zero;
+    private Vector3 initialPosition=new Vector3(-1.191f,0,0.137f);
     public float minAmplitude = 0.05f;
     public float maxAmplitude = 0.3f;
     public float minFrequency = 0.5f;
@@ -13,6 +13,10 @@ public class FishingFloat : MonoBehaviour
     public float minDuration = 5f;
     public float maxDuration = 15f;
 
+    private void Start()
+    {
+        this.transform.position = initialPosition;
+    }
     public IEnumerator FloatUpAndDown(float duration,float amplitude, float frequency)
     {
         float elapsed = 0f;

@@ -164,12 +164,14 @@ public class PlayerGrabItems : MonoBehaviour
 
 
 
+    public LayerMask Layer_DontTouchRay;
+
     private void OnGrab(InputAction.CallbackContext context)
     {
         if (grabbedObject == null)
         {
             RaycastHit hit;
-            if (Physics.Raycast(playerCamera.transform.position, playerCamera.transform.forward, out hit, grabDistance))
+            if (Physics.Raycast(playerCamera.transform.position, playerCamera.transform.forward, out hit, grabDistance, ~Layer_DontTouchRay))
             {
                 GrabableObjectComponent grabbable = hit.collider.GetComponent<GrabableObjectComponent>();
                 if (grabbable != null)
@@ -177,7 +179,7 @@ public class PlayerGrabItems : MonoBehaviour
                     Debug.Log(grabbable);
                     if (grabbable.objID >= 0)
                         isGrbbedNormalItem = true;
-                    else//is fish rod or something
+                    else // is fish rod or something
                     {
                         isGrbbedNormalItem = false;
                         grabbedObject = grabbable;
@@ -193,6 +195,51 @@ public class PlayerGrabItems : MonoBehaviour
             }
         }
         else if (!isPlayerInDoorArea)
+        {
+            if (!isGrbbedNormalItem)
+            {
+                grabbedObject.Release();
+                grabbedObject = null;
+                return;
+            }
+            Renderer grabbedObjectRenderer = grabbedObject.GetComponent<Renderer>();
+            grabbedObjectRenderer.material = originalMat_Grabbed;
+            grabbedObject.Release();
+            grabbedObject = null;
+            AllConnectsOfCurrentGrabbedObj = null;
+        }
+    }
+
+
+    public void Grab(GrabableObjectComponent obj)
+    {
+        if (grabbedObject == null)
+        {
+            GrabableObjectComponent grabbable = obj;
+            if (grabbable != null)
+            {
+                Debug.Log(grabbable);
+                if (grabbable.objID >= 0)
+                    isGrbbedNormalItem = true;
+                else // is fish rod or something
+                {
+                    isGrbbedNormalItem = false;
+                    grabbedObject = grabbable;
+                    grabbedObject.Grab();
+                    return;
+                }
+                grabbedObject = grabbable;
+                Renderer grabbedObjectRenderer = grabbedObject.GetComponent<Renderer>();
+                originalMat_Grabbed = grabbedObjectRenderer.material;
+                grabbedObject.Grab();
+                AllConnectsOfCurrentGrabbedObj = GrabableObejectGroupingManager.Instance.GetAllConnectObjects(grabbable);
+            }
+        }
+    }
+
+    public void Release()
+    {
+        if (grabbedObject != null && !isPlayerInDoorArea)
         {
             if (!isGrbbedNormalItem)
             {

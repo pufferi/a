@@ -10,12 +10,13 @@ public class InFishGameArea : MonoBehaviour
     public GameObject fishingTip1;
 
     private int tipTime = 5;
+    public PlayerGrabItems playerGrabItems;
 
     void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Player"))
+        if (other.CompareTag("Player") && playerGrabItems.grabbedObject != null && playerGrabItems.grabbedObject.objID == -2)
         {
-            if(tipTime > 0)
+            if (tipTime > 0)
             {
                 fishingTip0.SetActive(true);
                 tipTime--;

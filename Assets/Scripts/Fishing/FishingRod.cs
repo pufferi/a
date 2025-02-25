@@ -42,7 +42,7 @@ public class FishingRod : GrabableObjectComponent
             Vector2 mouseMovement = fishRodMoveAction.ReadValue<Vector2>();
             float mouseY = mouseMovement.y;
             angle = mouseY;
-            Debug.Log(angle);
+            //Debug.Log(angle);
             RotateObjectAroundPoint(RotateTarget, axis, angle);
         }
     }
@@ -53,12 +53,8 @@ public class FishingRod : GrabableObjectComponent
         transform.RotateAround(target, axis, angle * rotationSpeed * Time.deltaTime);
     }
 
-    public void RodMovementDuringFishingGame()
-    {
-        // 这里可以放钓鱼游戏中的逻辑
-    }
 
-    public void StartFishingGame()
+    public void StartFishingGame_PlacingTheFishRod()
     {
         this.transform.position = DefaultgrabPosition;
         this.transform.rotation = Quaternion.Euler(DefaultgrabRotation);
@@ -68,7 +64,7 @@ public class FishingRod : GrabableObjectComponent
 
     public void EndFishingGame()
     {
-        this.GetComponent<Rigidbody>().isKinematic = false;
+        //this.GetComponent<Rigidbody>().isKinematic = false;
         _isInFishingGame = false;
     }
 }

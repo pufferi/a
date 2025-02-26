@@ -38,9 +38,16 @@ UnityEngine.Application::get_isBatchMode
 UnityEngine.Application::get_isFocused
 UnityEngine.Application::get_isPlaying
 UnityEngine.Application::get_runInBackground
+UnityEngine.Application::get_dataPath
 UnityEngine.Application::OpenURL
 UnityEngine.Application::get_platform
 UnityEngine.AsyncOperation::InternalDestroy
+UnityEngine.AudioSource::Pause
+UnityEngine.AudioSource::PlayHelper
+UnityEngine.AudioSource::PlayOneShotHelper
+UnityEngine.AudioSource::Stop
+UnityEngine.AudioSource::set_clip
+UnityEngine.AudioSource::set_loop
 UnityEngine.Behaviour::get_enabled
 UnityEngine.Behaviour::get_isActiveAndEnabled
 UnityEngine.Behaviour::set_enabled
@@ -55,12 +62,18 @@ UnityEngine.Camera::get_targetDisplay
 UnityEngine.Camera::get_depth
 UnityEngine.Camera::get_farClipPlane
 UnityEngine.Camera::get_nearClipPlane
+UnityEngine.Camera::CopyFrom
+UnityEngine.Camera::Render
 UnityEngine.Camera::ScreenPointToRay_Injected
 UnityEngine.Camera::ScreenToViewportPoint_Injected
 UnityEngine.Camera::SetupCurrent
 UnityEngine.Camera::WorldToScreenPoint_Injected
 UnityEngine.Camera::get_pixelRect_Injected
+UnityEngine.Camera::set_backgroundColor_Injected
+UnityEngine.Camera::set_clearFlags
+UnityEngine.Camera::set_cullingMask
 UnityEngine.Camera::set_rect_Injected
+UnityEngine.Camera::set_targetTexture
 UnityEngine.Camera::get_current
 UnityEngine.Camera::get_main
 UnityEngine.Camera::get_clearFlags
@@ -310,6 +323,8 @@ UnityEngine.GUIUtility::set_imeCompositionMode
 UnityEngine.GUIUtility::set_systemCopyBuffer
 UnityEngine.Hash128::Hash128ToStringImpl_Injected
 UnityEngine.Hash128::Parse_Injected
+UnityEngine.ImageConversion::LoadImage
+UnityEngine.ImageConversion::EncodeToPNG
 UnityEngine.Input::CheckDisabled
 UnityEngine.Input::GetKeyDownInt
 UnityEngine.Input::GetMouseButton
@@ -345,6 +360,7 @@ UnityEngine.Joint::set_connectedBody
 UnityEngine.Joint::get_connectedBody
 UnityEngine.JsonUtility::FromJsonInternal
 UnityEngine.JsonUtility::ToJsonInternal
+UnityEngine.LayerMask::NameToLayer
 UnityEngine.Light::get_useColorTemperature
 UnityEngine.Light::get_bounceIntensity
 UnityEngine.Light::get_colorTemperature
@@ -402,6 +418,7 @@ UnityEngine.Mesh::get_vertexCount
 UnityEngine.Mesh::GetIndicesImpl
 UnityEngine.Mesh::GetTrianglesImpl
 UnityEngine.Mesh::ClearImpl
+UnityEngine.Mesh::CombineMeshesImpl
 UnityEngine.Mesh::GetArrayFromChannelImpl
 UnityEngine.Mesh::Internal_Create
 UnityEngine.Mesh::MarkDynamicImpl
@@ -412,11 +429,11 @@ UnityEngine.Mesh::SetArrayForChannelImpl
 UnityEngine.Mesh::SetIndicesImpl
 UnityEngine.Mesh::get_bounds_Injected
 UnityEngine.Mesh::set_bounds_Injected
+UnityEngine.Mesh::set_subMeshCount
 UnityEngine.MeshCollider::set_convex
 UnityEngine.MeshCollider::set_sharedMesh
 UnityEngine.MeshFilter::set_mesh
 UnityEngine.MeshFilter::set_sharedMesh
-UnityEngine.MeshFilter::get_mesh
 UnityEngine.MeshFilter::get_sharedMesh
 UnityEngine.MonoBehaviour::Internal_IsInvokingAll
 UnityEngine.MonoBehaviour::IsInvoking
@@ -448,6 +465,7 @@ UnityEngine.Object::get_hideFlags
 UnityEngine.Object::FindObjectFromInstanceID
 UnityEngine.Object::Internal_CloneSingle
 UnityEngine.Object::Internal_CloneSingleWithParent
+UnityEngine.Object::Internal_InstantiateSingle_Injected
 UnityEngine.Object::FindObjectsOfType
 UnityEngine.ObjectGUIState::Internal_Create
 UnityEngine.ObjectGUIState::Internal_Destroy
@@ -487,8 +505,8 @@ UnityEngine.PlayerPrefs::Save
 UnityEngine.PropertyNameUtils::PropertyNameFromString_Injected
 UnityEngine.QualitySettings::get_activeColorSpace
 UnityEngine.Quaternion::AngleAxis_Injected
-UnityEngine.Quaternion::FromToRotation_Injected
 UnityEngine.Quaternion::Internal_FromEulerRad_Injected
+UnityEngine.Quaternion::Internal_ToEulerRad_Injected
 UnityEngine.Quaternion::Inverse_Injected
 UnityEngine.Quaternion::LookRotation_Injected
 UnityEngine.Random::RandomRangeInt
@@ -531,6 +549,7 @@ UnityEngine.Renderer::set_sortingLayerID
 UnityEngine.Renderer::set_sortingOrder
 UnityEngine.Renderer::GetMaterial
 UnityEngine.Renderer::GetSharedMaterial
+UnityEngine.Renderer::GetSharedMaterialArray
 UnityEngine.Rendering.GraphicsSettings::get_lightsUseLinearIntensity
 UnityEngine.Rendering.ScriptableRenderContext::GetCameras_Internal_Injected
 UnityEngine.Rendering.SortingGroup::get_invalidSortingGroupID
@@ -646,6 +665,7 @@ UnityEngine.Texture2D::GetWritableImageData
 UnityEngine.Texture2D::GetRawImageDataSize
 UnityEngine.Texture2D::ApplyImpl
 UnityEngine.Texture2D::GetPixelBilinearImpl_Injected
+UnityEngine.Texture2D::ReadPixelsImpl_Injected
 UnityEngine.Texture2D::SetAllPixels32
 UnityEngine.Texture2D::SetPixelImpl_Injected
 UnityEngine.Texture2D::get_whiteTexture
@@ -657,6 +677,7 @@ UnityEngine.Texture3D::get_isReadable
 UnityEngine.Time::get_deltaTime
 UnityEngine.Time::get_fixedUnscaledTime
 UnityEngine.Time::get_realtimeSinceStartup
+UnityEngine.Time::get_time
 UnityEngine.Time::get_unscaledDeltaTime
 UnityEngine.Time::get_unscaledTime
 UnityEngine.TouchScreenKeyboard::IsInPlaceEditingAllowed

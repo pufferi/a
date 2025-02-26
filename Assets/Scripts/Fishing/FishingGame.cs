@@ -1,9 +1,7 @@
 using UnityEngine;
-using UnityEngine.UI;
 using System.Collections;
 using UnityEngine.InputSystem;
 using TMPro;
-using UnityEditor;
 
 
 public class FishingGame : MonoBehaviour
@@ -42,10 +40,9 @@ public class FishingGame : MonoBehaviour
 
     [SerializeField]
     private GameObject _fishingFloat;
-
+    int fishSize=0;
     public Transform playerTransform;
 
-    public GrabableObjectGenerator grabableObjectGenerator;
 
     //private Vector3 playerCamView;
     //private Vector3 player
@@ -56,13 +53,24 @@ public class FishingGame : MonoBehaviour
 
     //flags
     private bool _isPlayingFishingGame = false;//1
-    private bool _hasCaughtFish = false;//2
-    private bool _isFishBiting = false;//3
+    //private bool _hasCaughtFish = false;//2 //应该没用
+    private bool _isFishBiting = false;//2
 
 
 
     private float biteDuration = 5f; // am i going to torture my player?
     //private Coroutine biteCoroutine;
+
+
+    // Coroutine references
+    private Coroutine startFishingCoroutine;
+
+
+    [Header("Generate Garbage")]
+    public GrabableObjectGenerator grabableObjectGenerator;
+    public Material mat;
+
+
 
     private void Start()
     {
@@ -81,13 +89,22 @@ public class FishingGame : MonoBehaviour
         audioSource = GetComponent<AudioSource>();
     }
 
+
+
+
+
+
+
+    /// ///////////////////////////////////////////////
+
     private void OnFishingGameStart(InputAction.CallbackContext context)
     {
-
+        Debug.Log(playerGrabItems.grabbedObject);
         if (!infishArea.IsInArea())
             return;
         if (playerGrabItems.grabbedObject == null || playerGrabItems.grabbedObject.objID != -2)
             return;
+        Debug.Log("ON FISHING GAME START !!!! !!!!!START");
 
         tip0.SetActive(false);
         tip1.SetActive(false);
@@ -96,6 +113,7 @@ public class FishingGame : MonoBehaviour
 
         PlayerStateManager.Instance.PlayerMoveLock();
         PlayerStateManager.Instance.PlayerViewLock("x");
+        Debug.Log("锁住了，x方向");
         playerTransform.position = playerStillPos;
         PlayerCamera.Instance.LookAtSomeWhere(Vector3.zero); // point to the center of the pool
 
@@ -104,32 +122,32 @@ public class FishingGame : MonoBehaviour
         playerGrabItems.Release();
         fishRod.GetComponent<FishingRod>().StartFishingGame_PlacingTheFishRod();
 
-        int fishSize = Random.Range(1, 11);
-
+        fishSize = Random.Range(1, 30);
+        Debug.Log("FISHSIZE this time is   "  + fishSize);
         //sound
         audioSource.clip = backGroundWaterSound;
         audioSource.loop = true;
         audioSource.Play();
 
         _isPlayingFishingGame = true;
+        startFishingCoroutine = StartCoroutine(StartFishing(fishSize));
 
-        StartCoroutine(StartFishing(fishSize));
     }
     //-----------------------
 
     private string didntCatchFish = "You didn't catch anything!";
     private string caughtFishMessage = "You caught a garbage!";
     public TextMeshProUGUI Message;
-    // Coroutine references
-    private Coroutine startFishingCoroutine;
+
 
 
     private IEnumerator StartFishing(int fishSize)
     {
+        Debug.Log("START FISHING COROUTINE IN ON   ONNNNNNN");
         while (true)
         {
             float waitTime = Random.Range(3f, 20f);
-            //yield return new WaitForSeconds(waitTime);
+            //yield return new WaitForSeconds(5);
 
             float amplitude = Mathf.Lerp(minAmplitude, maxAmplitude, (float)fishSize / 10f);
             float frequency = Mathf.Lerp(minFrequency, maxFrequency, (float)fishSize / 10f);
@@ -139,7 +157,7 @@ public class FishingGame : MonoBehaviour
 
             audioSource.Stop();
             audioSource.PlayOneShot(fishBitingSound);
-            Debug.Log(fishRod.GetComponent<FishingRod>().angle);
+            //Debug.Log(fishRod.GetComponent<FishingRod>().angle);
 
             // 开始鱼咬钩
             _isFishBiting = true;
@@ -171,22 +189,29 @@ public class FishingGame : MonoBehaviour
         audioSource.Stop();
         audioSource.PlayOneShot(caughtFishSound);
 
-        ShowTheResultOfFishingGame(_hasCaughtFish);
+        //ShowTheResultOfFishingGame(_hasCaughtFish);
 
+        if (startFishingCoroutine != null)
+        {
+            Debug.Log("START FISHING coroutine  exsist and i  STOPPED  it");
+            StopCoroutine(startFishingCoroutine);
+            startFishingCoroutine = null;
+        }
+
+        StartCoroutine(ShowTheResultOfFishingGame(_isFishBiting));
         FinishWholeGame();
     }
 
     private IEnumerator ShowTheResultOfFishingGame(bool hasCaughtFish)
     {
-        // Stop specific coroutines
-        if (startFishingCoroutine != null)
+        
+        
+        Debug.Log("我们抓到鱼了吗  "+ hasCaughtFish);
+        if (hasCaughtFish)
         {
-            StopCoroutine(startFishingCoroutine);
-            startFishingCoroutine = null;
-        }
-
-        if(hasCaughtFish)
             Message.text = caughtFishMessage;
+            GenerateGarbage(fishSize);
+        }
 
         else
             Message.text = didntCatchFish;
@@ -212,10 +237,9 @@ public class FishingGame : MonoBehaviour
         fishRod.GetComponent<FishingRod>().EndFishingGame();
         _isPlayingFishingGame = false;
         _isFishBiting = false;
-
+        Message.text = "";
         TastList.SetActive(true);
-
-        //StopAllCoroutines();
+        fishRod.GetComponent<FishingRod>().angle = 0;//this is important,.,
     }
 
     private void PauseAllSounds()
@@ -226,13 +250,20 @@ public class FishingGame : MonoBehaviour
 
     private void Update()
     {
-        if (_isPlayingFishingGame && _isFishBiting)
+        if (_isPlayingFishingGame)
         {
+            Debug.Log("angle is is         " + fishRod.GetComponent<FishingRod>().angle);
+
             if (fishRod.GetComponent<FishingRod>().angle > 70)
             {
                 ReelInAndCheckIfCaughtTheFish();
             }
         }
+    }
+
+    private void GenerateGarbage(int fishSize)
+    {
+        GameObject obj = grabableObjectGenerator.GetObject(new Vector3(0,0.5f,0),Vector3.one*fishSize,mat);
     }
 
 

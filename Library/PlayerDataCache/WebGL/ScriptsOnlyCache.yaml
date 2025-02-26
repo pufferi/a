@@ -2,10 +2,12 @@ ScriptsOnlyBuild:
   usedScripts:
     Assembly-CSharp:
     - GrabableObjectComponent
+    - MailSlotButton
     - Polyhedron
     - PolyhedronFactory
     - PolyhedronGenerator
     Assembly-CSharp.dll:
+    - AutoScrollView
     - BasicUiController
     - BeginnerTutorialPreprocess
     - BeginnerTutorialProcess
@@ -15,22 +17,36 @@ ScriptsOnlyBuild:
     - Dialogue.DialogueConversations
     - Dialogue.DialogueManager
     - DialogueTrigger
+    - FishingFloat
+    - FishingGame
+    - FishingRod
     - GrabableObjectComponent
     - GrabableObjectGenerator
     - InAreaChecker
+    - InFishGameArea
+    - InventoryIconCapturer
+    - InventoryManager
+    - MailController
+    - MailHandler
+    - MailMaker
+    - MailSlotButton
+    - MeshCombiner
     - MoveCamera
     - NPCBehaviorController
     - Player.PlayerMovement
     - PlayerCamera
     - PlayerChangeScene
     - PlayerGrabItems
+    - PlayerStateManager
     - Polyhedron
     - PolyhedronFactory
     - PolyhedronGenerator
     - ShowingTips
     - TaskListController
+    - TestInstantiate
+    - TestMail
+    - TestScript
     - Test_Generate_randomObjs
-    - Test_TaskList
     - TutorialLetterHandler
     - TypingSpeedSliderHandler
     Unity.InputSystem.dll:
@@ -60,13 +76,20 @@ ScriptsOnlyBuild:
     - UnityEditor.TestTools.TestRunner.Api.CallbacksHolder
     - UnityEditor.TestTools.TestRunner.TestListCacheData
     - UnityEditor.TestTools.TestRunner.TestRun.TestJobDataHolder
+    UnityEngine.UI:
+    - UnityEngine.UI.Button
+    - UnityEngine.UI.Image
     UnityEngine.UI.dll:
     - UnityEngine.EventSystems.EventSystem
     - UnityEngine.UI.Button
     - UnityEngine.UI.CanvasScaler
+    - UnityEngine.UI.ContentSizeFitter
     - UnityEngine.UI.GraphicRaycaster
     - UnityEngine.UI.GridLayoutGroup
     - UnityEngine.UI.Image
+    - UnityEngine.UI.Mask
+    - UnityEngine.UI.ScrollRect
+    - UnityEngine.UI.Scrollbar
     - UnityEngine.UI.Slider
     - UnityEngine.UI.VerticalLayoutGroup
   serializedClasses:
@@ -74,6 +97,7 @@ ScriptsOnlyBuild:
     - Dialogue.Dialogue
     - Dialogue.DialogueCharacter
     - Dialogue.DialogueLine
+    - MailButtonEvent
     Unity.InputSystem:
     - UnityEngine.InputSystem.InputAction
     - UnityEngine.InputSystem.InputActionMap
@@ -115,9 +139,14 @@ ScriptsOnlyBuild:
     - UnityEngine.UI.ColorBlock
     - UnityEngine.UI.MaskableGraphic/CullStateChangedEvent
     - UnityEngine.UI.Navigation
+    - UnityEngine.UI.ScrollRect/ScrollRectEvent
+    - UnityEngine.UI.Scrollbar/ScrollEvent
     - UnityEngine.UI.Slider/SliderEvent
     - UnityEngine.UI.SpriteState
   methodsToPreserve:
+  - assembly: Assembly-CSharp
+    fullTypeName: MailHandler
+    methodName: OpenMail
   - assembly: UnityEngine.CoreModule
     fullTypeName: UnityEngine.GameObject
     methodName: SetActive
@@ -157,6 +186,10 @@ ScriptsOnlyBuild:
       Script: {instanceID: 0}
     - Class: 81
       Script: {instanceID: 0}
+    - Class: 82
+      Script: {instanceID: 0}
+    - Class: 83
+      Script: {instanceID: 0}
     - Class: 89
       Script: {instanceID: 0}
     - Class: 104
@@ -164,95 +197,133 @@ ScriptsOnlyBuild:
     - Class: 108
       Script: {instanceID: 0}
     - Class: 114
-      Script: {instanceID: 16692}
+      Script: {instanceID: 16622}
     - Class: 114
-      Script: {instanceID: 16696}
+      Script: {instanceID: 16624}
     - Class: 114
-      Script: {instanceID: 16836}
+      Script: {instanceID: 16628}
     - Class: 114
-      Script: {instanceID: 17350}
+      Script: {instanceID: 16694}
     - Class: 114
-      Script: {instanceID: 17580}
+      Script: {instanceID: 17194}
     - Class: 114
-      Script: {instanceID: 17768}
+      Script: {instanceID: 17198}
     - Class: 114
-      Script: {instanceID: 17810}
+      Script: {instanceID: 17326}
     - Class: 114
-      Script: {instanceID: 17848}
+      Script: {instanceID: 17804}
     - Class: 114
-      Script: {instanceID: 17858}
+      Script: {instanceID: 18196}
     - Class: 114
-      Script: {instanceID: 18084}
+      Script: {instanceID: 18236}
     - Class: 114
-      Script: {instanceID: 18306}
+      Script: {instanceID: 18268}
     - Class: 114
-      Script: {instanceID: 18312}
+      Script: {instanceID: 18278}
     - Class: 114
-      Script: {instanceID: 18416}
+      Script: {instanceID: 18402}
     - Class: 114
-      Script: {instanceID: 18598}
+      Script: {instanceID: 18476}
     - Class: 114
-      Script: {instanceID: 18822}
+      Script: {instanceID: 18496}
     - Class: 114
-      Script: {instanceID: 18960}
+      Script: {instanceID: 18602}
     - Class: 114
-      Script: {instanceID: 19080}
+      Script: {instanceID: 18710}
     - Class: 114
-      Script: {instanceID: 19128}
+      Script: {instanceID: 18716}
     - Class: 114
-      Script: {instanceID: 19300}
+      Script: {instanceID: 18994}
     - Class: 114
-      Script: {instanceID: 19598}
+      Script: {instanceID: 19020}
     - Class: 114
-      Script: {instanceID: 19602}
+      Script: {instanceID: 19086}
     - Class: 114
-      Script: {instanceID: 19612}
+      Script: {instanceID: 19100}
     - Class: 114
-      Script: {instanceID: 19886}
+      Script: {instanceID: 19122}
     - Class: 114
-      Script: {instanceID: 19942}
+      Script: {instanceID: 19212}
     - Class: 114
-      Script: {instanceID: 20168}
+      Script: {instanceID: 19340}
     - Class: 114
-      Script: {instanceID: 20282}
+      Script: {instanceID: 19460}
     - Class: 114
-      Script: {instanceID: 20318}
+      Script: {instanceID: 19506}
     - Class: 114
-      Script: {instanceID: 20608}
+      Script: {instanceID: 19670}
     - Class: 114
-      Script: {instanceID: 20684}
+      Script: {instanceID: 19678}
     - Class: 114
-      Script: {instanceID: 20692}
+      Script: {instanceID: 19930}
     - Class: 114
-      Script: {instanceID: 20694}
+      Script: {instanceID: 19946}
     - Class: 114
-      Script: {instanceID: 20706}
+      Script: {instanceID: 19950}
     - Class: 114
-      Script: {instanceID: 20760}
+      Script: {instanceID: 19960}
     - Class: 114
-      Script: {instanceID: 21076}
+      Script: {instanceID: 20216}
     - Class: 114
-      Script: {instanceID: 21320}
+      Script: {instanceID: 20268}
     - Class: 114
-      Script: {instanceID: 21502}
+      Script: {instanceID: 20334}
     - Class: 114
-      Script: {instanceID: 21702}
+      Script: {instanceID: 20360}
     - Class: 114
-      Script: {instanceID: 21712}
+      Script: {instanceID: 20486}
     - Class: 114
-      Script: {instanceID: 22218}
+      Script: {instanceID: 20596}
     - Class: 114
-      Script: {instanceID: 22296}
+      Script: {instanceID: 20624}
     - Class: 114
-      Script: {instanceID: 22366}
+      Script: {instanceID: 20886}
     - Class: 114
-      Script: {instanceID: 23064}
+      Script: {instanceID: 20954}
     - Class: 114
-      Script: {instanceID: 23078}
+      Script: {instanceID: 20962}
     - Class: 114
-      Script: {instanceID: 23082}
+      Script: {instanceID: 20964}
     - Class: 114
-      Script: {instanceID: 23378}
+      Script: {instanceID: 20976}
+    - Class: 114
+      Script: {instanceID: 21306}
+    - Class: 114
+      Script: {instanceID: 21536}
+    - Class: 114
+      Script: {instanceID: 21708}
+    - Class: 114
+      Script: {instanceID: 21892}
+    - Class: 114
+      Script: {instanceID: 21900}
+    - Class: 114
+      Script: {instanceID: 21980}
+    - Class: 114
+      Script: {instanceID: 22072}
+    - Class: 114
+      Script: {instanceID: 22384}
+    - Class: 114
+      Script: {instanceID: 22460}
+    - Class: 114
+      Script: {instanceID: 22528}
+    - Class: 114
+      Script: {instanceID: 23174}
+    - Class: 114
+      Script: {instanceID: 23188}
+    - Class: 114
+      Script: {instanceID: 23192}
+    - Class: 114
+      Script: {instanceID: 23210}
+    - Class: 114
+      Script: {instanceID: 23214}
+    - Class: 114
+      Script: {instanceID: 23342}
+    - Class: 114
+      Script: {instanceID: 23466}
+    - Class: 114
+      Script: {instanceID: 23698}
+    - Class: 114
+      Script: {instanceID: 24020}
     - Class: 115
       Script: {instanceID: 0}
     - Class: 128
@@ -280,6 +351,36 @@ ScriptsOnlyBuild:
     - Class: 224
       Script: {instanceID: 0}
   scriptHashData:
+  - hash:
+      serializedVersion: 2
+      Hash: a8226ba35193e678e97826ea84a4bce2
+    assemblyName: Assembly-CSharp
+    namespaceName: 
+    className: InventoryItemInfo
+  - hash:
+      serializedVersion: 2
+      Hash: 28eff413921fc4d578a4a96fc1b67567
+    assemblyName: Assembly-CSharp
+    namespaceName: 
+    className: InventoryManager
+  - hash:
+      serializedVersion: 2
+      Hash: 03b6ca04a0b642ef155babb8b7380363
+    assemblyName: Assembly-CSharp
+    namespaceName: 
+    className: TestMail
+  - hash:
+      serializedVersion: 2
+      Hash: b66fdcfe9031103fa70dea65b5578b16
+    assemblyName: Assembly-CSharp
+    namespaceName: 
+    className: ExtrudeMeshController
+  - hash:
+      serializedVersion: 2
+      Hash: 915204dac8acad99f076d6e72ada0a0f
+    assemblyName: UnityEngine.UI
+    namespaceName: UnityEngine.UI
+    className: Button
   - hash:
       serializedVersion: 2
       Hash: 55c6eb87d70b0790b987439513afe462
@@ -432,6 +533,12 @@ ScriptsOnlyBuild:
     className: RawImage
   - hash:
       serializedVersion: 2
+      Hash: 6ccd95e1c60c10c67c2533afa05dfdee
+    assemblyName: Assembly-CSharp
+    namespaceName: 
+    className: GrabableObejectGroupingManager
+  - hash:
+      serializedVersion: 2
       Hash: 1321993db8249e1e05e1e0492b2bbdc3
     assemblyName: Unity.VisualScripting.Core
     namespaceName: Unity.VisualScripting
@@ -444,7 +551,7 @@ ScriptsOnlyBuild:
     className: DialogueManager
   - hash:
       serializedVersion: 2
-      Hash: 5cb9282204613ae0305fc148ef2a60dc
+      Hash: 536b894dd1e1f47bb535bb0fab0dd823
     assemblyName: Assembly-CSharp
     namespaceName: 
     className: PlayerCamera
@@ -492,6 +599,12 @@ ScriptsOnlyBuild:
     className: UnityMessageListener
   - hash:
       serializedVersion: 2
+      Hash: 6658580cee5c0dd28ad3201ec00a7749
+    assemblyName: Assembly-CSharp
+    namespaceName: 
+    className: MeshCombiner
+  - hash:
+      serializedVersion: 2
       Hash: 07a437adda7a272c9823a82ea5dcfeaf
     assemblyName: Assembly-CSharp
     namespaceName: 
@@ -502,6 +615,12 @@ ScriptsOnlyBuild:
     assemblyName: Unity.VisualScripting.Core
     namespaceName: Unity.VisualScripting
     className: CoroutineRunner
+  - hash:
+      serializedVersion: 2
+      Hash: 8cb075f38fc507b06865af9563d7cf69
+    assemblyName: Assembly-CSharp
+    namespaceName: 
+    className: MailController
   - hash:
       serializedVersion: 2
       Hash: 6ddf94363c6ce4b02d9fdd51290cb0f9
@@ -552,6 +671,12 @@ ScriptsOnlyBuild:
     className: TestResultRendererCallback
   - hash:
       serializedVersion: 2
+      Hash: 3b2c5e4a11278b732c11bd06bab3707f
+    assemblyName: Assembly-CSharp
+    namespaceName: 
+    className: TestScript
+  - hash:
+      serializedVersion: 2
       Hash: b98001682cba83786775c9e415b89a61
     assemblyName: Unity.VisualScripting.Core
     namespaceName: Unity.VisualScripting
@@ -586,12 +711,6 @@ ScriptsOnlyBuild:
     assemblyName: UnityEngine.UI
     namespaceName: UnityEngine.UI
     className: ToggleGroup
-  - hash:
-      serializedVersion: 2
-      Hash: 915204dac8acad99f076d6e72ada0a0f
-    assemblyName: UnityEngine.UI
-    namespaceName: UnityEngine.UI
-    className: Button
   - hash:
       serializedVersion: 2
       Hash: e9fbcda3d63a202014acab4130cd1f43
@@ -654,12 +773,6 @@ ScriptsOnlyBuild:
     className: ContentSizeFitter
   - hash:
       serializedVersion: 2
-      Hash: b66fdcfe9031103fa70dea65b5578b16
-    assemblyName: Assembly-CSharp
-    namespaceName: 
-    className: ExtrudeMeshController
-  - hash:
-      serializedVersion: 2
       Hash: 86344100c716167fb86137c127ca9eee
     assemblyName: Unity.InputSystem
     namespaceName: UnityEngine.InputSystem.Editor
@@ -672,10 +785,22 @@ ScriptsOnlyBuild:
     className: VariablesAsset
   - hash:
       serializedVersion: 2
+      Hash: d74525f169d516e876f17273e58e1149
+    assemblyName: Assembly-CSharp
+    namespaceName: 
+    className: MailSlotButton
+  - hash:
+      serializedVersion: 2
       Hash: 7bdff9e91edfd9600f92a185def7e34a
     assemblyName: Unity.VisualScripting.Flow
     namespaceName: Unity.VisualScripting
     className: ScriptMachine
+  - hash:
+      serializedVersion: 2
+      Hash: f3132148c4d5c9b40511bd3583aea29d
+    assemblyName: Assembly-CSharp
+    namespaceName: 
+    className: AutoScrollView
   - hash:
       serializedVersion: 2
       Hash: 2b0a0c22dd44fd082c5a5d572617d796
@@ -688,6 +813,12 @@ ScriptsOnlyBuild:
     assemblyName: Unity.VisualScripting.Core
     namespaceName: Unity.VisualScripting
     className: UnityOnSelectMessageListener
+  - hash:
+      serializedVersion: 2
+      Hash: c5250ceeb2780a58aa4d221467a4861a
+    assemblyName: Assembly-CSharp
+    namespaceName: 
+    className: TestInstantiate
   - hash:
       serializedVersion: 2
       Hash: 5b8b7230ad968399f6726aa1269dcdcb
@@ -798,7 +929,7 @@ ScriptsOnlyBuild:
     className: InputActionDebuggerWindow
   - hash:
       serializedVersion: 2
-      Hash: 4735b3279caf18b78f7aff69804e5f2c
+      Hash: 27b0e8e201b201cfe163e82b3a231392
     assemblyName: Assembly-CSharp
     namespaceName: 
     className: GrabableObjectComponent
@@ -870,6 +1001,12 @@ ScriptsOnlyBuild:
     className: RectMask2D
   - hash:
       serializedVersion: 2
+      Hash: a08137ea7b481fd09e8c01f480d01021
+    assemblyName: Assembly-CSharp
+    namespaceName: 
+    className: MailMaker
+  - hash:
+      serializedVersion: 2
       Hash: c933b590b3badb5918fa01e73cd5cc0c
     assemblyName: Unity.TextMeshPro
     namespaceName: TMPro
@@ -936,16 +1073,28 @@ ScriptsOnlyBuild:
     className: UnityOnCancelMessageListener
   - hash:
       serializedVersion: 2
-      Hash: 3259857e2ec2cc3b83245a013fd5978b
+      Hash: 8d7243c92a70f1db204e08a9716be10d
     assemblyName: Assembly-CSharp
     namespaceName: 
     className: GrabableObjectGenerator
+  - hash:
+      serializedVersion: 2
+      Hash: 223154d03dffa2115c53caf848b98ce8
+    assemblyName: Assembly-CSharp
+    namespaceName: 
+    className: InFishGameArea
   - hash:
       serializedVersion: 2
       Hash: ea1b87a3bfed09792e7720338241c7a0
     assemblyName: Unity.InputSystem
     namespaceName: UnityEngine.InputSystem.Editor
     className: InputDeviceDebuggerWindow
+  - hash:
+      serializedVersion: 2
+      Hash: 8d9a7f7a2f799c4620fe702161b892ca
+    assemblyName: Assembly-CSharp
+    namespaceName: 
+    className: FishingRod
   - hash:
       serializedVersion: 2
       Hash: ff71db1a48de41d3a8a5ffdfae1ea607
@@ -966,7 +1115,7 @@ ScriptsOnlyBuild:
     className: MoveCamera
   - hash:
       serializedVersion: 2
-      Hash: 774d7b059f6799a57505be69b9b6e790
+      Hash: f9ff6f40b5de911413dad8c2533a5eb2
     assemblyName: Assembly-CSharp
     namespaceName: Player
     className: PlayerMovement
@@ -1104,7 +1253,7 @@ ScriptsOnlyBuild:
     className: TMP_FontAsset
   - hash:
       serializedVersion: 2
-      Hash: 59ba11babca7fe1cd10c75a4edb3a867
+      Hash: 22589284d15cbd11fb5f4fb2fc283899
     assemblyName: Assembly-CSharp
     namespaceName: 
     className: PlayerGrabItems
@@ -1156,6 +1305,12 @@ ScriptsOnlyBuild:
     assemblyName: Assembly-CSharp
     namespaceName: 
     className: TaskListController
+  - hash:
+      serializedVersion: 2
+      Hash: 12e14f908cd3adcb627532f8c4e6bc13
+    assemblyName: Assembly-CSharp
+    namespaceName: 
+    className: PlayerGrabFishingRod
   - hash:
       serializedVersion: 2
       Hash: 2071f7ac454ae14eafecfd4041edae3a
@@ -1234,6 +1389,12 @@ ScriptsOnlyBuild:
     assemblyName: Unity.VisualScripting.Core
     namespaceName: Unity.VisualScripting
     className: UnityOnMouseUpAsButtonMessageListener
+  - hash:
+      serializedVersion: 2
+      Hash: a1e5045fee69df9feee90f0b8a285a2e
+    assemblyName: Assembly-CSharp
+    namespaceName: 
+    className: InventoryIconCapturer
   - hash:
       serializedVersion: 2
       Hash: 4f353524ce6564e40764f1ea080b2d85
@@ -1452,6 +1613,12 @@ ScriptsOnlyBuild:
     className: Dropdown
   - hash:
       serializedVersion: 2
+      Hash: a3e78a2bf84824da49891f53626cd71f
+    assemblyName: Assembly-CSharp
+    namespaceName: 
+    className: GrabableObjectCollection
+  - hash:
+      serializedVersion: 2
       Hash: 4728e3d21cc2a12e391e71ec9b7eed0b
     assemblyName: Unity.Timeline
     namespaceName: UnityEngine.Timeline
@@ -1488,10 +1655,28 @@ ScriptsOnlyBuild:
     className: BeginnerTutorialPreprocess
   - hash:
       serializedVersion: 2
+      Hash: e81f9755bc4faf0e2ef9b50935288f40
+    assemblyName: Assembly-CSharp
+    namespaceName: 
+    className: GarbageBin
+  - hash:
+      serializedVersion: 2
+      Hash: b675132418ca77b8b45f81a38b4b2841
+    assemblyName: Assembly-CSharp
+    namespaceName: 
+    className: FishingFloat
+  - hash:
+      serializedVersion: 2
       Hash: d5cd7f207e91ca8336c65a577a6fb2a0
     assemblyName: UnityEngine.UI
     namespaceName: UnityEngine.UI
     className: ScrollRect
+  - hash:
+      serializedVersion: 2
+      Hash: c500dc4967dc91ed1779f2c651a4f802
+    assemblyName: Assembly-CSharp
+    namespaceName: 
+    className: MailHandler
   - hash:
       serializedVersion: 2
       Hash: 9a174471d4db2c0c6d3ac47d2f818db1
@@ -1554,6 +1739,12 @@ ScriptsOnlyBuild:
     className: TMP_ScrollbarEventHandler
   - hash:
       serializedVersion: 2
+      Hash: bc9a6074e9b183490801844e5d6f81c0
+    assemblyName: Assembly-CSharp
+    namespaceName: 
+    className: PlayerStateManager
+  - hash:
+      serializedVersion: 2
       Hash: ff76cf6cf52b4db7b95af6ffadca9288
     assemblyName: Unity.Timeline
     namespaceName: UnityEngine.Timeline
@@ -1600,7 +1791,13 @@ ScriptsOnlyBuild:
     assemblyName: Unity.VisualScripting.Core
     namespaceName: Unity.VisualScripting
     className: UnityOnSliderValueChangedMessageListener
+  - hash:
+      serializedVersion: 2
+      Hash: 3804810efe9f1691338d2c8455366101
+    assemblyName: Assembly-CSharp
+    namespaceName: 
+    className: FishingGame
   platform: 20
   scenePathNames:
   - Assets/Scenes/mainScene.unity
-  playerPath: C:/Users/24769/Desktop/D
+  playerPath: C:/Users/24769/Desktop/F

@@ -34,8 +34,10 @@ public class GrabableObjectGenerator : MonoBehaviour
         obj.transform.localScale = scaleSize;
 
         Renderer renderer = obj.GetComponent<Renderer>();
+        Debug.Log("renderer: " + renderer); 
         if (renderer != null)
         {
+            Debug.Log("chenggong huan le caizhi ");
             renderer.material = material;
         }
 

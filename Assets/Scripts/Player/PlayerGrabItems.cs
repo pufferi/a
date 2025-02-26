@@ -218,7 +218,7 @@ public class PlayerGrabItems : MonoBehaviour
             GrabableObjectComponent grabbable = obj;
             if (grabbable != null)
             {
-                Debug.Log(grabbable);
+                //Debug.Log(grabbable);
                 if (grabbable.objID >= 0)
                     isGrbbedNormalItem = true;
                 else // is fish rod or something

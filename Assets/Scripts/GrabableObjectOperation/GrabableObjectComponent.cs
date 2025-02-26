@@ -5,7 +5,7 @@ public class GrabableObjectComponent : MonoBehaviour
 {
     private Rigidbody rb;
     public Vector3 MeshCenter;
-    private GameObject grabCenter;
+    public GameObject grabCenter;
     public LayerMask groundLayer;
     public LayerMask Layer_DontTouchPlayer;
     public int objID;
@@ -18,7 +18,7 @@ public class GrabableObjectComponent : MonoBehaviour
 
     private void Update()
     {
-        AdjustHeightIfBelowGround();
+        //AdjustHeightIfBelowGround();
     }
 
     private void AdjustHeightIfBelowGround()
@@ -45,16 +45,22 @@ public class GrabableObjectComponent : MonoBehaviour
         }
     }
 
-    public void Grab()
+ 
+  public void Grab()
     {
         rb = GetComponent<Rigidbody>();
 
         grabCenter = new GameObject("GrabCenter");
-        transform.SetParent(grabCenter.transform);
+        // Removed setting the parent to MainCamera to prevent unwanted transformations
+        // grabCenter.transform.SetParent(GameObject.FindWithTag("MainCamera").transform);
+        grabCenter.transform.position = this.transform.position;
+
+        // Use a FixedJoint instead of setting isKinematic
+        FixedJoint joint = grabCenter.AddComponent<FixedJoint>();
+        joint.connectedBody = rb;
+
         int layer = Mathf.RoundToInt(Mathf.Log(Layer_DontTouchPlayer.value, 2));
         gameObject.layer = layer;
-        rb.isKinematic = true;
-        grabCenter.transform.SetParent(GameObject.FindWithTag("MainCamera").transform);
 
         if (this.objID < 0)
             return;
@@ -63,22 +69,39 @@ public class GrabableObjectComponent : MonoBehaviour
             obj.gameObject.layer = layer;
     }
 
-    public void Release()
+    public virtual void Release()
     {
-        gameObject.layer = 0;
-
-        rb.isKinematic = false;
-        transform.SetParent(null);
         if (grabCenter != null)
         {
+            FixedJoint joint = grabCenter.GetComponent<FixedJoint>();
+            if (joint != null)
+            {
+                Destroy(joint);
+            }
             Destroy(grabCenter);
             grabCenter = null;
         }
-        if (this.objID < 0)
-            return;
 
-        List<GrabableObjectComponent> AllConnect = GrabableObejectGroupingManager.Instance.GetAllConnectObjects(this);
-        foreach (var obj in AllConnect)
-            obj.gameObject.layer = 0;
+        if (rb != null)
+        {
+            rb.isKinematic = false;
+        }
+
+        int originalLayer = Mathf.RoundToInt(Mathf.Log(Layer_DontTouchPlayer.value, 2));
+        gameObject.layer = originalLayer;
+
+        if (this.objID >= 0)
+        {
+            List<GrabableObjectComponent> allConnected = GrabableObejectGroupingManager.Instance.GetAllConnectObjects(this);
+            foreach (var obj in allConnected)
+            {
+                obj.gameObject.layer = originalLayer;
+            }
+        }
+
+        // Additional release functionality if needed
     }
+
+
+
 }

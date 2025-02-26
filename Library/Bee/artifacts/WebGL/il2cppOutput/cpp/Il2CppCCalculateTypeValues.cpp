@@ -1004,6 +1004,7 @@ struct FontWeightU5BU5D_t2A406B5BAB0DD0F06E7F1773DB062E4AF98067BA;
 struct FontWeightPairU5BU5D_t76E8DB55C81EEBEFA2E6D1D3E3B3EA1FB4C4954F;
 struct GCHandleU5BU5D_t7EA6F2FA83CDF86871001174CF7D30033AC4A785;
 struct GUIStyleU5BU5D_t1BA4BCF4D4D32DF07E9B84F1750D964DF33B0FEC;
+struct GameObjectU5BU5D_tFF67550DFCE87096D7A3734EA15B75896B2722CF;
 struct GamepadU5BU5D_t907383551E67ACF51B8B4ECCC0E399DAE2AB3762;
 struct GotoInstructionU5BU5D_t249B329B6B374B728C519853CBFBACD0CA679907;
 struct GradientSettingsU5BU5D_t5A316EDE81269563C087800A519341276F98AF9C;
@@ -7310,14 +7311,14 @@ struct U3CFloatUpAndDownU3Ed__2_tEAD85E7E25849CABA498AAE655C0D1EE74150230  : pub
 	float ___duration;
 	float ___U3CelapsedU3E5__2;
 };
-struct U3CShowTheResultOfFishingGameU3Ed__37_t11DD8DBFF28279AC7D36E0220CF7A888B5193C40  : public RuntimeObject
+struct U3CShowTheResultOfFishingGameU3Ed__38_t4783A587D92863F0E2216957A572CB1BCA494DD0  : public RuntimeObject
 {
 	int32_t ___U3CU3E1__state;
 	RuntimeObject* ___U3CU3E2__current;
 	bool ___hasCaughtFish;
 	FishingGame_tEDA77AF663DA3EF51BD39FB36DB653708BDA98E6* ___U3CU3E4__this;
 };
-struct U3CStartFishingU3Ed__35_t65E40EF7D858377008E36468304A6A4A50BC155F  : public RuntimeObject
+struct U3CStartFishingU3Ed__36_t858CF6E7066809352F0AE4A23338653B70DE5A1C  : public RuntimeObject
 {
 	int32_t ___U3CU3E1__state;
 	RuntimeObject* ___U3CU3E2__current;
@@ -41762,6 +41763,7 @@ struct FishingGame_tEDA77AF663DA3EF51BD39FB36DB653708BDA98E6  : public MonoBehav
 	GrabableObjectComponent_t902381CDEE723457EFCAABCA7B195DC92C75945C* ___fishRod;
 	bool ____isPlayingFishingGame;
 	bool ____isFishBiting;
+	bool ___CanShowInAreaMessage;
 	float ___biteDuration;
 	Coroutine_t85EA685566A254C23F3FD77AB5BDFFFF8799596B* ___startFishingCoroutine;
 	GrabableObjectGenerator_tB710FF53DD5E7AAA0AFAF4F150F444D8267873BC* ___grabableObjectGenerator;
@@ -41921,6 +41923,7 @@ struct InFishGameArea_tB1371D2DEECD47CD37D0EFB183F1AFA8C1B46C37  : public MonoBe
 	GameObject_t76FEDD663AB33C991A9C9A23129337651094216F* ___fishingTip1;
 	int32_t ___tipTime;
 	PlayerGrabItems_t97AF8922EA6B42002106F4C6E7BD9CAC7F9E4DA3* ___playerGrabItems;
+	FishingGame_tEDA77AF663DA3EF51BD39FB36DB653708BDA98E6* ___fishGame;
 };
 struct InlineStyleAccess_t5CA7877999C9442491A220AE50D605C84D09A165  : public StyleValueCollection_t5ADC08D23E648FBE78F2C161494786E6C83E1377
 {
@@ -43600,6 +43603,7 @@ struct FishingRod_t25A7548AC9118EDFFEF6DEB1AF2DFF41A5D68ED8  : public GrabableOb
 	InputAction_t1B550AD2B55AF322AFB53CD28DA64081220D01CD* ___fishRodMoveAction;
 	bool ____isInFishingGame;
 	float ___angle;
+	GameObjectU5BU5D_tFF67550DFCE87096D7A3734EA15B75896B2722CF* ___tipsToShut;
 };
 struct Foldout_t150CF00C27D0C105EC2831E0BA1C5D8A96EF5DC3  : public BindableElement_t873EFF65032D21AB3B7BFBA21675D1693967435C
 {
@@ -60158,9 +60162,9 @@ const Il2CppTypeDefinitionSizes g_typeDefinitionSize4687 = { sizeof(U3CFloatUpAn
 extern const Il2CppTypeDefinitionSizes g_typeDefinitionSize4688;
 const Il2CppTypeDefinitionSizes g_typeDefinitionSize4688 = { sizeof(FishingFloat_t9F786530EB0CFCEBE041C349E33BAD0318C6AC9A), -1, 0, 0 };
 extern const Il2CppTypeDefinitionSizes g_typeDefinitionSize4689;
-const Il2CppTypeDefinitionSizes g_typeDefinitionSize4689 = { sizeof(U3CShowTheResultOfFishingGameU3Ed__37_t11DD8DBFF28279AC7D36E0220CF7A888B5193C40), -1, 0, 0 };
+const Il2CppTypeDefinitionSizes g_typeDefinitionSize4689 = { sizeof(U3CShowTheResultOfFishingGameU3Ed__38_t4783A587D92863F0E2216957A572CB1BCA494DD0), -1, 0, 0 };
 extern const Il2CppTypeDefinitionSizes g_typeDefinitionSize4690;
-const Il2CppTypeDefinitionSizes g_typeDefinitionSize4690 = { sizeof(U3CStartFishingU3Ed__35_t65E40EF7D858377008E36468304A6A4A50BC155F), -1, 0, 0 };
+const Il2CppTypeDefinitionSizes g_typeDefinitionSize4690 = { sizeof(U3CStartFishingU3Ed__36_t858CF6E7066809352F0AE4A23338653B70DE5A1C), -1, 0, 0 };
 extern const Il2CppTypeDefinitionSizes g_typeDefinitionSize4691;
 const Il2CppTypeDefinitionSizes g_typeDefinitionSize4691 = { sizeof(FishingGame_tEDA77AF663DA3EF51BD39FB36DB653708BDA98E6), -1, 0, 0 };
 extern const Il2CppTypeDefinitionSizes g_typeDefinitionSize4692;

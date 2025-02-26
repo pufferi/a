@@ -218,10 +218,6 @@ void RegisterAllStrippedInternalCalls()
 
 	//Start Registrations for type : UnityEngine.AudioSource
 
-		//System.Void UnityEngine.AudioSource::Pause()
-		void Register_UnityEngine_AudioSource_Pause();
-		Register_UnityEngine_AudioSource_Pause();
-
 		//System.Void UnityEngine.AudioSource::PlayHelper(UnityEngine.AudioSource,System.UInt64)
 		void Register_UnityEngine_AudioSource_PlayHelper();
 		Register_UnityEngine_AudioSource_PlayHelper();

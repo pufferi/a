@@ -5,7 +5,7 @@ using UnityEngine;
 public class FishingFloat : MonoBehaviour
 {
 
-    private Vector3 initialPosition=new Vector3(-1.191f,0,0.137f);
+    public Vector3 initialPosition=new Vector3(-1.191f,0,0.137f);
     //public float minAmplitude = 0.05f;
     //public float maxAmplitude = 0.3f;
     //public float minFrequency = 0.5f;

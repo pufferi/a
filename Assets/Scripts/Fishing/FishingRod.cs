@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -64,5 +65,16 @@ public class FishingRod : GrabableObjectComponent
     {
         //this.GetComponent<Rigidbody>().isKinematic = false;
         _isInFishingGame = false;
+    }
+
+    [SerializeField]
+    private GameObject[] tipsToShut;
+    public override void Release()
+    {
+        base.Release();
+        foreach(var a in tipsToShut)
+        {
+            a.SetActive(false);
+        }
     }
 }

@@ -43,22 +43,17 @@ public class FishingGame : MonoBehaviour
     int fishSize=0;
     public Transform playerTransform;
 
-
-    //private Vector3 playerCamView;
-    //private Vector3 player
-
-    //我决定钓竿不拿在手上，立在空中
     private GrabableObjectComponent fishRod;
 
 
     //flags
     private bool _isPlayingFishingGame = false;//1
-    //private bool _hasCaughtFish = false;//2 //应该没用
     private bool _isFishBiting = false;//2
+    public bool CanShowInAreaMessage = true;//3
 
 
 
-    private float biteDuration = 5f; // am i going to torture my player?
+    private float biteDuration = 1.5f; // am i going to torture my player?
     //private Coroutine biteCoroutine;
 
 
@@ -104,16 +99,16 @@ public class FishingGame : MonoBehaviour
             return;
         if (playerGrabItems.grabbedObject == null || playerGrabItems.grabbedObject.objID != -2)
             return;
-        Debug.Log("ON FISHING GAME START !!!! !!!!!START");
 
+        CanShowInAreaMessage = false;
         tip0.SetActive(false);
         tip1.SetActive(false);
         TastList.SetActive(false);
         _fishingFloat.SetActive(true);
 
         PlayerStateManager.Instance.PlayerMoveLock();
-        PlayerStateManager.Instance.PlayerViewLock("x");
-        Debug.Log("锁住了，x方向");
+        //PlayerStateManager.Instance.PlayerViewLock("x");
+        PlayerStateManager.Instance.PlayerViewLock("all");
         playerTransform.position = playerStillPos;
         PlayerCamera.Instance.LookAtSomeWhere(Vector3.zero); // point to the center of the pool
 
@@ -123,7 +118,8 @@ public class FishingGame : MonoBehaviour
         fishRod.GetComponent<FishingRod>().StartFishingGame_PlacingTheFishRod();
 
         fishSize = Random.Range(1, 30);
-        Debug.Log("FISHSIZE this time is   "  + fishSize);
+
+
         //sound
         audioSource.clip = backGroundWaterSound;
         audioSource.loop = true;
@@ -143,11 +139,10 @@ public class FishingGame : MonoBehaviour
 
     private IEnumerator StartFishing(int fishSize)
     {
-        Debug.Log("START FISHING COROUTINE IN ON   ONNNNNNN");
         while (true)
         {
             float waitTime = Random.Range(3f, 20f);
-            //yield return new WaitForSeconds(5);
+            yield return new WaitForSeconds(waitTime);
 
             float amplitude = Mathf.Lerp(minAmplitude, maxAmplitude, (float)fishSize / 10f);
             float frequency = Mathf.Lerp(minFrequency, maxFrequency, (float)fishSize / 10f);
@@ -157,23 +152,21 @@ public class FishingGame : MonoBehaviour
 
             audioSource.Stop();
             audioSource.PlayOneShot(fishBitingSound);
-            //Debug.Log(fishRod.GetComponent<FishingRod>().angle);
 
-            // 开始鱼咬钩
+            float startFishingTims = Time.time;
             _isFishBiting = true;
-            //biteCoroutine = StartCoroutine(FishBitingTimer());
 
-            // 等待鱼咬钩期间
-            yield return new WaitForSeconds(biteDuration);
+            while (Time.time - startFishingTims < duration)
+            {
+                if (fishRod.GetComponent<FishingRod>().angle > 70)
+                {
+                    ReelInAndCheckIfCaughtTheFish();
+                    yield break;
+                }
+                yield return null;
+            }
 
-            // 停止鱼咬钩
             _isFishBiting = false;
-
-            //if (fishRod.GetComponent<FishingRod>().angle > 70)
-            //{
-            //    Debug.Log("收杆！！！");
-            //    break;
-            //}
 
             yield return new WaitForSeconds(duration); // wait for the fish to bite
         }
@@ -204,20 +197,20 @@ public class FishingGame : MonoBehaviour
 
     private IEnumerator ShowTheResultOfFishingGame(bool hasCaughtFish)
     {
-        
-        
-        Debug.Log("我们抓到鱼了吗  "+ hasCaughtFish);
         if (hasCaughtFish)
         {
             Message.text = caughtFishMessage;
             GenerateGarbage(fishSize);
-        }
 
+            audioSource.Stop();
+            audioSource.PlayOneShot(caughtFishSound);
+        }
         else
             Message.text = didntCatchFish;
 
-        yield return new WaitForSeconds(3f);
+        yield return new WaitForSeconds(1.5f);
         Message.text = "";
+        CanShowInAreaMessage = true;
     }
 
     private void OnFinishWholeGame(InputAction.CallbackContext context)
@@ -232,39 +225,20 @@ public class FishingGame : MonoBehaviour
 
         playerGrabItems.Grab(fishRod);
         PlayerStateManager.Instance.PlayerMoveUnlock();
-        PlayerStateManager.Instance.PlayerViewUnlock("x");
-        PauseAllSounds();
+        PlayerStateManager.Instance.PlayerViewUnlock("all");
         fishRod.GetComponent<FishingRod>().EndFishingGame();
         _isPlayingFishingGame = false;
         _isFishBiting = false;
-        Message.text = "";
+        //Message.text = "";
         TastList.SetActive(true);
+        fishingFloat.gameObject.SetActive(false);
+        fishingFloat.transform.position = fishingFloat.initialPosition;
         fishRod.GetComponent<FishingRod>().angle = 0;//this is important,.,
-    }
-
-    private void PauseAllSounds()
-    {
-        audioSource.Pause();
-        audioSource.clip = null;
-    }
-
-    private void Update()
-    {
-        if (_isPlayingFishingGame)
-        {
-            Debug.Log("angle is is         " + fishRod.GetComponent<FishingRod>().angle);
-
-            if (fishRod.GetComponent<FishingRod>().angle > 70)
-            {
-                ReelInAndCheckIfCaughtTheFish();
-            }
-        }
     }
 
     private void GenerateGarbage(int fishSize)
     {
         GameObject obj = grabableObjectGenerator.GetObject(new Vector3(0,0.5f,0),Vector3.one*fishSize,mat);
     }
-
 
 }

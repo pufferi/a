@@ -1,11 +1,11 @@
-using System.Collections.Generic;
+ï»¿using System.Collections.Generic;
 using UnityEngine;
 
 public class GrabableObjectComponent : MonoBehaviour
 {
     private Rigidbody rb;
     public Vector3 MeshCenter;
-    public GameObject grabCenter;
+    private GameObject grabCenter;
     public LayerMask groundLayer;
     public LayerMask Layer_DontTouchPlayer;
     public int objID;
@@ -27,14 +27,14 @@ public class GrabableObjectComponent : MonoBehaviour
         if (collider == null)
             return;
 
-        // ¼ÆËãÎïÌåµÄ×îµÍµã
+        // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Íµï¿½
         Vector3 lowestPoint = transform.position - new Vector3(0, collider.bounds.extents.y, 0);
 
-        // ·¢ÉäÒ»Ìõ´Ó×îµÍµãÏòÏÂµÄÉäÏß£¬ÒÔ¼ì²âÊÇ·ñ½Ó´¥µØÃæ
+        // ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Íµï¿½ï¿½ï¿½ï¿½Âµï¿½ï¿½ï¿½ï¿½ß£ï¿½ï¿½Ô¼ï¿½ï¿½ï¿½Ç·ï¿½Ó´ï¿½ï¿½ï¿½ï¿½ï¿½
         RaycastHit hit;
         if (Physics.Raycast(lowestPoint, Vector3.down, out hit, 0.1f, groundLayer))
         {
-            // ¼ÆËãÐèÒªÌáÉýµÄ¸ß¶È
+            // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Òªï¿½ï¿½ï¿½ï¿½ï¿½Ä¸ß¶ï¿½
             float offset = hit.distance - collider.bounds.extents.y;
             if (offset < 0)
             {
@@ -45,22 +45,16 @@ public class GrabableObjectComponent : MonoBehaviour
         }
     }
 
- 
-  public void Grab()
+    public void Grab()
     {
         rb = GetComponent<Rigidbody>();
 
         grabCenter = new GameObject("GrabCenter");
-        // Removed setting the parent to MainCamera to prevent unwanted transformations
-        // grabCenter.transform.SetParent(GameObject.FindWithTag("MainCamera").transform);
-        grabCenter.transform.position = this.transform.position;
-
-        // Use a FixedJoint instead of setting isKinematic
-        FixedJoint joint = grabCenter.AddComponent<FixedJoint>();
-        joint.connectedBody = rb;
-
+        transform.SetParent(grabCenter.transform);
         int layer = Mathf.RoundToInt(Mathf.Log(Layer_DontTouchPlayer.value, 2));
         gameObject.layer = layer;
+        rb.isKinematic = true;
+        grabCenter.transform.SetParent(GameObject.FindWithTag("MainCamera").transform);
 
         if (this.objID < 0)
             return;
@@ -71,37 +65,20 @@ public class GrabableObjectComponent : MonoBehaviour
 
     public virtual void Release()
     {
+        gameObject.layer = 0;
+
+        rb.isKinematic = false;
+        transform.SetParent(null);
         if (grabCenter != null)
         {
-            FixedJoint joint = grabCenter.GetComponent<FixedJoint>();
-            if (joint != null)
-            {
-                Destroy(joint);
-            }
             Destroy(grabCenter);
             grabCenter = null;
         }
+        if (this.objID < 0)
+            return;
 
-        if (rb != null)
-        {
-            rb.isKinematic = false;
-        }
-
-        int originalLayer = Mathf.RoundToInt(Mathf.Log(Layer_DontTouchPlayer.value, 2));
-        gameObject.layer = originalLayer;
-
-        if (this.objID >= 0)
-        {
-            List<GrabableObjectComponent> allConnected = GrabableObejectGroupingManager.Instance.GetAllConnectObjects(this);
-            foreach (var obj in allConnected)
-            {
-                obj.gameObject.layer = originalLayer;
-            }
-        }
-
-        // Additional release functionality if needed
+        List<GrabableObjectComponent> AllConnect = GrabableObejectGroupingManager.Instance.GetAllConnectObjects(this);
+        foreach (var obj in AllConnect)
+            obj.gameObject.layer = 0;
     }
-
-
-
 }

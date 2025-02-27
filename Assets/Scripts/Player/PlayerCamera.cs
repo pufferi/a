@@ -21,6 +21,8 @@ public class PlayerCamera : MonoBehaviour
     public bool playerViewLockX = false;
     public bool playerViewLockY = false;
 
+    public PlayerGrabItems playerGrabItems;
+
     private void Awake()
     {
         if (Instance != null && Instance != this)
@@ -59,17 +61,19 @@ public class PlayerCamera : MonoBehaviour
         if (!playerViewLockX)
         {
             yRotation += mouseX;
-        }
+            if (!playerViewLockY)
+            {
+                if (playerGrabItems != null && !playerGrabItems.CanItemGoDown() && mouseY < 0)
+                {
+                    mouseY = 0;
+                }
+                xRotation -= mouseY;
+                xRotation = Mathf.Clamp(xRotation, -90f, 90f);
+            }
 
-        if (!playerViewLockY)
-        {
-            xRotation -= mouseY;
-            xRotation = Mathf.Clamp(xRotation, -90f, 90f);
+            transform.rotation = Quaternion.Euler(xRotation, yRotation, 0);
+            playerOrientation.rotation = Quaternion.Euler(0, yRotation, 0);
         }
-        //Debug.Log("yRotation      "+yRotation);
-        //Debug.Log("xRotation      "+xRotation);
-        transform.rotation = Quaternion.Euler(xRotation, yRotation, 0);
-        playerOrientation.rotation = Quaternion.Euler(0, yRotation, 0);
     }
 
     public void OnLook(InputAction.CallbackContext context)

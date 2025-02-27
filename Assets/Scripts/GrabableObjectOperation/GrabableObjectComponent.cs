@@ -18,30 +18,9 @@ public class GrabableObjectComponent : MonoBehaviour
 
     private void Update()
     {
-        //AdjustHeightIfBelowGround();
-    }
-
-    private void AdjustHeightIfBelowGround()
-    {
-        Collider collider = GetComponent<Collider>();
-        if (collider == null)
-            return;
-
-        // �����������͵�
-        Vector3 lowestPoint = transform.position - new Vector3(0, collider.bounds.extents.y, 0);
-
-        // ����һ������͵����µ����ߣ��Լ���Ƿ�Ӵ�����
-        RaycastHit hit;
-        if (Physics.Raycast(lowestPoint, Vector3.down, out hit, 0.1f, groundLayer))
+        if (transform.position.y < -0.5f)
         {
-            // ������Ҫ�����ĸ߶�
-            float offset = hit.distance - collider.bounds.extents.y;
-            if (offset < 0)
-            {
-                Vector3 newPosition = transform.position;
-                newPosition.y += -offset;
-                transform.position = newPosition;
-            }
+            transform.position = new Vector3(transform.position.x, -0.3f, transform.position.z);
         }
     }
 

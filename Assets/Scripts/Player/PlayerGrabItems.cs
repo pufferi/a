@@ -348,6 +348,24 @@ public class PlayerGrabItems : MonoBehaviour
         GrabableObejectGroupingManager.Instance.UnassignGroupID(grabbedObject);
     }
 
+    public bool CanItemGoDown()
+    {
+        // Check if the object is too close to the ground
+        if (grabbedObject == null)
+            return true;
+        Collider collider = grabbedObject.GetComponent<Collider>();
+        if (collider != null)
+        {
+            Vector3 lowestPoint = grabbedObject.transform.position - new Vector3(0, collider.bounds.extents.y, 0);
+            if (Physics.Raycast(lowestPoint, Vector3.down, out RaycastHit hit, 0.08f, grabbedObject.groundLayer))
+            {
+                Debug.Log("cant go down");
+                return false;
+            }
+        }
+        return true;
+    }
+
 
     private void OnItemMovingForward(InputAction.CallbackContext context)
     {
@@ -361,12 +379,22 @@ public class PlayerGrabItems : MonoBehaviour
             float distance = Vector3.Distance(grabbedObject.transform.position, hand.position);
             float minDistance = 0.7f;
 
+            // Check if the object is too close to the ground
+            Collider collider = grabbedObject.GetComponent<Collider>();
+            if (collider != null)
+            {
+                if (!CanItemGoDown())
+                    return;
+            }
+
             if (distance < minDistance && scrollValue < 0)
             {
                 Debug.Log("Too close");
             }
             else
+            {
                 grabbedObject.transform.position += direction * scrollValue;
+            }
         }
     }
 

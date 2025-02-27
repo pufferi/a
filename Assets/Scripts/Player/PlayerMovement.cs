@@ -1,6 +1,6 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
-
+using System.Collections;
 namespace Player
 {
     public class PlayerMovement : MonoBehaviour
@@ -37,7 +37,6 @@ namespace Player
             }
 
             Instance = this;
-            //DontDestroyOnLoad(gameObject);
         }
 
         private void Start()
@@ -69,6 +68,26 @@ namespace Player
                 playerRigidbody.drag = groundDrag;
             else
                 playerRigidbody.drag = 0;
+
+            PreventPlayerFromSuiside();
+        }
+
+        [SerializeField]
+        TMPro.TextMeshProUGUI text;
+        private void PreventPlayerFromSuiside()
+        {
+            if (transform.position.y < -10)
+            {
+                transform.position = new Vector3(0, 10, 0);
+                playerRigidbody.velocity = Vector3.zero;
+                text.text = "I know the world sucks, but it's not the time to kill yourself";
+                StartCoroutine(HideTextAfterDelay(4));
+            }
+        }
+        private IEnumerator HideTextAfterDelay(float delay)
+        {
+            yield return new WaitForSeconds(delay);
+            text.text = string.Empty;
         }
 
         private void FixedUpdate()
@@ -105,10 +124,5 @@ namespace Player
             }
         }
 
-        private void OnDestroy()
-        {
-            if (jumpAction != null)
-                jumpAction.performed -= PlayerJump;
-        }
     }
 }

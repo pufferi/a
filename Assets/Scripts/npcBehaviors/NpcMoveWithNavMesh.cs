@@ -55,7 +55,6 @@ public class NpcMoveWithNavMesh : MonoBehaviour
                 Vector3 newPos = RandomNavSphere(transform.position, wanderRadius, -1);
                 agent.SetDestination(newPos);
                 willNpcSpin = WillTheNpcSpin();
-                Debug.Log(agent.velocity.sqrMagnitude);
                 timer = 0;
             }
         }

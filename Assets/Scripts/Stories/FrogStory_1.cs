@@ -19,7 +19,8 @@ public class FrogStory_1 : MonoBehaviour
 
     private bool isConversation2triggered;
 
-    public ShowingTips ShowingTipsController;
+    //public ShowingTips ShowingTipsController;
+    public GameObject punctTip;
     public InputActionAsset inputActions;
     private InputAction talkAction;
 
@@ -36,6 +37,7 @@ public class FrogStory_1 : MonoBehaviour
     public NPCBehaviorController npcbehaviour;
 
     public TaskListController tlm;
+    public MailHandler mailHandler;
 
     private void Start()
     {
@@ -59,7 +61,8 @@ public class FrogStory_1 : MonoBehaviour
         if (inRegion&&!isConversation1triggered)
         {
             isConversation1triggered = true;
-            ShowingTipsController.HidePuctTip();
+
+            punctTip.SetActive(false);
             conversation1.dialogue.onDialogueEnd += OnConversation1Complete;
             StartCoroutine(StartDialogue(conversation1));
             talkAction.performed -= OnTalk1Action;
@@ -72,7 +75,7 @@ public class FrogStory_1 : MonoBehaviour
         {
             //拿走苍蝇拍应该要setParent,取消kinematic
             isConversation2triggered = true;
-            ShowingTipsController.HidePuctTip();
+            punctTip.SetActive(false);
             conversation2.dialogue.onDialogueEnd += OnConversation2Complete;
             StartCoroutine(StartDialogue(conversation2));
             talkAction.performed -= OnTalk2Action;
@@ -84,7 +87,8 @@ public class FrogStory_1 : MonoBehaviour
         if (other.gameObject.tag == "Player")
         {
             inRegion = true;
-            if (!isConversation1triggered||(IsSwatterInHand() && !isConversation2triggered)) ShowingTipsController.ShowPunctTip(gameObject.transform);
+            if (!isConversation1triggered||(IsSwatterInHand() && !isConversation2triggered)) 
+                punctTip.SetActive(true);
         }
     }
 
@@ -93,7 +97,7 @@ public class FrogStory_1 : MonoBehaviour
         if (other.gameObject.tag == "Player")
         {
             inRegion = false;
-            ShowingTipsController.HidePuctTip();
+            punctTip.SetActive(false);
         }
     }
 
@@ -105,15 +109,29 @@ public class FrogStory_1 : MonoBehaviour
     }
 
 
+
     private void OnConversation2Complete()
     {
-        // 青蛙走掉
+        Web.transform.SetParent(FrogHandPos);
+        webRigidbody.isKinematic = true;
+
+        barRigidbody.isKinematic = false;
+        Bar.transform.SetParent(FrogHandPos);
+
         Vector3 destination = new Vector3(100, FrogTransform.position.y, 50);
         Debug.Log(FrogTransform == null);
 
         npcbehaviour.Move(FrogTransform, destination, 30f);
         tlm.CompleteTask("help the frog to fix the swatter");
+        mailHandler.CreatMail("Green Frog 03,11");
 
+        StartCoroutine(DestroyAfterDelay(gameObject, 2f));
+    }
+
+    private IEnumerator DestroyAfterDelay(GameObject obj, float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        Destroy(obj);
     }
 
 

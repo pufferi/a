@@ -66,11 +66,9 @@ public class FishingGame : MonoBehaviour
     {
         var FishGameMap = inputActions.FindActionMap("FishGame");
         fishAction = FishGameMap.FindAction("Fishing");
-        //catchFishAction = FishGameMap.FindAction("CatchFish");
         finishWholeGame = FishGameMap.FindAction("FinishWholeFishGame");
 
         fishAction.Enable();
-        //catchFishAction.Enable();
         finishWholeGame.Enable();
         fishAction.performed += OnFishingGameStart;
 
@@ -103,7 +101,6 @@ public class FishingGame : MonoBehaviour
         _fishingFloat.SetActive(true);
 
         PlayerStateManager.Instance.PlayerMoveLock();
-        //PlayerStateManager.Instance.PlayerViewLock("x");
         PlayerStateManager.Instance.PlayerViewLock("all");
         playerTransform.position = playerStillPos;
         PlayerCamera.Instance.LookAtSomeWhere(Vector3.zero); // point to the center of the pool
@@ -174,7 +171,6 @@ public class FishingGame : MonoBehaviour
         PlayerStateManager.Instance.PlayerViewUnlock();
         Debug.Log("Finish the fishing game");
 
-        // 播放抓到鱼的音效
         audioSource.Stop();
         audioSource.PlayOneShot(caughtFishSound);
 

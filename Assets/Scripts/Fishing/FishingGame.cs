@@ -54,17 +54,12 @@ public class FishingGame : MonoBehaviour
 
 
     private float biteDuration = 1.5f; // am i going to torture my player?
-    //private Coroutine biteCoroutine;
-
 
     // Coroutine references
     private Coroutine startFishingCoroutine;
 
 
-    [Header("Generate Garbage")]
-    public GrabableObjectGenerator grabableObjectGenerator;
-    public Material mat;
-
+    private FishGenerator fishGenerator;
 
 
     private void Start()
@@ -82,6 +77,7 @@ public class FishingGame : MonoBehaviour
         finishWholeGame.performed += OnFinishWholeGame;
 
         audioSource = GetComponent<AudioSource>();
+        fishGenerator = GetComponent<FishGenerator>();
     }
 
 
@@ -156,7 +152,7 @@ public class FishingGame : MonoBehaviour
             float startFishingTims = Time.time;
             _isFishBiting = true;
 
-            while (Time.time - startFishingTims < duration)
+            while (Time.time - startFishingTims < biteDuration)
             {
                 if (fishRod.GetComponent<FishingRod>().angle > 70)
                 {
@@ -238,7 +234,7 @@ public class FishingGame : MonoBehaviour
 
     private void GenerateGarbage(int fishSize)
     {
-        GameObject obj = grabableObjectGenerator.GetObject(new Vector3(0,0.5f,0),Vector3.one*fishSize,mat);
+        fishGenerator.GenerateFish(fishSize);
     }
 
 }

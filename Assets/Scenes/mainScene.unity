@@ -9916,6 +9916,10 @@ PrefabInstance:
       value: painting
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 4abbd199f666354488b8c6f2f717fc77, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 4abbd199f666354488b8c6f2f717fc77, type: 3}
       propertyPath: m_TagString
       value: Item
       objectReference: {fileID: 0}
@@ -12029,9 +12033,33 @@ PrefabInstance:
       propertyPath: m_ConstrainProportionsScale
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: -7727283976786494646, guid: 2a9d756ad150b2d4b86a1ba9c8cdf2bd, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 50
+      objectReference: {fileID: 0}
+    - target: {fileID: -7727283976786494646, guid: 2a9d756ad150b2d4b86a1ba9c8cdf2bd, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 50
+      objectReference: {fileID: 0}
+    - target: {fileID: -7727283976786494646, guid: 2a9d756ad150b2d4b86a1ba9c8cdf2bd, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 50
+      objectReference: {fileID: 0}
+    - target: {fileID: -7727283976786494646, guid: 2a9d756ad150b2d4b86a1ba9c8cdf2bd, type: 3}
+      propertyPath: m_ConstrainProportionsScale
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -1571088974278647724, guid: 2a9d756ad150b2d4b86a1ba9c8cdf2bd, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: -1571088974278647724, guid: 2a9d756ad150b2d4b86a1ba9c8cdf2bd, type: 3}
       propertyPath: m_TagString
       value: Item
+      objectReference: {fileID: 0}
+    - target: {fileID: -1182885439118767771, guid: 2a9d756ad150b2d4b86a1ba9c8cdf2bd, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -1182885439118767771, guid: 2a9d756ad150b2d4b86a1ba9c8cdf2bd, type: 3}
       propertyPath: m_TagString
@@ -12040,6 +12068,22 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 2a9d756ad150b2d4b86a1ba9c8cdf2bd, type: 3}
       propertyPath: m_Name
       value: moka
+      objectReference: {fileID: 0}
+    - target: {fileID: 4530601140202948231, guid: 2a9d756ad150b2d4b86a1ba9c8cdf2bd, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 50
+      objectReference: {fileID: 0}
+    - target: {fileID: 4530601140202948231, guid: 2a9d756ad150b2d4b86a1ba9c8cdf2bd, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 50
+      objectReference: {fileID: 0}
+    - target: {fileID: 4530601140202948231, guid: 2a9d756ad150b2d4b86a1ba9c8cdf2bd, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 50
+      objectReference: {fileID: 0}
+    - target: {fileID: 4530601140202948231, guid: 2a9d756ad150b2d4b86a1ba9c8cdf2bd, type: 3}
+      propertyPath: m_ConstrainProportionsScale
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -12193,6 +12237,7 @@ MonoBehaviour:
   mokaTop: {fileID: 1136079720}
   mokaBottom: {fileID: 223290827}
   tree: {fileID: 0}
+  puffer: {fileID: 0}
   playerGrabItems: {fileID: 1230388856}
   BeeTransform: {fileID: 0}
   tlm: {fileID: 856751620}
@@ -12932,6 +12977,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 06ca042319ae7124fadd5c7bd7b4f69f, type: 3}
       propertyPath: m_Name
       value: Mirror
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 06ca042319ae7124fadd5c7bd7b4f69f, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 06ca042319ae7124fadd5c7bd7b4f69f, type: 3}
       propertyPath: m_TagString
@@ -15349,6 +15398,7 @@ GameObject:
   - component: {fileID: 2087819560}
   - component: {fileID: 2087819561}
   - component: {fileID: 2087819562}
+  - component: {fileID: 2087819563}
   m_Layer: 0
   m_Name: Fishing
   m_TagString: Untagged
@@ -15364,7 +15414,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2087819559}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -15404,8 +15454,6 @@ MonoBehaviour:
   _fishingFloat: {fileID: 325034270}
   playerTransform: {fileID: 1230388848}
   CanShowInAreaMessage: 1
-  grabableObjectGenerator: {fileID: 1298957109}
-  mat: {fileID: 2100000, guid: 9d076b53cd6458d469dd3d710e175d7a, type: 2}
   Message: {fileID: 2120774675}
 --- !u!82 &2087819562
 AudioSource:
@@ -15503,6 +15551,30 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &2087819563
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2087819559}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 10d0afb744b7980468cf4aa7cda8fc71, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  fishEntries:
+  - fishObject: {fileID: 1136079720}
+    index: 0
+  - fishObject: {fileID: 1708608598}
+    index: 3
+  - fishObject: {fileID: 1159211813}
+    index: 5
+  - fishObject: {fileID: 223290827}
+    index: 6
+  grabableObjectGenerator: {fileID: 1298957109}
+  mat: {fileID: 2100000, guid: 9d076b53cd6458d469dd3d710e175d7a, type: 2}
+  tlm: {fileID: 856751620}
 --- !u!1 &2089600196
 GameObject:
   m_ObjectHideFlags: 0
@@ -16926,7 +16998,7 @@ SceneRoots:
   - {fileID: 756038914}
   - {fileID: 1025204462}
   - {fileID: 1114499648}
-  - {fileID: 348076632}
   - {fileID: 2087819560}
+  - {fileID: 348076632}
   - {fileID: 211681604}
   - {fileID: 1125528915}

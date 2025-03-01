@@ -58,7 +58,6 @@ public class PufferStory_1 : MonoBehaviour
     {
         if (other.gameObject.tag == "Player")
         {
-            Debug.Log("YES INNNNN");
             punctTip.SetActive(true);
 
             _inRegion = true;

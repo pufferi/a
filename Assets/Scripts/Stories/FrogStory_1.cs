@@ -39,6 +39,7 @@ public class FrogStory_1 : MonoBehaviour
 
     public TaskListController tlm;
     public MailHandler mailHandler;
+    public GameObject bee;
 
     private void Start()
     {
@@ -126,7 +127,7 @@ public class FrogStory_1 : MonoBehaviour
         tlm.CompleteTask("help the frog to fix the swatter");
         mailHandler.CreatMail("Green Frog 03,11");
         mailHandler.SelectChild(0);
-
+        bee.SetActive(true);
         StartCoroutine(DestroyAfterDelay(gameObject, 2f));
     }
 

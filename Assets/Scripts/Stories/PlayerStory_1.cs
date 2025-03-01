@@ -44,6 +44,7 @@ public class PlayerStory_1 : MonoBehaviour
     public InputActionAsset inputActions;
     private InputAction InteractAction;
 
+    public MailHandler mailHandler;
 
 
     void Start()
@@ -57,6 +58,9 @@ public class PlayerStory_1 : MonoBehaviour
         InteractAction = playerMap.FindAction("Interact");
         InteractAction.performed += ToggleLetter;
         InteractAction.Enable();
+
+        mailHandler.CreatMail("Community Administrator 03,10");
+
         ShowDialogue1();
     }
 
@@ -108,6 +112,7 @@ public class PlayerStory_1 : MonoBehaviour
         Destroy(tip1);
         tip2.SetActive(true);
         hasPickedLetter = true;
+        mailHandler.CreatMail("frEUrd 03,11");
     }
     private void OnConversation3Complete()
     {

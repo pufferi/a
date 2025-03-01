@@ -100,6 +100,7 @@ public class BeeStory_1 : MonoBehaviour
     {
         _beeMove.NpcStopMoveWithPlayer();
         _beeMove.NpcStartMove();
+        puffer.SetActive(true);
         tlm.AddTask("Find the moka pot for the bee");
     }
 
@@ -111,7 +112,6 @@ public class BeeStory_1 : MonoBehaviour
 
         tree.transform.position = new Vector3(this.transform.position.x, this.transform.position.y + 5f, this.transform.position.z);
         tlm.CompleteTask("Find the moka pot for the bee");
-        puffer.SetActive(true);
         this.enabled = false;
     }
 
@@ -120,7 +120,7 @@ public class BeeStory_1 : MonoBehaviour
     private IEnumerator StartDialogue(DialogueConversations conversation)
     {
         DialogueManager.instance.StartDialogue(conversation.dialogue);
-       yield return null;
+        yield return null;
     }
 
     private bool IsMokaTopAndBottomConnected()

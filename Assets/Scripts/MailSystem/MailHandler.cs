@@ -149,6 +149,7 @@ public class MailHandler : MonoBehaviour
         mail.OnSelectEvent.AddListener((ItemButtom) => { HandleEventEmailOnSelect(mail); });
         mail.OnClickEvent.AddListener((ItemButtom) => { HandleEventEmailOnClick(mail); });
         mail.OnSubmitEvent.AddListener((ItemButtom) => { HandleEventEmailOnSubmit(mail); });
+        SelectChild(0);
     }
 
 

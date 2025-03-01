@@ -111,13 +111,13 @@ namespace Player
         private void PlayerMove()
         {
             Vector3 moveDirection = orientation.forward * moveInput.y + orientation.right * moveInput.x;
-            playerRigidbody.AddForce(moveDirection.normalized * moveSpeed * 10f, ForceMode.Force);
+            transform.position += moveDirection.normalized * moveSpeed * Time.deltaTime;
 
             // Check for small steps and move forward if detected
             if (moveInput.y > 0 && IsSmallStepAhead())
             {
-                playerRigidbody.AddForce(Vector3.up * 5f, ForceMode.Impulse);
-                playerRigidbody.AddForce(orientation.forward * moveSpeed * 10f, ForceMode.Force);
+                transform.position += Vector3.up * 0.2f;
+                transform.position += orientation.forward * moveSpeed * Time.deltaTime;
             }
         }
 
@@ -131,13 +131,14 @@ namespace Player
             if (Physics.Raycast(origin, direction, out hit, maxDistance))
             {
                 float stepHeight = hit.point.y - transform.position.y;
-                if (stepHeight > 0 && stepHeight <= 0.2f)
+                if (stepHeight > 0 && stepHeight <= 0.2f && !hit.collider.isTrigger)//added !hit.collider.isTrigger
                 {
                     return true;
                 }
             }
             return false;
         }
+
 
         private void SpeedControl()
         {

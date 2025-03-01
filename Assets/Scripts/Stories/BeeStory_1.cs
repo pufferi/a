@@ -34,6 +34,7 @@ public class BeeStory_1 : MonoBehaviour
 
     public Transform playerTransform;
 
+    public TaskListController tlm;
 
     private void Start()
     {
@@ -66,10 +67,10 @@ public class BeeStory_1 : MonoBehaviour
     {
         if (_inRegion && !isConversation2triggered && _isMokaInHand)
         {
-            //拿走苍蝇拍应该要setParent,取消kinematic
             isConversation2triggered = true;
             ShowingTipsController.HidePuctTip();
             conversation2.dialogue.onDialogueEnd += OnConversation2Complete;
+            _beeMove.NpcStopMove();
             StartCoroutine(StartDialogue(conversation2));
             talkAction.performed -= OnTalk2Action;
         }
@@ -98,7 +99,7 @@ public class BeeStory_1 : MonoBehaviour
     {
         _beeMove.NpcStopMoveWithPlayer();
         _beeMove.NpcStartMove();
-
+        tlm.AddTask("Find the moka pot for the bee");
     }
 
 
@@ -107,7 +108,8 @@ public class BeeStory_1 : MonoBehaviour
         tree.SetActive(true);
         _beeMove.NpcStartMove();
 
-        tree.transform.position = new Vector3(playerTransform.position.x, tree.transform.position.y + 5f, playerTransform.position.z);
+        tree.transform.position = new Vector3(this.transform.position.x, this.transform.position.y + 5f, this.transform.position.z);
+        tlm.CompleteTask("Find the moka pot for the bee");
         this.enabled = false;
     }
 

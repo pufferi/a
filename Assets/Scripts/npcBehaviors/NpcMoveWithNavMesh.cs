@@ -17,6 +17,8 @@ public class NpcMoveWithNavMesh : MonoBehaviour
     public float YRotationOffset = 0f;
     public float ZRotationOffset = 90f;
 
+    public float YPositionOffset = 0f;
+
     public float rotationSpeed = 50f;
 
     private bool shouldNpcMoveWithPlayer=false;
@@ -33,10 +35,16 @@ public class NpcMoveWithNavMesh : MonoBehaviour
 
     void Update()
     {
-        Debug.Log(agent.isOnNavMesh);
         if (shouldNpcMoveWithPlayer)
         {
-            agent.SetDestination(playerTransform.position);
+            float distanceToPlayer = Vector3.Distance(transform.position, playerTransform.position);
+            if (distanceToPlayer > 3.0f) // Adjust the stopping distance as needed
+            {
+                agent.isStopped = false;
+                agent.SetDestination(playerTransform.position);
+            }
+            else
+                agent.isStopped = true;
         }
         else
         {
@@ -67,10 +75,12 @@ public class NpcMoveWithNavMesh : MonoBehaviour
         }
         else
         {
-            
             Vector3 currentRotation = transform.rotation.eulerAngles;
             transform.rotation = Quaternion.Euler(XRotationOffset, currentRotation.y, currentRotation.z);
         }
+
+        Vector3 currentPosition = transform.position;
+        transform.position = new Vector3(currentPosition.x, currentPosition.y + YPositionOffset, currentPosition.z);
     }
 
    

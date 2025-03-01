@@ -42,6 +42,20 @@ public class TaskListController : MonoBehaviour
             taskText.color = Color.gray; 
         }
     }
+    public void CompleteTask(string taskDescription)
+    {
+        for (int i = 0; i < tasks.Count; i++)
+        {
+            TMP_Text taskText = tasks[i].GetComponent<TMP_Text>();
+            if (taskText.text == taskDescription)
+            {
+                taskText.fontStyle = FontStyles.Strikethrough;
+                taskText.color = Color.gray;
+                break;
+            }
+        }
+    }
+
 
     public void RemoveTask(int taskIndex)
     {

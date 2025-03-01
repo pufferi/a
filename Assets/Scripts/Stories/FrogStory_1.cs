@@ -35,6 +35,8 @@ public class FrogStory_1 : MonoBehaviour
 
     public NPCBehaviorController npcbehaviour;
 
+    public TaskListController tlm;
+
     private void Start()
     {
         var playerMap = inputActions.FindActionMap("Player");
@@ -99,6 +101,7 @@ public class FrogStory_1 : MonoBehaviour
     {
         webRigidbody.isKinematic = false;
         barRigidbody.isKinematic = false;
+        tlm.AddTask("help the frog to fix the swatter");
     }
 
 
@@ -109,6 +112,7 @@ public class FrogStory_1 : MonoBehaviour
         Debug.Log(FrogTransform == null);
 
         npcbehaviour.Move(FrogTransform, destination, 30f);
+        tlm.CompleteTask("help the frog to fix the swatter");
 
     }
 

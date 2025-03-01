@@ -1,4 +1,5 @@
 using Dialogue;
+using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -124,6 +125,7 @@ public class FrogStory_1 : MonoBehaviour
         npcbehaviour.Move(FrogTransform, destination, 30f);
         tlm.CompleteTask("help the frog to fix the swatter");
         mailHandler.CreatMail("Green Frog 03,11");
+        mailHandler.SelectChild(0);
 
         StartCoroutine(DestroyAfterDelay(gameObject, 2f));
     }

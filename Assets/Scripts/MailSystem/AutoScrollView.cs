@@ -12,7 +12,7 @@ public class AutoScrollView : MonoBehaviour
     [SerializeField]
     private float _transitionDuration = 0.2f;
 
-    private TransitionHelper _transitionHelper=new TransitionHelper();
+    private TransitionHelper _transitionHelper = new TransitionHelper();
 
     private void Update()
     {
@@ -26,19 +26,19 @@ public class AutoScrollView : MonoBehaviour
     public void HandleOnSelectChange(GameObject go)
     {
         float viewportTopBorderY = GetBorderTopYLocal(_viewportRectTransform.gameObject);
-        float viewportBottomBorderY=GetBorderBottomYLocal(_viewportRectTransform.gameObject);
+        float viewportBottomBorderY = GetBorderBottomYLocal(_viewportRectTransform.gameObject);
 
         float targetTopBorderY = GetBorderTopYRelative(go);
-        float targetTopYWithViewportOffset=targetTopBorderY + viewportTopBorderY;
+        float targetTopYWithViewportOffset = targetTopBorderY + viewportTopBorderY;
 
-        float targetBottomBorderY=GetBorderBottomYRelative(go);
-        float targetBottomYWithViewportOffset=targetBottomBorderY - viewportBottomBorderY;
+        float targetBottomBorderY = GetBorderBottomYRelative(go);
+        float targetBottomYWithViewportOffset = targetBottomBorderY - viewportBottomBorderY;
 
-        float topDiff=targetBottomYWithViewportOffset-viewportTopBorderY;
+        float topDiff = targetBottomYWithViewportOffset - viewportTopBorderY;
         if (topDiff > 0f)
             MoveContentObjectByAmount((topDiff * 100f) + GetVerticalLayoutGroup().padding.top);
 
-        float bottomDiff=targetBottomYWithViewportOffset-viewportBottomBorderY;
+        float bottomDiff = targetBottomYWithViewportOffset - viewportBottomBorderY;
         if (bottomDiff < 0f)
             MoveContentObjectByAmount((bottomDiff * 100f) - GetVerticalLayoutGroup().padding.bottom);
     }
@@ -53,7 +53,7 @@ public class AutoScrollView : MonoBehaviour
     {
         Vector2 rectSize = go.GetComponent<RectTransform>().rect.size * 0.01f;
         Vector3 pos = go.transform.localPosition / 100f;
-        pos.y-= rectSize.y;
+        pos.y -= rectSize.y;
         return pos.y;
     }
 
@@ -61,7 +61,7 @@ public class AutoScrollView : MonoBehaviour
     {
         float contentY = _content.transform.localPosition.y / 100f;
         float targetBorderTopLacal = GetBorderTopYLocal(go);
-        float targetBorderTopYRelative =targetBorderTopLacal + contentY;
+        float targetBorderTopYRelative = targetBorderTopLacal + contentY;
 
         return targetBorderTopYRelative;
     }
@@ -78,7 +78,7 @@ public class AutoScrollView : MonoBehaviour
 
     private void MoveContentObjectByAmount(float amount)
     {
-        Vector2 posScrollFrom=_content.transform.localPosition;
+        Vector2 posScrollFrom = _content.transform.localPosition;
         Vector2 posScrollTo = posScrollFrom;
         posScrollTo.y -= amount;
 
@@ -107,7 +107,7 @@ public class AutoScrollView : MonoBehaviour
         private Vector2 _posTo;
 
         public bool InProgress { get => _inProgress; }
-        public Vector2 PosCurrent { get => _posCurrent;}
+        public Vector2 PosCurrent { get => _posCurrent; }
 
 
         public void Update()
@@ -117,7 +117,7 @@ public class AutoScrollView : MonoBehaviour
             CalculatePosition();
         }
 
-        public void TransitionPositionFromTo(Vector2 posFrom , Vector2 posTo,float duration)
+        public void TransitionPositionFromTo(Vector2 posFrom, Vector2 posTo, float duration)
         {
             Clear();
 
@@ -149,8 +149,8 @@ public class AutoScrollView : MonoBehaviour
                 return;
 
             _timeElapsed += Time.deltaTime;
-            _progress=_timeElapsed/_duration;
-            if(_progress>1f)
+            _progress = _timeElapsed / _duration;
+            if (_progress > 1f)
                 _progress = 1f;
 
             if (_progress >= 1f)

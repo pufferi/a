@@ -135,7 +135,16 @@ public class FishingGame : MonoBehaviour
         while (true)
         {
             float waitTime = Random.Range(3f, 20f);
-            yield return new WaitForSeconds(waitTime);
+            float startWaitTime = Time.time;
+            while (Time.time - startWaitTime < waitTime)
+            {
+                if (fishRod.GetComponent<FishingRod>().angle > 70)
+                {
+                    ReelInAndCheckIfCaughtTheFish(false);
+                    yield break;
+                }
+                yield return null;
+            }
 
             float amplitude = Mathf.Lerp(minAmplitude, maxAmplitude, (float)fishSize / 10f);
             float frequency = Mathf.Lerp(minFrequency, maxFrequency, (float)fishSize / 10f);
@@ -147,43 +156,36 @@ public class FishingGame : MonoBehaviour
             audioSource.PlayOneShot(fishBitingSound);
 
             float startFishingTims = Time.time;
-            _isFishBiting = true;
 
-            while (Time.time - startFishingTims < biteDuration)
+            while (Time.time - startFishingTims < duration)
             {
+                _isFishBiting = true;
                 if (fishRod.GetComponent<FishingRod>().angle > 70)
                 {
-                    ReelInAndCheckIfCaughtTheFish();
+                    ReelInAndCheckIfCaughtTheFish(true);
                     yield break;
                 }
                 yield return null;
             }
 
             _isFishBiting = false;
-
-            yield return new WaitForSeconds(duration); // wait for the fish to bite
         }
     }
 
 
-    private void ReelInAndCheckIfCaughtTheFish()
+    private void ReelInAndCheckIfCaughtTheFish(bool hasCaughtFish)
     {
         PlayerStateManager.Instance.PlayerViewUnlock();
-        Debug.Log("Finish the fishing game");
-
         audioSource.Stop();
         audioSource.PlayOneShot(caughtFishSound);
 
-        //ShowTheResultOfFishingGame(_hasCaughtFish);
-
         if (startFishingCoroutine != null)
         {
-            Debug.Log("START FISHING coroutine  exsist and i  STOPPED  it");
             StopCoroutine(startFishingCoroutine);
             startFishingCoroutine = null;
         }
 
-        StartCoroutine(ShowTheResultOfFishingGame(_isFishBiting));
+        StartCoroutine(ShowTheResultOfFishingGame(hasCaughtFish));
         FinishWholeGame();
     }
 

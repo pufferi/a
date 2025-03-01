@@ -1,6 +1,4 @@
 using Player;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -11,6 +9,7 @@ public class MailController : MonoBehaviour
     private bool isMailBoxOpen = false;
     public GameObject MailBoxCanvas;
     public PlayerMovement playerMovement;
+    public MailHandler mailHandler;
 
     private void Start()
     {
@@ -19,11 +18,14 @@ public class MailController : MonoBehaviour
         MailBoxOpenAndClose.performed += OnMailBoxOpenAndClosePerformed;
     }
 
+    
+
     private void OnMailBoxOpenAndClosePerformed(InputAction.CallbackContext context)
     {
         Debug.Log("MailBoxOpenAndClose triggered. isMailBoxOpen: " + isMailBoxOpen);
         if (isMailBoxOpen)
         {
+            mailHandler.SelectChild(0);
             MailBoxCanvas.SetActive(false);
             isMailBoxOpen=false;
             playerMovement.playerStill=false;
@@ -36,12 +38,5 @@ public class MailController : MonoBehaviour
         }
     }
    
-    private void OnDestroy()
-    {
-        if (MailBoxOpenAndClose != null)
-        {
-            MailBoxOpenAndClose.performed -= OnMailBoxOpenAndClosePerformed;
-        }
-    }
 
 }

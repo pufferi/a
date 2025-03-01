@@ -10477,8 +10477,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1230388847}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0.47631493, z: -0, w: 0.8792748}
-  m_LocalPosition: {x: -10.37, y: 1.5, z: -17.77}
+  m_LocalRotation: {x: 0, y: -0.3479177, z: 0, w: 0.9375251}
+  m_LocalPosition: {x: 18.5, y: 13.9, z: -81.5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -10486,7 +10486,7 @@ Transform:
   - {fileID: 374822299}
   - {fileID: 89274929}
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: -56.89, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: -40.72, z: 0}
 --- !u!54 &1230388850
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -11453,7 +11453,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1320036105}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f8ce384e8029ade4687c17bd7cd3cb1d, type: 3}
   m_Name: 
@@ -12447,6 +12447,7 @@ MonoBehaviour:
   inputActions: {fileID: -944628639613478452, guid: 36ed6e878f024884795a1d8cbe5853ce, type: 3}
   MailBoxCanvas: {fileID: 740859174}
   playerMovement: {fileID: 1230388854}
+  mailHandler: {fileID: 740859179}
 --- !u!1 &1499894289 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 8974073784288432854, guid: 739404dcb6ec50c41a010cf9d0933632, type: 3}
@@ -13490,6 +13491,51 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 739404dcb6ec50c41a010cf9d0933632, type: 3}
+--- !u!1 &1830937550
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1830937552}
+  - component: {fileID: 1830937551}
+  m_Layer: 0
+  m_Name: GameObject
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1830937551
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1830937550}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 51dda493f1d10bf4db7ac0ca80c78ac0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mailHandler: {fileID: 740859179}
+--- !u!4 &1830937552
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1830937550}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 4.6152344, y: 0.94745696, z: -18.658392}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1843626668
 GameObject:
   m_ObjectHideFlags: 0
@@ -13552,7 +13598,7 @@ MonoBehaviour:
     2.
     G Key - Place the item in hand into the inventory or throw it out.
 
-    
+
 
     Yes,
     technically, your inventory can hold an entire world.
@@ -17119,3 +17165,4 @@ SceneRoots:
   - {fileID: 348076632}
   - {fileID: 211681604}
   - {fileID: 1125528915}
+  - {fileID: 1830937552}

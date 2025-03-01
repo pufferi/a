@@ -56,7 +56,7 @@ public class PufferStory_1 : MonoBehaviour
 
     public void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.tag == "Player")
+        if (!isConversation1triggered && other.gameObject.tag == "Player")
         {
             punctTip.SetActive(true);
 

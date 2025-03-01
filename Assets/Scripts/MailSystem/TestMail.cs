@@ -11,7 +11,6 @@ public class TestMail : MonoBehaviour
     string mailName = "frEUrd 03,11";
     string mailName2 = "Community Administrator 03,10";
 
-    public Image image;
     void Start()
     {
         mailHandler.CreatMail(mailName);

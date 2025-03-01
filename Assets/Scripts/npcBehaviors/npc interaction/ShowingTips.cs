@@ -12,13 +12,13 @@ public class ShowingTips : MonoBehaviour
         PunctTip = Resources.Load<GameObject>("punct");
     }
 
-    public void ShowPunctTip(Transform parent)
+    public void ShowPunctTip(Transform parent, float OffsetOnYPos = 0)
     {
         if (PunctTipInstance == null)
         {
             PunctTipInstance = Instantiate(PunctTip, parent);
             PunctTipInstance.SetActive(true);
-            PunctTip.transform.position = new Vector3(PunctTip.transform.position.x, PunctTip.transform.position.y, PunctTip.transform.position.z);
+            PunctTip.transform.position = new Vector3(PunctTip.transform.position.x, PunctTip.transform.position.y+OffsetOnYPos, PunctTip.transform.position.z);
         }
     }
 

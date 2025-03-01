@@ -60,7 +60,6 @@
     <Analyzer Include="D:\coding\unity_project\2022.3.23f1\Editor\Data\Tools\Unity.SourceGenerators\Unity.Properties.SourceGenerator.dll" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\Scripts\BeginnerTutorial\TutorialLetterHandler.cs" />
     <Compile Include="Assets\Scripts\Polyhedron\dependencies\Test scenes\8. Deform mesh\Decals\DecalsController.cs" />
     <Compile Include="Assets\Scripts\Polyhedron\dependencies\_Utility scripts\Data structures\_TransformBetweenDataStructures.cs" />
     <Compile Include="Assets\Scripts\Polyhedron\dependencies\7. Extrude mesh along curve\Extrude mesh\MeshProfile.cs" />
@@ -76,7 +75,6 @@
     <Compile Include="Assets\Scripts\GrabableObjectOperation\GrabableObejectGroupingManager.cs" />
     <Compile Include="Assets\Scripts\GrabableObjectOperation\GrabableObjectComponent.cs" />
     <Compile Include="Assets\Scripts\Polyhedron\dependencies\Test scenes\1. Intersection\IntersectionController.cs" />
-    <Compile Include="Assets\Scripts\BeginnerTutorial\BeginnerTutorialProcess.cs" />
     <Compile Include="Assets\Scripts\Polyhedron\dependencies\_Utility scripts\Data structures\Heap\Heap.cs" />
     <Compile Include="Assets\Scripts\Polyhedron\dependencies\5. Voronoi diagram\DelaunayToVoronoiAlgorithm.cs" />
     <Compile Include="Assets\Scripts\Polyhedron\dependencies\7. Extrude mesh along curve\Curves\CatmullRom.cs" />
@@ -101,6 +99,7 @@
     <Compile Include="Assets\Scripts\Polyhedron\dependencies\8. Deform mesh\Simplification\Quadric Error Metric\QEM_Edge.cs" />
     <Compile Include="Assets\Scripts\npcBehaviors\MailSystem\TestMail.cs" />
     <Compile Include="Assets\Scripts\Polyhedron\dependencies\2. Generate Mesh\Grid.cs" />
+    <Compile Include="Assets\Scripts\Stories\BeginnerTutorialPreprocess.cs" />
     <Compile Include="Assets\Scripts\Inventory\InventoryManager.cs" />
     <Compile Include="Assets\Scripts\Polyhedron\dependencies\4. Triangulation\Marching squares\Square.cs" />
     <Compile Include="Assets\Scripts\Fishing\FishingGame.cs" />
@@ -117,6 +116,7 @@
     <Compile Include="Assets\Scripts\Polyhedron\dependencies\3. Convex Hull\3d\IterativeHullAlgorithm3D.cs" />
     <Compile Include="Assets\Scripts\Controller\JointController.cs" />
     <Compile Include="Assets\Scripts\Player\PlayerChangeScene.cs" />
+    <Compile Include="Assets\Scripts\Stories\InAreaChecker.cs" />
     <Compile Include="Assets\Scripts\Polyhedron\dependencies\_Utility scripts\Data structures\MyVector2.cs" />
     <Compile Include="Assets\Scripts\Polyhedron\dependencies\Test scenes\4. Triangulation\Marching\MetaCirclesController.cs" />
     <Compile Include="Assets\Scripts\Polyhedron\dependencies\_Utility scripts\Data structures\Half-edge\HalfEdgeData3.cs" />
@@ -134,7 +134,6 @@
     <Compile Include="Assets\Scripts\Fishing\InFishGameArea.cs" />
     <Compile Include="Assets\Scripts\Polyhedron\dependencies\4. Triangulation\Ear Clipping\LinkedVertex.cs" />
     <Compile Include="Assets\Scripts\Polyhedron\dependencies\_Utility scripts\Data structures\Line.cs" />
-    <Compile Include="Assets\Scripts\BeginnerTutorial\InAreaChecker.cs" />
     <Compile Include="Assets\Scripts\Player\MoveCamera.cs" />
     <Compile Include="Assets\Scripts\Polyhedron\dependencies\Test scenes\8. Deform mesh\Simplification\MeshSimplificationController.cs" />
     <Compile Include="Assets\Scripts\npcBehaviors\MailSystem\MailHandler.cs" />
@@ -146,6 +145,7 @@
     <Compile Include="Assets\Scripts\Controller\BasicUiController.cs" />
     <Compile Include="Assets\Scripts\Polyhedron\dependencies\_Utility scripts\BooleanOperations.cs" />
     <Compile Include="Assets\Scripts\Polyhedron\dependencies\4. Triangulation\Delaunay\ConstrainedDelaunaySloan.cs" />
+    <Compile Include="Assets\Scripts\Stories\BeeStory_1.cs" />
     <Compile Include="Assets\Scripts\Polyhedron\dependencies\_Utility scripts\Data structures\Half-edge\DebugHalfEdge.cs" />
     <Compile Include="Assets\Scripts\Polyhedron\dependencies\7. Extrude mesh along curve\Curves\BezierLinear.cs" />
     <Compile Include="Assets\Scripts\Polyhedron\dependencies\Test scenes\6. Polygon clipping\PolygonClippingController.cs" />
@@ -171,12 +171,12 @@
     <Compile Include="Assets\Scripts\Polyhedron\dependencies\8. Deform mesh\Simplification\RemoveUnwantedTriangles.cs" />
     <Compile Include="Assets\Scripts\Polyhedron\dependencies\_Utility scripts\Data structures\Half-edge\HalfEdgeData2.cs" />
     <Compile Include="Assets\Scripts\GrabableObjectOperation\GrabableObjectCollection.cs" />
+    <Compile Include="Assets\Scripts\Stories\FrogStory_1.cs" />
     <Compile Include="Assets\Scripts\Polyhedron\dependencies\9. Other\_Geometry.cs" />
     <Compile Include="Assets\Scripts\Polyhedron\dependencies\_Utility scripts\Data structures\MyQuaternion.cs" />
     <Compile Include="Assets\Scripts\npcBehaviors\MailSystem\MailMaker.cs" />
     <Compile Include="Assets\Scripts\Polyhedron\dependencies\7. Extrude mesh along curve\Curves\BezierCubic.cs" />
     <Compile Include="Assets\Scripts\GrabableObjectOperation\GrabableObjectGenerator.cs" />
-    <Compile Include="Assets\Scripts\BeginnerTutorial\BeginnerTutorialPreprocess.cs" />
     <Compile Include="Assets\Scripts\Polyhedron\dependencies\8. Deform mesh\Cut mesh with plane\CutMeshWithPlane.cs" />
     <Compile Include="Assets\Scripts\npcBehaviors\MailSystem\MailSlotButton.cs" />
     <Compile Include="Assets\Scripts\GrabableObjectOperation\Test_Generate_randomObjs.cs" />
@@ -207,6 +207,7 @@
     <Compile Include="Assets\Scripts\Polyhedron\dependencies\4. Triangulation\Marching squares\SquareGrid.cs" />
     <Compile Include="Assets\Scripts\Polyhedron\dependencies\5. Voronoi diagram\VoronoiSiteBySiteAlgorithm.cs" />
     <Compile Include="Assets\Scripts\Polyhedron\dependencies\4. Triangulation\TriangleSplittingAlgorithm.cs" />
+    <Compile Include="Assets\Scripts\Stories\TutorialLetterHandler.cs" />
     <Compile Include="Assets\Scripts\Polyhedron\dependencies\5. Voronoi diagram\Delaunay3DToVoronoiAlgorithm.cs" />
     <Compile Include="Assets\[Temp]\TestScript.cs" />
     <Compile Include="Assets\Scripts\Polyhedron\dependencies\8. Deform mesh\Cut mesh with plane\CutMeshHole.cs" />

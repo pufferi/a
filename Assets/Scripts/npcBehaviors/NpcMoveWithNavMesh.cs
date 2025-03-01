@@ -19,6 +19,10 @@ public class NpcMoveWithNavMesh : MonoBehaviour
 
     public float rotationSpeed = 50f;
 
+    private bool shouldNpcMoveWithPlayer=false;
+
+    public Transform playerTransform;
+
     void Start()
     {
         agent = GetComponent<NavMeshAgent>();
@@ -29,15 +33,23 @@ public class NpcMoveWithNavMesh : MonoBehaviour
 
     void Update()
     {
-        timer += Time.deltaTime;
-
-        if (timer >= wanderTimer)
+        Debug.Log(agent.isOnNavMesh);
+        if (shouldNpcMoveWithPlayer)
         {
-            Vector3 newPos = RandomNavSphere(transform.position, wanderRadius, -1);
-            agent.SetDestination(newPos);
-            willNpcSpin = WillTheNpcSpin();
-            Debug.Log(agent.velocity.sqrMagnitude);
-            timer = 0;
+            agent.SetDestination(playerTransform.position);
+        }
+        else
+        {
+            timer += Time.deltaTime;
+
+            if (timer >= wanderTimer)
+            {
+                Vector3 newPos = RandomNavSphere(transform.position, wanderRadius, -1);
+                agent.SetDestination(newPos);
+                willNpcSpin = WillTheNpcSpin();
+                Debug.Log(agent.velocity.sqrMagnitude);
+                timer = 0;
+            }
         }
 
         if (agent.velocity.sqrMagnitude > Mathf.Epsilon)
@@ -63,13 +75,23 @@ public class NpcMoveWithNavMesh : MonoBehaviour
 
    
 
-    public void StopNPC()
+    public void NpcStartMoveWithPlayer()
+    {
+        shouldNpcMoveWithPlayer = true;
+    }
+
+    public void NpcStopMoveWithPlayer()
+    {
+        shouldNpcMoveWithPlayer = false;
+    }
+
+    public void NpcStopMove()
     {
         agent.isStopped = true;
     }
 
 
-    public void StartNPC()
+    public void NpcStartMove()
     {
         agent.isStopped = false;
     }

@@ -291,6 +291,8 @@ public class PlayerGrabItems : MonoBehaviour
                 return;
 
             Debug.Log("Detected closest object with tag: " + targetTag);
+            //if targetTag=="wall"
+            //如果物体没有粘到墙上，则把物体粘到墙上
 
             FixedJoint joint = grabbedObject.AddComponent<FixedJoint>();
             joint.connectedBody = closestHit.rigidbody;
@@ -397,5 +399,6 @@ public class PlayerGrabItems : MonoBehaviour
             }
         }
     }
+    
 
 }

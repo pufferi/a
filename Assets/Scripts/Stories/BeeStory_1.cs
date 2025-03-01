@@ -27,12 +27,13 @@ public class BeeStory_1 : MonoBehaviour
     public GameObject mokaTop;
     public GameObject mokaBottom;
     public GameObject tree;
+    public GameObject puffer;
 
     private NpcMoveWithNavMesh _beeMove;
 
     public PlayerGrabItems playerGrabItems;
 
-    public Transform playerTransform;
+    public Transform BeeTransform;
 
     public TaskListController tlm;
 
@@ -110,6 +111,7 @@ public class BeeStory_1 : MonoBehaviour
 
         tree.transform.position = new Vector3(this.transform.position.x, this.transform.position.y + 5f, this.transform.position.z);
         tlm.CompleteTask("Find the moka pot for the bee");
+        puffer.SetActive(true);
         this.enabled = false;
     }
 

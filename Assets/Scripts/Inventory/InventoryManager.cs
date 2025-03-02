@@ -99,11 +99,14 @@ public class InventoryManager : MonoBehaviour
 
             Image image = inventoryButtons[currentSlot].GetComponent<Image>();
 
-            string fileName = Application.dataPath + "/Inventory/InventoryItemIcons/" + slotName + ".png";
-            if (File.Exists(fileName))
+            string folderPath = Application.dataPath + "/InventoryItemIcons";
+            string newFilePath = Path.Combine(folderPath, slotName + ".png");
+
+
+            if (File.Exists(newFilePath))
             {
-                //Debug.Log("Loading image from file: " + fileName);
-                byte[] fileData = File.ReadAllBytes(fileName);
+                Debug.Log("Loading image from file: " + newFilePath);
+                byte[] fileData = File.ReadAllBytes(newFilePath);
                 Texture2D tex = new Texture2D(2, 2);
                 tex.LoadImage(fileData);
                 Sprite sprite = Sprite.Create(tex, new Rect(0, 0, tex.width, tex.height), new Vector2(0.5f, 0.5f));
@@ -111,7 +114,7 @@ public class InventoryManager : MonoBehaviour
             }
             else
             {
-                //Debug.Log("NONONONONNnnn    "+ fileName);
+                Debug.Log("NONONONONNnnn    "+ newFilePath);
             }
 
             isInventorySlotEmpty[currentSlot] = false;
@@ -190,10 +193,10 @@ public class InventoryManager : MonoBehaviour
 
                     foreach (Transform child in children)
                     {
-                        Debug.Log("child is here");
+                        //Debug.Log("child is here");
                         child.GetComponent<Rigidbody>().isKinematic = false;
                         child.SetParent(_GrabableObjs.transform);
-                        Debug.Log("child    " + child.transform.position);
+                        //Debug.Log("child    " + child.transform.position);
                         child.position = new Vector3(
                     playerGrabItems.hand.position.x + playerCam.transform.forward.x * 0.5f,
                     Mathf.Max(storedItem.position.y, playerGrabItems.hand.position.y + playerCam.transform.forward.y * 0.5f),
@@ -214,10 +217,12 @@ public class InventoryManager : MonoBehaviour
                 Debug.LogError("Failed to find stored item in slot: " + currentSlot);
             }
 
-            string iconPath = _inventoryIconPath + slotName + ".png";
-            if (File.Exists(iconPath))
+            string folderPath = Application.dataPath + "/InventoryItemIcons";
+            string newFilePath = Path.Combine(folderPath, slotName + ".png");
+
+            if (File.Exists(newFilePath))
             {
-                File.Delete(iconPath);
+                File.Delete(newFilePath);
             }
 
             isInventorySlotEmpty[currentSlot] = true;

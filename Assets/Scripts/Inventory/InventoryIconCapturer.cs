@@ -1,7 +1,6 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.InputSystem;
+using System.IO;
 
 public class InventoryIconCapturer : MonoBehaviour
 {
@@ -64,8 +63,24 @@ public class InventoryIconCapturer : MonoBehaviour
 
         byte[] bytes = screenshot.EncodeToPNG();
         //\Resources\Inventory\InventoryItemIcons
-        Debug.Log(Application.dataPath + "/Inventory/InventoryItemIcons/" + ItemName + ".png");
-        System.IO.File.WriteAllBytes(Application.dataPath + "/Inventory/InventoryItemIcons/" + ItemName + ".png", bytes);
+
+        string folderPath = Application.dataPath + "/InventoryItemIcons";
+        if (!Directory.Exists(folderPath))
+        {
+            // 创建文件夹
+            Directory.CreateDirectory(folderPath);
+            Debug.Log("Folder created at: " + folderPath);
+        }
+        string newFilePath = Path.Combine(folderPath, ItemName + ".png");
+
+
+        Debug.Log("THE PATH OF MY STORED IMAGE IS:     ");
+        Debug.Log(newFilePath);
+
+
+        System.IO.File.WriteAllBytes(newFilePath, bytes);
+        Debug.Log("AND DOES IT EXIST?    " + System.IO.File.Exists(newFilePath));
+
         Debug.Log("Screenshot saved");
     }
 }

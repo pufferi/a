@@ -33,9 +33,8 @@ public class InventoryManager : MonoBehaviour
     [SerializeField]
     private GameObject _GrabableObjs; // This is just an entry in the Hierarchy, convenient for managing these objects later
 
-    private string _prefabPath = "Assets/Resources/Inventory/InventoryPrefebs/";
-    private string _inventoryIconPath = "Assets/Resources/Inventory/InventoryItemIcons/";
-
+    //private string _inventoryIconPath = "Assets/Resources/Inventory/InventoryItemIcons/";
+    private string _inventoryIconPath = Path.Combine(Application.dataPath, "/Inventory/InventoryItemIcons/");
     public Camera playerCam;
 
     private void Start()
@@ -100,14 +99,19 @@ public class InventoryManager : MonoBehaviour
 
             Image image = inventoryButtons[currentSlot].GetComponent<Image>();
 
-            string fileName = _inventoryIconPath + slotName + ".png";
+            string fileName = Application.dataPath + "/Inventory/InventoryItemIcons/" + slotName + ".png";
             if (File.Exists(fileName))
             {
+                //Debug.Log("Loading image from file: " + fileName);
                 byte[] fileData = File.ReadAllBytes(fileName);
                 Texture2D tex = new Texture2D(2, 2);
                 tex.LoadImage(fileData);
                 Sprite sprite = Sprite.Create(tex, new Rect(0, 0, tex.width, tex.height), new Vector2(0.5f, 0.5f));
                 image.sprite = sprite;
+            }
+            else
+            {
+                //Debug.Log("NONONONONNnnn    "+ fileName);
             }
 
             isInventorySlotEmpty[currentSlot] = false;

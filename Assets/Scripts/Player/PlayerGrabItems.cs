@@ -359,7 +359,7 @@ public class PlayerGrabItems : MonoBehaviour
         if (collider != null)
         {
             Vector3 lowestPoint = grabbedObject.transform.position - new Vector3(0, collider.bounds.extents.y, 0);
-            if (Physics.Raycast(lowestPoint, Vector3.down, out RaycastHit hit, 0.08f, grabbedObject.groundLayer))
+            if (Physics.Raycast(lowestPoint, Vector3.down, out RaycastHit hit, 0.01f, grabbedObject.groundLayer))
             {
                 Debug.Log("cant go down");
                 return false;

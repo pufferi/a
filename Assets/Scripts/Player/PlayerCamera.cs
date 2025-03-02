@@ -37,12 +37,14 @@ public class PlayerCamera : MonoBehaviour
         var playerMap = inputActions.FindActionMap("Player");
         lookAction = playerMap.FindAction("Look");
         lookAction.performed += OnLook;
+        lookAction.canceled += OnLookCanceled; 
         lookAction.Enable();
     }
 
     private void OnDestroy()
     {
         lookAction.performed -= OnLook;
+        lookAction.canceled -= OnLookCanceled;
         lookAction.Disable();
     }
 
@@ -58,9 +60,13 @@ public class PlayerCamera : MonoBehaviour
         float mouseX = currentInput.x * Time.deltaTime * sensX;
         float mouseY = currentInput.y * Time.deltaTime * sensY;
 
+        //Debug.Log("MouseX: " + mouseX + " MouseY: " + mouseY);
+
         if (!playerViewLockX)
         {
             yRotation += mouseX;
+            yRotation %= 360; 
+
             if (!playerViewLockY)
             {
                 if (playerGrabItems != null && !playerGrabItems.CanItemGoDown() && mouseY < 0)
@@ -81,6 +87,12 @@ public class PlayerCamera : MonoBehaviour
         if (playerViewLockX && playerViewLockY)
             return;
         lookInput = context.ReadValue<Vector2>();
+    }
+
+    // reset lookInput
+    public void OnLookCanceled(InputAction.CallbackContext context)
+    {
+        lookInput = Vector2.zero;
     }
 
     public void LookAtSomeWhere(Vector3 someWhere)

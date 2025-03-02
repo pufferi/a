@@ -113,12 +113,13 @@ namespace Player
             Vector3 moveDirection = orientation.forward * moveInput.y + orientation.right * moveInput.x;
             transform.position += moveDirection.normalized * moveSpeed * Time.deltaTime;
 
-            // Check for small steps and move forward if detected
-            if (moveInput.y > 0 && IsSmallStepAhead())
-            {
-                transform.position += Vector3.up * 0.2f;
-                transform.position += orientation.forward * moveSpeed * Time.deltaTime;
-            }
+
+            //// Check for small steps and move forward if detected
+            //if (moveInput.y > 0 && IsSmallStepAhead())
+            //{
+            //    transform.position += Vector3.up * 0.2f;
+            //    transform.position += orientation.forward * moveSpeed * Time.deltaTime;
+            //}
         }
 
         private bool IsSmallStepAhead()

@@ -64,7 +64,8 @@ public class InventoryIconCapturer : MonoBehaviour
 
         byte[] bytes = screenshot.EncodeToPNG();
         //\Resources\Inventory\InventoryItemIcons
-        System.IO.File.WriteAllBytes(Application.dataPath + "/Resources/Inventory/InventoryItemIcons/" + ItemName + ".png", bytes);
+        Debug.Log(Application.dataPath + "/Inventory/InventoryItemIcons/" + ItemName + ".png");
+        System.IO.File.WriteAllBytes(Application.dataPath + "/Inventory/InventoryItemIcons/" + ItemName + ".png", bytes);
         Debug.Log("Screenshot saved");
     }
 }

@@ -157,17 +157,15 @@ public class MailHandler : MonoBehaviour
     {
         MailSlotButton mail;
         mail = EventSystem.current.currentSelectedGameObject.GetComponent<MailSlotButton>();
-        string mailInformation= mail.MailInformationText;   
-        string fileName = "Assets/Images/Mails/" + mailInformation + ".png";
+        string mailInformation = mail.MailInformationText;
+        string fileName = Path.Combine(Application.dataPath, "Images/Mails", mailInformation + ".png");
         image.gameObject.SetActive(true);
         if (File.Exists(fileName))
         {
-            // 加载PNG文件并转换为Texture2D
             byte[] fileData = File.ReadAllBytes(fileName);
             Texture2D tex = new Texture2D(2, 2);
             tex.LoadImage(fileData);
 
-            // 创建Sprite并设置到Image组件
             Sprite sprite = Sprite.Create(tex, new Rect(0, 0, tex.width, tex.height), new Vector2(0.5f, 0.5f));
             image.sprite = sprite;
         }

@@ -146,24 +146,22 @@ public class MailHandler : MonoBehaviour
 
     public void OpenMail()
     {
-        Debug.Log("Openning mail");
-        MailSlotButton mail;
-        mail = EventSystem.current.currentSelectedGameObject.GetComponent<MailSlotButton>();
+        Debug.Log("Opening mail");
+        MailSlotButton mail = EventSystem.current.currentSelectedGameObject.GetComponent<MailSlotButton>();
         string mailInformation = mail.MailInformationText;
-        string fileName = Path.Combine(Application.dataPath, "Images/Mails", mailInformation + ".png");
-        image.gameObject.SetActive(true);
-        if (File.Exists(fileName))
-        {
-            byte[] fileData = File.ReadAllBytes(fileName);
-            Texture2D tex = new Texture2D(2, 2);
-            tex.LoadImage(fileData);
 
-            Sprite sprite = Sprite.Create(tex, new Rect(0, 0, tex.width, tex.height), new Vector2(0.5f, 0.5f));
+        // Set the resource path relative to the Resources folder
+        string resourcePath = "Images/" + mailInformation;
+
+        image.gameObject.SetActive(true);
+        Sprite sprite = Resources.Load<Sprite>(resourcePath);
+        if (sprite != null)
+        {
             image.sprite = sprite;
         }
         else
         {
-            Debug.LogError("File not found at: " + fileName);
+            Debug.LogError("File not found at: " + resourcePath);
         }
     }
 

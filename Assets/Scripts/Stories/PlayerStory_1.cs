@@ -46,6 +46,8 @@ public class PlayerStory_1 : MonoBehaviour
 
     public MailHandler mailHandler;
 
+    public GameObject BaseTrigger;
+
 
     void Start()
     {
@@ -116,9 +118,11 @@ public class PlayerStory_1 : MonoBehaviour
     }
     private void OnConversation3Complete()
     {
-        tlm.AddTask("Gather some materials and build a sofa on the base.");
+        tlm.AddTask("Gather some materials and build a bed on the base.");
+        BaseTrigger.SetActive(false);
         playerChangeScene.ActivateChangeSceneFunction();
     }
+
     private IEnumerator StartDialogue(DialogueConversations conversation)
     {
         DialogueManager.instance.StartDialogue(conversation.dialogue);

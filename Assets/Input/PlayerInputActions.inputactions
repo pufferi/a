@@ -139,6 +139,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "CheckBedProgress",
+                    "type": "Button",
+                    "id": "8d56374e-df7e-4d8c-be3b-e9bbe2f6f607",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -392,6 +401,17 @@
                     "processors": "",
                     "groups": "",
                     "action": "ItemForward",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "b57cf168-fbb7-41a6-9f4c-5256cc153d25",
+                    "path": "<Keyboard>/p",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "CheckBedProgress",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

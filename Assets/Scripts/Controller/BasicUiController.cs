@@ -8,8 +8,8 @@ public class BasicUiController : MonoBehaviour
 
     [SerializeField]
     private GameObject settingsCanvas;
-    [SerializeField]
-    private CursorController cursorController;
+
+    public CursorController cursorController;
 
 
     private void Start()
@@ -21,12 +21,24 @@ public class BasicUiController : MonoBehaviour
 
     }
 
-    void Update() 
-    { 
-        if (settingsAction.triggered) 
+    void Update()
+    {
+        if (settingsAction.triggered)
         {
-            if (!settingsCanvas.activeSelf) { settingsCanvas.SetActive(true); cursorController.CursorUnlock(); }
-            else { settingsCanvas.SetActive(false); cursorController.Cursorlock(); }
+            if (!settingsCanvas.activeSelf)
+            {
+                settingsCanvas.SetActive(true);
+                PlayerStateManager.Instance.PlayerMoveLock();
+                PlayerStateManager.Instance.PlayerViewLock("all");
+                cursorController.CursorUnlock();
+            }
+            else
+            {
+                settingsCanvas.SetActive(false);
+                PlayerStateManager.Instance.PlayerMoveUnlock();
+                PlayerStateManager.Instance.PlayerViewUnlock("all");
+                cursorController.Cursorlock();
+            }
         }
     }
 

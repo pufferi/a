@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -23,7 +21,10 @@ public class Click2Start : MonoBehaviour
 
     private void onClick(InputAction.CallbackContext context)
     {
+        Debug.Log("Clicked");
+        clickAction.performed -= onClick;
         cursorController.Cursorlock();
         gameObject.SetActive(false);
+        clickAction.Disable();
     }
 }

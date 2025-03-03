@@ -21,7 +21,6 @@ public class MailController : MonoBehaviour
 
     private void OnMailBoxOpenAndClosePerformed(InputAction.CallbackContext context)
     {
-        Debug.Log("MailBoxOpenAndClose triggered. isMailBoxOpen: " + isMailBoxOpen);
         if (isMailBoxOpen)
         {
             MailBoxCanvas.SetActive(false);

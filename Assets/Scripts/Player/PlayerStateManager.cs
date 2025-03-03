@@ -40,11 +40,13 @@ public class PlayerStateManager : MonoBehaviour
 
     public void PlayerMoveLock()
     {
+        Debug.Log("Player Move Unlock");
         PlayerMovement.Instance.playerStill = true;
     }
 
     public void PlayerMoveUnlock()
     {
+        Debug.Log("PlayerMoveUnlock");
         PlayerMovement.Instance.playerStill = false;
     }
 

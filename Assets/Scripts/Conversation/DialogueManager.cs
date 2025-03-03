@@ -25,7 +25,6 @@ namespace Dialogue
         public InputActionAsset inputActions;
         private InputAction leftclickAction;
 
-        public PlayerMovement playermovement; //¿ØÖÆÍæ¼ÒÔÝÍ£
 
         public TypingSpeedSliderHandler TypingSpeedSliderHandler;
 
@@ -121,7 +120,7 @@ namespace Dialogue
         void EndDialogue()
         {
             DialogueCanvas.SetActive(false);
-            playermovement.playerStill = false;
+            PlayerStateManager.Instance.PlayerMoveUnlock();
             // Any additional actions after dialogue ends
             if (currentDialogue != null && currentDialogue.onDialogueEnd != null)
             {

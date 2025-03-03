@@ -27,13 +27,13 @@ public class BedDeteminant : MonoBehaviour
 
     public bool IsBed()
     {
-        float triggeredNum = 0;
+        int triggeredNum = 0;
         foreach (BedDeterminTrigger bdt in bedTrigger)
         {
             if (bdt.isTriggered)
             {
                 triggeredNum++;
-                if (triggeredNum / (float)bedTrigger.Count >= 0.6f)
+                if (triggeredNum == bedTrigger.Count)
                 {
                     return true;
                 }

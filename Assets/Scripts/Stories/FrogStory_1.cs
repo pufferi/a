@@ -121,8 +121,7 @@ public class FrogStory_1 : MonoBehaviour
         Bar.transform.SetParent(FrogHandPos);
 
         Vector3 destination = new Vector3(100, FrogTransform.position.y, 50);
-        Debug.Log(FrogTransform == null);
-
+        
         npcbehaviour.Move(FrogTransform, destination, 30f);
         tlm.CompleteTask("help the frog to fix the swatter");
         mailHandler.CreatMail("Green Frog 03,11");

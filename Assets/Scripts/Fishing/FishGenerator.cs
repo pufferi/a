@@ -40,7 +40,7 @@ public class FishGenerator : MonoBehaviour
 
     public void GenerateFish(int fishSize)
     {
-        if(fishSize == -1)
+        if(_caughtFishCount == -1)
         {
             tlm.CompleteTask("Try Fishing");
         }

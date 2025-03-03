@@ -7,7 +7,7 @@ public class PlayerGrabItems : MonoBehaviour
 {
 
     public Transform hand;
-    private float grabDistance = 1.5f;
+    private float grabDistance = 1.8f;
     public float rotationSpeed = 10;
     private string targetTag = "Item";
     private float rayDistance = 0.4f;

@@ -1,6 +1,3 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -122,13 +119,6 @@ public class MailHandler : MonoBehaviour
         return mail.GetComponent<Selectable>();
     }
 
-    //private void TestCreatMail(int count)
-    //{
-    //    for (int i = 0; i < count; i++)
-    //    {
-    //        CreatMail("NAme                " + i);
-    //    }
-    //}
 
 
     public void CreatMail(string mailInformation)
@@ -137,24 +127,26 @@ public class MailHandler : MonoBehaviour
         MailSlotButton mail;
         obj = Instantiate(_contentPrefab, Vector3.zero, Quaternion.identity);
         obj.transform.SetParent(_content.transform);
-        obj.transform.localPosition =new Vector3();
+        obj.transform.localPosition = new Vector3();
         obj.transform.localScale = new Vector3(1f, 1f, 1f);
         obj.transform.localRotation = Quaternion.Euler(new Vector3());
         obj.name = mailInformation;
 
-
-        mail= obj.GetComponent<MailSlotButton>();
+        mail = obj.GetComponent<MailSlotButton>();
         mail.MailInformationText = mailInformation;
 
-        mail.OnSelectEvent.AddListener((ItemButtom) => { HandleEventEmailOnSelect(mail); });
-        mail.OnClickEvent.AddListener((ItemButtom) => { HandleEventEmailOnClick(mail); });
-        mail.OnSubmitEvent.AddListener((ItemButtom) => { HandleEventEmailOnSubmit(mail); });
+        mail.OnSelectEvent.AddListener((ItemButton) => { HandleEventEmailOnSelect(mail); });
+        mail.OnClickEvent.AddListener((ItemButton) => { HandleEventEmailOnClick(mail); });
+        mail.OnSubmitEvent.AddListener((ItemButton) => { HandleEventEmailOnSubmit(mail); });
+
+        UpdataButtonNavigation(); 
         SelectChild(0);
     }
 
 
     public void OpenMail()
     {
+        Debug.Log("Openning mail");
         MailSlotButton mail;
         mail = EventSystem.current.currentSelectedGameObject.GetComponent<MailSlotButton>();
         string mailInformation = mail.MailInformationText;

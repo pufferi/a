@@ -8,7 +8,6 @@ public class MailController : MonoBehaviour
     private InputAction MailBoxOpenAndClose;
     private bool isMailBoxOpen = false;
     public GameObject MailBoxCanvas;
-    public PlayerMovement playerMovement;
     public MailHandler mailHandler;
 
     private void Start()
@@ -25,16 +24,18 @@ public class MailController : MonoBehaviour
         Debug.Log("MailBoxOpenAndClose triggered. isMailBoxOpen: " + isMailBoxOpen);
         if (isMailBoxOpen)
         {
-            mailHandler.SelectChild(0);
             MailBoxCanvas.SetActive(false);
             isMailBoxOpen=false;
-            playerMovement.playerStill=false;
+            PlayerStateManager.Instance.PlayerMoveUnlock();
+            PlayerStateManager.Instance.PlayerViewUnlock("all");
         }
         else
         {
+            mailHandler.SelectChild(0);
             MailBoxCanvas.SetActive(true);
             isMailBoxOpen = true;
-            playerMovement.playerStill = true;
+            PlayerStateManager.Instance.PlayerMoveLock();
+            PlayerStateManager.Instance.PlayerViewLock("all");
         }
     }
    

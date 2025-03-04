@@ -13,7 +13,7 @@ public class PlayerStory_1 : MonoBehaviour
     [SerializeField]
     private DialogueConversations conversation3;
 
-    public TaskListController tlm;
+    public TaskListController tlc;
 
     private bool isConversation1triggered=false;
 
@@ -29,16 +29,13 @@ public class PlayerStory_1 : MonoBehaviour
 
     public GameObject tip1;
     public GameObject tip2;
-    //public string targetTag = "Player"; 
+
     private bool hasPickedLetter = false;
     private bool hasTriggeredBaseConversation=false;
     private bool hasTriggeredLetterConversation=false;
 
     public InAreaChecker inSofaAreaChecker;
     public InAreaChecker inLetterAreaChecker;
-
-
-    public PlayerMovement playerMovement;
 
 
     public InputActionAsset inputActions;
@@ -53,8 +50,7 @@ public class PlayerStory_1 : MonoBehaviour
     {
         playerChangeScene = GetComponent<PlayerChangeScene>();
         playerChangeScene.InactivateChangeSceneFunction();
-
-        //playerMovement.playerStill = true;
+        PlayerStateManager.Instance.PlayerMoveLock();
 
         var playerMap = inputActions.FindActionMap("Player");
         InteractAction = playerMap.FindAction("Interact");
@@ -68,7 +64,6 @@ public class PlayerStory_1 : MonoBehaviour
 
     private void Update()
     {
-        
         if (hasPickedLetter&& !hasTriggeredBaseConversation)
         {
             if (inSofaAreaChecker.inArea)
@@ -104,7 +99,7 @@ public class PlayerStory_1 : MonoBehaviour
 
     private void OnConversation1Complete()
     {
-        playerMovement.playerStill = false;
+        PlayerStateManager.Instance.PlayerMoveUnlock();
     }
 
 
@@ -118,7 +113,7 @@ public class PlayerStory_1 : MonoBehaviour
     }
     private void OnConversation3Complete()
     {
-        tlm.AddTask("Gather some materials and build a bed on the base.");
+        tlc.AddTask("Gather some materials and build a bed on the base.");
         BaseTrigger.SetActive(false);
         playerChangeScene.ActivateChangeSceneFunction();
     }

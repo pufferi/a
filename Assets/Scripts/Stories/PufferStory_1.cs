@@ -8,8 +8,7 @@ public class PufferStory_1 : MonoBehaviour
     [SerializeField]
     private DialogueConversations conversation1;
 
-    private bool isConversation1triggered;
-
+    private bool _isConversation1triggered;
 
     public InputActionAsset inputActions;
     private InputAction talkAction;
@@ -35,16 +34,12 @@ public class PufferStory_1 : MonoBehaviour
         talkAction.Enable();
         _pufferMove = this.GetComponent<NpcMoveWithNavMesh>();
     }
-    private void Update()
-    {
-     
-    }
 
     private void OnTalk1Action(InputAction.CallbackContext context)
     {
-        if (_inRegion && !isConversation1triggered)
+        if (_inRegion && !_isConversation1triggered)
         {
-            isConversation1triggered = true;
+            _isConversation1triggered = true;
             punctTip.SetActive(false);
             conversation1.dialogue.onDialogueEnd += OnConversation1Complete;
             _pufferMove.NpcStopMove();
@@ -56,10 +51,9 @@ public class PufferStory_1 : MonoBehaviour
 
     public void OnTriggerEnter(Collider other)
     {
-        if (!isConversation1triggered && other.gameObject.tag == "Player")
+        if (!_isConversation1triggered && other.gameObject.tag == "Player")
         {
             punctTip.SetActive(true);
-
             _inRegion = true;
         }
     }

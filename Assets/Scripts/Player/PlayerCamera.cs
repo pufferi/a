@@ -5,8 +5,8 @@ public class PlayerCamera : MonoBehaviour
 {
     public static PlayerCamera Instance { get; private set; }
 
-    public float sensX = 100f;
-    public float sensY = 100f;
+    public float sensX = 90f;
+    public float sensY = 90f;
     public Transform playerOrientation;
     public InputActionAsset inputActions;
     public float damping = 10f;
@@ -60,8 +60,6 @@ public class PlayerCamera : MonoBehaviour
         float mouseX = currentInput.x * Time.deltaTime * sensX;
         float mouseY = currentInput.y * Time.deltaTime * sensY;
 
-        //Debug.Log("MouseX: " + mouseX + " MouseY: " + mouseY);
-
         if (!playerViewLockX)
         {
             yRotation += mouseX;
@@ -89,7 +87,8 @@ public class PlayerCamera : MonoBehaviour
         lookInput = context.ReadValue<Vector2>();
     }
 
-    // reset lookInput
+
+    // prevent camera from moving when mouse is still
     public void OnLookCanceled(InputAction.CallbackContext context)
     {
         lookInput = Vector2.zero;

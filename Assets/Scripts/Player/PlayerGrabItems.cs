@@ -62,7 +62,6 @@ public class PlayerGrabItems : MonoBehaviour
         jointAction.performed += OnJoint;
         unjointAction.performed += OnUnJoint;
         itemForwardAction.performed += OnItemMovingForward;
-        //autoAttachAction.performed += OnAutoAttach;
 
         directions = GenerateDirections(numberOfDirections);
     }
@@ -86,7 +85,7 @@ public class PlayerGrabItems : MonoBehaviour
     }
 
 
-    bool canGrabbedObjStick = false;
+    private bool canGrabbedObjStick = false;
     private RaycastHit closestHit = new RaycastHit();
 
     private RaycastHit lastRaycasHit;
@@ -101,8 +100,15 @@ public class PlayerGrabItems : MonoBehaviour
 
     private void CheckIfCanStickAndChangeMaterial()//Get closestHit
     {
+        Debug.Log("CheckIfCanStickAndChangeMaterial called");
         canGrabbedObjStick = false;
         float closestDistance = 3f;
+
+        if (grabbedObject == null)
+        {
+            Debug.LogError("grabbedObject is null");
+            return;
+        }
 
         foreach (Vector3 direction in directions)
         {
@@ -118,28 +124,36 @@ public class PlayerGrabItems : MonoBehaviour
                         canGrabbedObjStick = true;
                     }
                 }
-
             }
         }
+
         Renderer grabbedObjectRenderer = grabbedObject.GetComponent<Renderer>();
+        if (grabbedObjectRenderer == null)
+        {
+            Debug.LogError("grabbedObjectRenderer is null");
+            return;
+        }
+
         if (canGrabbedObjStick)
         {
             grabbedObjectRenderer.material = greenMet;
 
             Renderer hitRenderer = closestHit.collider.GetComponent<Renderer>();
+            if (hitRenderer == null)
+            {
+                Debug.LogError("hitRenderer is null");
+            }
 
             if (LastHitObject != null && LastHitObject.GetComponent<Renderer>() != null)//&& LastHitObject.GetComponent<Renderer>().material == yellowMet)
+            {
                 LastHitObject.GetComponent<Renderer>().material = originalMat_Target;
-
+            }
 
             if (hitRenderer != null)
             {
-
                 originalMat_Target = hitRenderer.material;
-
                 hitRenderer.material = yellowMet;
                 LastHitObject = closestHit.collider.gameObject;// Ensure only one object has the yellow material
-
             }
 
             lastRaycasHit = closestHit;
@@ -157,9 +171,7 @@ public class PlayerGrabItems : MonoBehaviour
                 originalMat_Target = null;
                 LastHitObject = null;
             }
-
         }
-
     }
 
 
@@ -283,17 +295,13 @@ public class PlayerGrabItems : MonoBehaviour
 
     private void OnJoint(InputAction.CallbackContext context)
     {
-        Debug.Log("OnJoint");
         if (canGrabbedObjStick)
         {
             GrabableObjectComponent hitObject = closestHit.rigidbody.GetComponent<GrabableObjectComponent>();
             if (hitObject == null || GrabableObejectGroupingManager.Instance.IsConnect(grabbedObject, hitObject))
                 return;
 
-            Debug.Log("Detected closest object with tag: " + targetTag);
-            //if targetTag=="wall"
-            //如果物体没有粘到墙上，则把物体粘到墙上
-
+            //Debug.Log("On joint and detected closest object with tag: " + targetTag);
             FixedJoint joint = grabbedObject.AddComponent<FixedJoint>();
             joint.connectedBody = closestHit.rigidbody;
             Renderer grabbedObjectRenderer = grabbedObject.GetComponent<Renderer>();
@@ -315,23 +323,18 @@ public class PlayerGrabItems : MonoBehaviour
 
     private void OnUnJoint(InputAction.CallbackContext context)
     {
-        Debug.Log("OnUnJoint");
         FixedJoint[] joints = grabbedObject.GetComponents<FixedJoint>();
         if (joints.Length > 0)
         {
             foreach (FixedJoint joint in joints)
-            {
                 Destroy(joint);
-            }
         }
 
         FixedJoint[] allJoints = FindObjectsOfType<FixedJoint>();
         foreach (FixedJoint j in allJoints)
         {
             if (j.connectedBody == grabbedObject.GetComponent<Rigidbody>())
-            {
                 Destroy(j);
-            }
         }
         if (lastRaycasHit.collider != null)
         {

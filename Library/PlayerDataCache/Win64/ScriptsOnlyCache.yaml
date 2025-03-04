@@ -48,11 +48,9 @@ ScriptsOnlyBuild:
     - ShowBedBuildProgress
     - ShowingTips
     - TaskListController
+    - TempEnding
     - Test_Generate_randomObjs
-    - TutorialLetterHandler
     - TypingSpeedSliderHandler
-    Unity.AI.Navigation.Editor.dll:
-    - Unity.AI.Navigation.Editor.NavMeshAssetManager
     Unity.AI.Navigation.dll:
     - Unity.AI.Navigation.NavMeshModifier
     - Unity.AI.Navigation.NavMeshSurface
@@ -334,25 +332,27 @@ ScriptsOnlyBuild:
     - Class: 114
       Script: {instanceID: 22830}
     - Class: 114
-      Script: {instanceID: 23196}
+      Script: {instanceID: 22962}
     - Class: 114
-      Script: {instanceID: 23210}
+      Script: {instanceID: 23198}
     - Class: 114
-      Script: {instanceID: 23214}
+      Script: {instanceID: 23212}
     - Class: 114
-      Script: {instanceID: 23236}
+      Script: {instanceID: 23216}
     - Class: 114
-      Script: {instanceID: 23240}
+      Script: {instanceID: 23238}
     - Class: 114
-      Script: {instanceID: 23390}
+      Script: {instanceID: 23242}
     - Class: 114
-      Script: {instanceID: 23518}
+      Script: {instanceID: 23392}
     - Class: 114
-      Script: {instanceID: 23768}
+      Script: {instanceID: 23520}
     - Class: 114
-      Script: {instanceID: 23922}
+      Script: {instanceID: 23770}
     - Class: 114
-      Script: {instanceID: 55418}
+      Script: {instanceID: 23924}
+    - Class: 114
+      Script: {instanceID: 26334}
     - Class: 115
       Script: {instanceID: 0}
     - Class: 128
@@ -594,12 +594,6 @@ ScriptsOnlyBuild:
     className: BedDeteminant
   - hash:
       serializedVersion: 2
-      Hash: 35bfae4a600ceef08e3b1def9cb48d04
-    assemblyName: Assembly-CSharp
-    namespaceName: 
-    className: TutorialLetterHandler
-  - hash:
-      serializedVersion: 2
       Hash: e987953190eb4c12cf19df790566dc2c
     assemblyName: UnityEngine.UI
     namespaceName: UnityEngine.EventSystems
@@ -714,7 +708,7 @@ ScriptsOnlyBuild:
     className: PlayerChangeScene
   - hash:
       serializedVersion: 2
-      Hash: d11b63ca08e39ff0761390632eb00852
+      Hash: 2403a83cc673fc3fc6991fd898e58709
     assemblyName: Assembly-CSharp
     namespaceName: 
     className: Click2Start
@@ -1698,6 +1692,12 @@ ScriptsOnlyBuild:
     className: GrabableObjectCollection
   - hash:
       serializedVersion: 2
+      Hash: 498bb3b286f5630765f6d4f58e13baf8
+    assemblyName: Assembly-CSharp
+    namespaceName: 
+    className: TempEnding
+  - hash:
+      serializedVersion: 2
       Hash: 4728e3d21cc2a12e391e71ec9b7eed0b
     assemblyName: Unity.Timeline
     namespaceName: UnityEngine.Timeline
@@ -1728,7 +1728,7 @@ ScriptsOnlyBuild:
     className: InputSystemUIInputModule
   - hash:
       serializedVersion: 2
-      Hash: cae8e58e77b89595ccb8a4ea43ba2a44
+      Hash: 603d0502c3e206c3aa753d6cbcf5d498
     assemblyName: Assembly-CSharp
     namespaceName: 
     className: PlayerStory_1
@@ -1879,4 +1879,4 @@ ScriptsOnlyBuild:
   platform: 19
   scenePathNames:
   - Assets/Scenes/mainScene.unity
-  playerPath: C:/Users/24769/Desktop/RRR/Garbage Manor.exe
+  playerPath: C:/Users/24769/Desktop/B/Garbage Manor.exe

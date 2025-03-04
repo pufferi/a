@@ -74,4 +74,18 @@ public class TaskListController : MonoBehaviour
         tasks.Clear(); 
     }
 
+    public int GetCompletedTaskCount()
+    {
+        int completedTaskCount = 0;
+        foreach (GameObject task in tasks)
+        {
+            TMP_Text taskText = task.GetComponent<TMP_Text>();
+            if (taskText.fontStyle == FontStyles.Strikethrough && taskText.color == Color.gray)
+            {
+                completedTaskCount++;
+            }
+        }
+        return completedTaskCount;
+    }
+    
 }

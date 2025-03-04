@@ -16,11 +16,10 @@ public class FrogStory_1 : MonoBehaviour
     public Transform FrogTransform;
     public Transform FrogHandPos;
 
-    private bool isConversation1triggered;
+    private bool _isConversation1triggered;
 
-    private bool isConversation2triggered;
+    private bool _isConversation2triggered;
 
-    //public ShowingTips ShowingTipsController;
     public GameObject punctTip;
     public InputActionAsset inputActions;
     private InputAction talkAction;
@@ -29,7 +28,7 @@ public class FrogStory_1 : MonoBehaviour
     private bool isSwatterMade = false;
     private bool isSwatterInHand = false;
 
-    public GameObject Web; // 苍蝇拍的网
+    public GameObject Web;//web of swatter
     public GameObject Bar;
 
     private Rigidbody webRigidbody;
@@ -60,9 +59,9 @@ public class FrogStory_1 : MonoBehaviour
 
     private void OnTalk1Action(InputAction.CallbackContext context)
     {
-        if (inRegion&&!isConversation1triggered)
+        if (inRegion && !_isConversation1triggered)
         {
-            isConversation1triggered = true;
+            _isConversation1triggered = true;
 
             punctTip.SetActive(false);
             conversation1.dialogue.onDialogueEnd += OnConversation1Complete;
@@ -73,10 +72,9 @@ public class FrogStory_1 : MonoBehaviour
     }
     private void OnTalk2Action(InputAction.CallbackContext context)
     {
-        if (inRegion && !isConversation2triggered&&isSwatterInHand)
+        if (inRegion && !_isConversation2triggered && isSwatterInHand)
         {
-            //拿走苍蝇拍应该要setParent,取消kinematic
-            isConversation2triggered = true;
+            _isConversation2triggered = true;
             punctTip.SetActive(false);
             conversation2.dialogue.onDialogueEnd += OnConversation2Complete;
             StartCoroutine(StartDialogue(conversation2));
@@ -89,7 +87,7 @@ public class FrogStory_1 : MonoBehaviour
         if (other.gameObject.tag == "Player")
         {
             inRegion = true;
-            if (!isConversation1triggered||(IsSwatterInHand() && !isConversation2triggered)) 
+            if (!_isConversation1triggered || (IsSwatterInHand() && !_isConversation2triggered))
                 punctTip.SetActive(true);
         }
     }
@@ -121,7 +119,7 @@ public class FrogStory_1 : MonoBehaviour
         Bar.transform.SetParent(FrogHandPos);
 
         Vector3 destination = new Vector3(100, FrogTransform.position.y, 50);
-        
+
         npcbehaviour.Move(FrogTransform, destination, 30f);
         tlm.CompleteTask("help the frog to fix the swatter");
         mailHandler.CreatMail("Green Frog 03,11");
@@ -141,7 +139,7 @@ public class FrogStory_1 : MonoBehaviour
     private IEnumerator StartDialogue(DialogueConversations conversation)
     {
         DialogueManager.instance.StartDialogue(conversation.dialogue);
-       yield return null;
+        yield return null;
     }
 
     private bool IsWebAndBarConnected()

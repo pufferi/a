@@ -36,4 +36,9 @@ public class BedDeterminTrigger : MonoBehaviour
         else
             isTriggered = false;
     }
+
+    private void OnTriggerExit(Collider other)
+    {
+        isTriggered = false;
+    }
 }

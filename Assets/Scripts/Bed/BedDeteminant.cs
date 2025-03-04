@@ -25,6 +25,11 @@ public class BedDeteminant : MonoBehaviour
     }
 
 
+    //i made 25 triggers to determinate if is a bed 
+    //it's quite hard to tigger them all
+    //so
+    int determinedTriggerCount = 15;
+
     public bool IsBed()
     {
         int triggeredNum = 0;
@@ -33,10 +38,8 @@ public class BedDeteminant : MonoBehaviour
             if (bdt.isTriggered)
             {
                 triggeredNum++;
-                if (triggeredNum == bedTrigger.Count)
-                {
+                if (triggeredNum == determinedTriggerCount)
                     return true;
-                }
             }
 
         }

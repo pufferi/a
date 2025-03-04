@@ -23,6 +23,7 @@ namespace Player
         private Vector2 moveInput;
         private InputAction moveAction;
         private InputAction jumpAction;
+        private InputAction accelerateAction;
 
         Rigidbody playerRigidbody;
 
@@ -51,11 +52,25 @@ namespace Player
 
             moveAction = playerMap.FindAction("Move");
             jumpAction = playerMap.FindAction("Jump");
+            accelerateAction = playerMap.FindAction("SpeedUp");
 
             moveAction.Enable();
             jumpAction.Enable();
+            accelerateAction.Enable();
 
             jumpAction.performed += PlayerJump;
+            accelerateAction.performed += PlayerAccelerate;
+            accelerateAction.canceled += PlayerDecelerate;
+        }
+
+        private void PlayerAccelerate(InputAction.CallbackContext context)
+        {
+            moveSpeed *= 2;
+        }
+
+        private void PlayerDecelerate(InputAction.CallbackContext context)
+        {
+            moveSpeed /= 2;
         }
 
         private void Update()
